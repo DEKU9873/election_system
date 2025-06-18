@@ -1,15 +1,14 @@
 import React, { useState } from "react";
+import logo from "../../assets/urlogo.png";
+
 import {
   Menu,
   X,
   Home,
-  Settings,
   Users,
-  FileText,
-  BarChart3,
-  Mail,
-  Calendar,
-  ChevronLeft,
+  LogOut,
+  UserCog,
+  Vote,
   Bell,
 } from "lucide-react";
 
@@ -19,13 +18,15 @@ const Sidebar = () => {
   const [activeItem, setActiveItem] = useState("dashboard");
 
   const menuItems = [
-    { id: "dashboard", label: "لوحة التحكم", icon: Home, href: "#" },
-    { id: "analytics", label: "التحليلات", icon: BarChart3, href: "#" },
-    { id: "users", label: "المستخدمون", icon: Users, href: "#" },
-    { id: "documents", label: "المستندات", icon: FileText, href: "#" },
-    { id: "calendar", label: "التقويم", icon: Calendar, href: "#" },
-    { id: "mail", label: "البريد", icon: Mail, href: "#" },
-    { id: "settings", label: "الإعدادات", icon: Settings, href: "#" },
+    { id: "dashboard", label: "لوحة التحكم", icon: Home, href: "/dashboard" },
+    { id: "voters", label: "الناخبين", icon: Vote, href: "/elected" },
+    {
+      id: "supervisors",
+      label: "المشرفين",
+      icon: UserCog,
+      href: "/monitors",
+    },
+    { id: "users", label: "المستخدمين", icon: Users, href: "/users" },
   ];
 
   // تحديد حجم الشاشة
@@ -97,6 +98,7 @@ const Sidebar = () => {
           </div>
         </div>
       </div>
+
       {/* Overlay للموبايل */}
       {isMobile && isOpen && (
         <div
@@ -117,15 +119,23 @@ const Sidebar = () => {
               }`
         }`}
       >
-        {/* Header */}
+        {/* Header with Logo */}
         <div className="border-b border-gray-200 min-w-64 flex-shrink-0">
-          <div className="flex items-center justify-between p-4">
+          <div className="flex justify-end m-4">
             <button
               onClick={toggleSidebar}
               className="p-1.5 rounded-lg hover:bg-gray-100 hover:rotate-90 transition-all duration-300"
             >
-              <X size={16} />
+              <X size={18} />
             </button>
+          </div>
+          <div className="flex items-center justify-between p-4">
+            <div className="flex flex-col items-center gap-2 flex-1 justify-center">
+              <img src={logo} alt="شعار الشركة" className="h-20 w-auto" />
+              <span className="font-bold text-lg text-gray-800">
+                نظام الانتخابات
+              </span>
+            </div>
           </div>
         </div>
 
@@ -141,27 +151,19 @@ const Sidebar = () => {
                     setActiveItem(item.id);
                     closeSidebar();
                   }}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-md group ${
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-300 hover:bg-gray-50 ${
                     activeItem === item.id
-                      ? "bg-blue-50 text-blue-700 border-l-2 border-blue-600 shadow-sm"
-                      : "text-gray-700 hover:bg-gray-50"
+                      ? "bg-blue-50 text-blue-700 shadow-sm"
+                      : "text-gray-700"
                   }`}
                 >
-                  <ChevronLeft
-                    size={16}
-                    className="opacity-0 group-hover:opacity-100 group-hover:translate-x-[-2px] transition-all duration-200 order-2"
+                  <Icon
+                    size={20}
+                    className={`transition-all duration-200 ${
+                      activeItem === item.id ? "text-blue-600" : ""
+                    }`}
                   />
-                  <div className="flex items-center gap-3 order-1">
-                    <Icon
-                      size={20}
-                      className={`transition-all duration-200 ${
-                        activeItem === item.id
-                          ? "text-blue-600 scale-110"
-                          : "group-hover:scale-105"
-                      }`}
-                    />
-                    <span className="font-medium">{item.label}</span>
-                  </div>
+                  <span className="font-medium">{item.label}</span>
                 </button>
               );
             })}
@@ -183,6 +185,15 @@ const Sidebar = () => {
               <span className="text-gray-600 font-medium text-sm">أم</span>
             </div>
           </div>
+          <button
+            onClick={() => {
+              // Handle logout
+            }}
+            className="w-full flex items-center gap-3 px-3 py-2 mt-2 rounded-lg transition-all duration-300 hover:bg-red-50 text-red-600"
+          >
+            <LogOut size={20} />
+            <span className="font-medium">تسجيل الخروج</span>
+          </button>
         </div>
       </div>
     </div>

@@ -268,13 +268,13 @@ const UsersTable = () => {
                                   onClick={() => handleUserAction("view", row)}
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
-                                  👁️ عرض التفاصيل
+                                   عرض التفاصيل
                                 </button>
                                 <button
                                   onClick={() => handleUserAction("edit", row)}
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
-                                  ✏️ تعديل
+                                   تعديل
                                 </button>
                                 <button
                                   onClick={() =>
@@ -282,7 +282,7 @@ const UsersTable = () => {
                                   }
                                   className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
                                 >
-                                  🗑️ حذف
+                                   حذف
                                 </button>
                                 <button
                                   onClick={() =>
@@ -290,7 +290,7 @@ const UsersTable = () => {
                                   }
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
-                                  🔐 إدارة الصلاحيات
+                                   إدارة الصلاحيات
                                 </button>
                                 <hr className="my-1" />
                                 <button
@@ -299,7 +299,7 @@ const UsersTable = () => {
                                   }
                                   className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
                                 >
-                                  🗑️ حذف المستخدم
+                                   حذف المستخدم
                                 </button>
                               </div>
                             </div>
