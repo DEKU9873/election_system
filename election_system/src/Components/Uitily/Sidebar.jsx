@@ -10,6 +10,7 @@ import {
   Mail,
   Calendar,
   ChevronLeft,
+  Bell,
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -60,22 +61,48 @@ const Sidebar = () => {
 
   return (
     <div dir="rtl" className="font-['Cairo',_'Segoe_UI',_Tahoma,_sans-serif]">
+      {/* Main Content Wrapper */}
+      <div className="pt-16">{/* Content goes here */}</div>
+
+      {/* Navbar */}
+      <div
+        className={`fixed top-0 left-0 bg-white border-b border-gray-200 shadow-sm z-40 py-3 transition-all duration-500 ${
+          isOpen ? "right-64" : "right-0"
+        }`}
+      >
+        <div className="flex items-center justify-between px-6">
+          <div className="flex items-center gap-4">
+            {!isOpen && (
+              <button
+                onClick={toggleSidebar}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                title="فتح القائمة"
+              >
+                <Menu size={20} className="text-gray-600" />
+              </button>
+            )}
+            <h1 className="text-xl font-semibold text-gray-800 font-['Cairo']">
+              {menuItems.find((item) => item.id === activeItem)?.label ||
+                "لوحة التحكم"}
+            </h1>
+          </div>
+          <div className="flex items-center space-x-4 rtl:space-x-reverse">
+            <button
+              className="p-2 hover:bg-gray-100 rounded-full relative transition-colors duration-200"
+              title="الإشعارات"
+            >
+              <Bell size={20} className="text-gray-600" />
+              <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+            </button>
+          </div>
+        </div>
+      </div>
       {/* Overlay للموبايل */}
       {isMobile && isOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden transition-all duration-300"
           onClick={closeSidebar}
         />
-      )}
-
-      {/* زر فتح الـ sidebar عندما يكون مغلق */}
-      {!isOpen && (
-        <button
-          onClick={toggleSidebar}
-          className="fixed top-4 right-4 z-50 p-3  "
-        >
-          <Menu size={22} className="text-gray-600" />
-        </button>
       )}
 
       {/* Sidebar */}
@@ -91,28 +118,20 @@ const Sidebar = () => {
         }`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200 min-w-64 flex-shrink-0">
-          <button
-            onClick={toggleSidebar}
-            className="p-1.5 rounded-lg hover:bg-gray-100 hover:rotate-90 transition-all duration-300 order-2"
-          >
-            <X size={16} />
-          </button>
-
-          <div className="flex items-center gap-3 order-1">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center transform hover:scale-110 transition-transform duration-200">
-              <span className="text-white font-bold text-sm">ش</span>
-            </div>
-            <div className="text-right">
-              <h1 className="font-semibold text-gray-900">شركة الأحلام</h1>
-              <p className="text-xs text-gray-500">الشركات</p>
-            </div>
+        <div className="border-b border-gray-200 min-w-64 flex-shrink-0">
+          <div className="flex items-center justify-between p-4">
+            <button
+              onClick={toggleSidebar}
+              className="p-1.5 rounded-lg hover:bg-gray-100 hover:rotate-90 transition-all duration-300"
+            >
+              <X size={16} />
+            </button>
           </div>
         </div>
 
         {/* Navigation with scroll */}
-        <nav className="flex-1 min-w-64 overflow-y-auto">
-          <div className="p-4 space-y-1">
+        <nav className="flex-1 min-w-64 overflow-y-auto pt-4">
+          <div className="px-4 space-y-1">
             {menuItems.map((item) => {
               const Icon = item.icon;
               return (
@@ -133,7 +152,7 @@ const Sidebar = () => {
                     className="opacity-0 group-hover:opacity-100 group-hover:translate-x-[-2px] transition-all duration-200 order-2"
                   />
                   <div className="flex items-center gap-3 order-1">
-                       <Icon
+                    <Icon
                       size={20}
                       className={`transition-all duration-200 ${
                         activeItem === item.id
@@ -142,7 +161,6 @@ const Sidebar = () => {
                       }`}
                     />
                     <span className="font-medium">{item.label}</span>
-                 
                   </div>
                 </button>
               );
