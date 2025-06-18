@@ -74,7 +74,11 @@ const UserTableToolbar = ({
                             ? "تاريخ التسجيل"
                             : key === "registrationMethod"
                             ? "طريقة التسجيل"
-                            : key}
+                            : key === "state"
+                            ? "الولاية"
+                            : key === "addBy"
+                            ? "تمت إضافة بواسطة"
+                            : key }
                         </span>
                       </label>
                     )

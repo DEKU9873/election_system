@@ -1,12 +1,18 @@
 import React from 'react'
-import UserTable from './Components/auth/UserTable'
-import Sidebar from './Components/Uitily/Sidebar'
+import ElectedTablePage from './pages/ElectedTablePage'
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import MonitorsTablePage from './pages/MonitorsTablePage';
+
 
 const App = () => {
   return (
     <div>
-      <UserTable/>
-      {/* <Sidebar/> */}
+      <BrowserRouter>
+        <Routes>
+          <Route path="/elected" element={<ElectedTablePage />} />
+          <Route path="/monitors" element={<MonitorsTablePage />} />
+        </Routes>
+      </BrowserRouter>
       
     </div>
   )

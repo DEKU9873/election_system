@@ -95,5 +95,16 @@ export const useUserData = () => {
     },
   ]);
 
-  return { data };
+   const  [electedData] = useState([
+        {
+          id: "1",
+          name: "الحسن محمد",
+          phone: "07717234",
+          state: "مفعل",
+          addBy: "باسم",
+          location: [30.0978, 40.2854],
+        }
+  ])
+
+  return { data, electedData  };
 };
