@@ -103,7 +103,23 @@ export const useUserData = () => {
           state: "مفعل",
           addBy: "باسم",
           location: [30.0978, 40.2854],
-        }
+        },
+        {
+          id: "2",
+          name: "محمد حسن",
+          phone: "07717234",
+          state: "مفعل",
+          addBy: "باسم",
+          location: [30.0978, 40.2854],
+        },
+        {
+          id: "3",
+          name: "مريم محمد",
+          phone: "07717234",
+          state: "مفعل",
+          addBy: "الحسن",
+          location: [30.0978, 40.2854],
+        },
   ])
 
   return { data, electedData  };

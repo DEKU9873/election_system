@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import logo from "../../assets/urlogo.png";
 
 import {
@@ -15,7 +16,16 @@ import {
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
-  const [activeItem, setActiveItem] = useState("dashboard");
+  const location = useLocation();
+const [activeItem, setActiveItem] = useState("");
+
+React.useEffect(() => {
+  const currentPath = location.pathname;
+  const currentItem = menuItems.find(item => item.href === currentPath);
+  if (currentItem) {
+    setActiveItem(currentItem.id);
+  }
+}, [location]);
 
   const menuItems = [
     { id: "dashboard", label: "لوحة التحكم", icon: Home, href: "/dashboard" },
@@ -145,12 +155,10 @@ const Sidebar = () => {
             {menuItems.map((item) => {
               const Icon = item.icon;
               return (
-                <button
+                <Link
                   key={item.id}
-                  onClick={() => {
-                    setActiveItem(item.id);
-                    closeSidebar();
-                  }}
+                  to={item.href}
+                  onClick={closeSidebar}
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-300 hover:bg-gray-50 ${
                     activeItem === item.id
                       ? "bg-blue-50 text-blue-700 shadow-sm"
@@ -164,7 +172,7 @@ const Sidebar = () => {
                     }`}
                   />
                   <span className="font-medium">{item.label}</span>
-                </button>
+                </Link>
               );
             })}
           </div>
