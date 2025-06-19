@@ -17,15 +17,15 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
-const [activeItem, setActiveItem] = useState("");
+  const [activeItem, setActiveItem] = useState("");
 
-React.useEffect(() => {
-  const currentPath = location.pathname;
-  const currentItem = menuItems.find(item => item.href === currentPath);
-  if (currentItem) {
-    setActiveItem(currentItem.id);
-  }
-}, [location]);
+  React.useEffect(() => {
+    const currentPath = location.pathname;
+    const currentItem = menuItems.find((item) => item.href === currentPath);
+    if (currentItem) {
+      setActiveItem(currentItem.id);
+    }
+  }, [location]);
 
   const menuItems = [
     { id: "dashboard", label: "لوحة التحكم", icon: Home, href: "/dashboard" },
@@ -36,6 +36,8 @@ React.useEffect(() => {
       icon: UserCog,
       href: "/monitors",
     },
+    { id: "coordinators", label: "المرتكزين", icon: Vote, href: "/coordinators" },
+
     { id: "users", label: "المستخدمين", icon: Users, href: "/users" },
   ];
 
@@ -183,10 +185,10 @@ React.useEffect(() => {
           <div className="flex items-center gap-3 hover:bg-gray-50 rounded-lg p-2 transition-all duration-200 cursor-pointer">
             <div className="flex-1 min-w-0 text-right order-1">
               <p className="text-sm font-medium text-gray-900 truncate">
-                أحمد محمد
+                الحسن محمد
               </p>
               <p className="text-xs text-gray-500 truncate">
-                ahmed@example.com
+                alhassan@gmail.com
               </p>
             </div>
             <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center order-2 hover:scale-105 transition-transform duration-200">

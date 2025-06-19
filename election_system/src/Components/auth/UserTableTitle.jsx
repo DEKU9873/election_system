@@ -1,7 +1,7 @@
 import React from 'react';
 import { User } from 'lucide-react';
 
-const UserTableTitle = () => {
+const UserTableTitle = ({title, subtitle}) => {
   return (
     <div className="flex items-center gap-3 mb-4">
       <div className="p-2 bg-blue-100 rounded-lg">
@@ -9,10 +9,10 @@ const UserTableTitle = () => {
       </div>
       <div>
         <h2 className="text-2xl font-bold text-gray-900">
-          إدارة المستخدمين
+          {title}
         </h2>
         <p className="text-gray-600">
-          إدارة حسابات المستخدمين والصلاحيات
+          {subtitle}
         </p>
       </div>
     </div>

@@ -1,51 +1,51 @@
-import { User } from 'lucide-react';
+import { User } from "lucide-react";
 
 export const tableHeaders = [
   {
-    id: 'select',
-    label: '',
+    id: "select",
+    label: "",
     sortable: false,
     icon: null,
   },
   {
-    id: 'id',
-    label: 'ت',
+    id: "id",
+    label: "ت",
     sortable: true,
     icon: null,
   },
   {
-    id: 'name',
-    label: 'الاسم',
+    id: "name",
+    label: "الاسم",
     sortable: true,
     icon: User,
   },
   {
-    id: 'phone',
-    label: 'رقم الهاتف',
+    id: "phone",
+    label: "رقم الهاتف",
     sortable: true,
     icon: null,
   },
   {
-    id: 'birthYear',
-    label: 'سنة الميلاد',
+    id: "birthYear",
+    label: "سنة الميلاد",
     sortable: true,
     icon: null,
   },
   {
-    id: 'registrationDate',
-    label: 'تاريخ التسجيل',
+    id: "registrationDate",
+    label: "تاريخ التسجيل",
     sortable: true,
     icon: null,
   },
   {
-    id: 'registrationMethod',
-    label: 'طريقة التسجيل',
+    id: "registrationMethod",
+    label: "طريقة التسجيل",
     sortable: true,
     icon: null,
   },
   {
-    id: 'actions',
-    label: 'الإجراءات',
+    id: "actions",
+    label: "الإجراءات",
     sortable: false,
     icon: null,
   },
@@ -53,45 +53,136 @@ export const tableHeaders = [
 
 export const electedTableHeaders = [
   {
-    id: 'select',
-    label: '',
+    id: "select",
+    label: "",
     sortable: false,
     icon: null,
   },
   {
-    id: 'id',
-    label: 'ت',
+    id: "id",
+    label: "ت",
     sortable: true,
     icon: null,
   },
   {
-    id: 'name',
-    label: 'الاسم',
+    id: "name",
+    label: "الاسم",
     sortable: true,
     icon: User,
   },
   {
-    id: 'phone',
-    label: 'رقم الهاتف',
+    id: "phone",
+    label: "رقم الهاتف",
     sortable: true,
     icon: null,
   },
   {
-    id: 'state',
-    label: 'الحالة',
+    id: "state",
+    label: "الحالة",
     sortable: true,
     icon: null,
   },
   {
-    id: 'addBy',
-    label: 'اضيف بواسطة',
+    id: "addBy",
+    label: "اضيف بواسطة",
     sortable: true,
     icon: null,
   },
   {
-    id: 'actions',
-    label: 'الإجراءات',
+    id: "actions",
+    label: "الإجراءات",
     sortable: false,
     icon: null,
   },
-]
+];
+
+export const coordinatorTableHeaders = [
+  {
+    id: "select",
+    label: "",
+    sortable: false,
+    icon: null,
+  },
+  {
+    id: "id",
+    label: "ت",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "name",
+    label: "الاسم",
+    sortable: true,
+    icon: User,
+  },
+  {
+    id: "phone",
+    label: "رقم الهاتف",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "numberOfCenters",
+    label: "عدد المراكز",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "actions",
+    label: "الإجراءات",
+    sortable: false,
+    icon: null,
+  },
+];
+
+export const userTableHeaders = [
+  {
+    id: "select",
+    label: "",
+    sortable: false,
+    icon: null,
+  },
+  {
+    id: "id",
+    label: "ت",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "name",
+    label: "الاسم",
+    sortable: true,
+    icon: User,
+  },
+  {
+    id: "phone",
+    label: "رقم الهاتف",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "pollingCenter",
+    label: "المركز الانتخابي",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "addBy",
+    label: "اضيف بواسطة",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "registrationDate",
+    label: "تاريخ التسجيل",
+    sortable: true,
+    icon: null,
+  },
+
+  {
+    id: "actions",
+    label: "الإجراءات",
+    sortable: false,
+    icon: null,
+  },
+];

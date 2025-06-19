@@ -122,5 +122,36 @@ export const useUserData = () => {
         },
   ])
 
-  return { data, electedData  };
+  const [coordinatorData] = useState([
+    {
+      id: "1",
+      name: "احمد عبدالله",
+      phone: "07717234",
+      numberOfCenters: "3",
+      location: [30.0978, 40.2854],
+    },
+  ]);
+
+  const [usersData] = useState([
+    {
+      id: "1",
+      name: "احمد عبدالله",
+      phone: "07717234",
+      pollingCenter: "مدرسة الكرخ",
+      addBy: "علي",
+      registrationDate: "2023-01-01",
+      location: [30.0978, 40.2854],
+    },
+    {
+      id: "2",
+      name: "محمد عبدالله",
+      phone: "07717234",
+      pollingCenter: "مدرسة الكرخ",
+      addBy: "علي",
+      registrationDate: "2023-01-01",
+      location: [30.0978, 40.2854],
+    },
+  ]);
+
+  return { data, electedData, coordinatorData, usersData  };
 };

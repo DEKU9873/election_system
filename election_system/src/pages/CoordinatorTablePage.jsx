@@ -2,15 +2,14 @@ import React, { useMemo, useState } from "react";
 import { useUserData } from "../Components/auth/UserData";
 import Sidebar from "../Components/Uitily/Sidebar";
 import UserTableTitle from "../Components/auth/UserTableTitle";
-import UsersMap from "../Components/auth/UsersMap";
 import UserTableToolbar from "../Components/auth/UserTableToolbar";
 import UserTableStats from "../Components/auth/UserTableStats";
 import UserTableHeader from "../Components/auth/UserTableHeader";
-import { electedTableHeaders } from "../Components/auth/TableHeaderData";
+import { coordinatorTableHeaders } from "../Components/auth/TableHeaderData";
 import { MoreHorizontal, User } from "lucide-react";
 import UserTablePagination from "../Components/auth/UserTablePagination";
-const MonitorsTablePage = () => {
-  const { electedData } = useUserData();
+const CoordinatorTablePage = () => {
+  const { coordinatorData } = useUserData();
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -22,8 +21,7 @@ const MonitorsTablePage = () => {
     id: true,
     name: true,
     phone: true,
-    state: true,
-    addBy: true,
+    numberOfCenters: true,
     actions: true,
   });
   const [showColumnMenu, setShowColumnMenu] = useState(false);
@@ -33,7 +31,7 @@ const MonitorsTablePage = () => {
 
   // تصفية البيانات
   const filteredData = useMemo(() => {
-    return electedData.filter(
+    return coordinatorData.filter(
       (item) =>
         item.name.toLowerCase().includes(filterText.toLowerCase()) ||
         item.phone.includes(filterText) ||
@@ -41,7 +39,7 @@ const MonitorsTablePage = () => {
         item.registrationDate.includes(filterText) ||
         item.registrationMethod.toLowerCase().includes(filterText.toLowerCase())
     );
-  }, [electedData, filterText]);
+  }, [coordinatorData, filterText]);
 
   // ترتيب البيانات
   const sortedData = useMemo(() => {
@@ -110,7 +108,7 @@ const MonitorsTablePage = () => {
       <Sidebar />
       <div className="w-full max-w-[1440px] mx-auto p-6 bg-white" dir="rtl">
         <div className="mb-6">
-          <UserTableTitle title="المشرفين" subtitle="قائمة المشرفين" />
+          <UserTableTitle title="المرتكزين" subtitle="قائمة المرتكزين" />
 
           <UserTableToolbar
             filterText={filterText}
@@ -121,14 +119,14 @@ const MonitorsTablePage = () => {
             setVisibleColumns={setVisibleColumns}
           />
 
-          <UserTableStats data={electedData} />
+          <UserTableStats data={coordinatorData} />
         </div>
 
         {/* الجدول */}
         <div className="border border-gray-200 rounded-lg shadow-sm">
           <table className="w-full">
             <UserTableHeader
-              tableHeaders={electedTableHeaders}
+              tableHeaders={coordinatorTableHeaders}
               visibleColumns={visibleColumns}
               selectedRows={selectedRows}
               paginatedData={paginatedData}
@@ -174,16 +172,12 @@ const MonitorsTablePage = () => {
                         <div className="text-sm text-gray-900">{row.phone}</div>
                       </td>
                     )}
-                    {visibleColumns.state && (
+                    {visibleColumns.numberOfCenters && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.state}</div>
+                        <div className="text-sm text-gray-900">{row.numberOfCenters}</div>
                       </td>
                     )}
-                    {visibleColumns.addBy && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.addBy}</div>
-                      </td>
-                    )}
+                   
 
                     {visibleColumns.actions && (
                       <td className="px-4 py-3">
@@ -286,4 +280,4 @@ const MonitorsTablePage = () => {
   );
 };
 
-export default MonitorsTablePage;
+export default CoordinatorTablePage;

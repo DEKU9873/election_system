@@ -78,7 +78,8 @@ const UserTableToolbar = ({
                             ? "الولاية"
                             : key === "addBy"
                             ? "تمت إضافة بواسطة"
-                            : key }
+                            : key === "numberOfCenters" ? "عدد المراكز" : 
+                            key === "pollingCenter" ? "المركز الانتخابي": key }
                         </span>
                       </label>
                     )

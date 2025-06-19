@@ -6,12 +6,12 @@ import UsersMap from '../Components/auth/UsersMap';
 import UserTableToolbar from '../Components/auth/UserTableToolbar';
 import UserTableStats from '../Components/auth/UserTableStats';
 import UserTableHeader from '../Components/auth/UserTableHeader';
-import { tableHeaders } from '../Components/auth/TableHeaderData';
+import { userTableHeaders } from '../Components/auth/TableHeaderData';
 import { MoreHorizontal, User } from 'lucide-react';
 import UserTablePagination from '../Components/auth/UserTablePagination';
 
-const ElectedTablePage = () => {
-    const { data } = useUserData();
+const UserTablePage = () => {
+    const { usersData } = useUserData();
 
     // حالات التطبيق
     const [selectedRows, setSelectedRows] = useState(new Set());
@@ -23,23 +23,23 @@ const ElectedTablePage = () => {
       id: true,
       name: true,
       phone: true,
-      birthYear: true,
+      pollingCenter: "مدرسة الكرخ",
+      addBy: "علي",
       registrationDate: true,
-      registrationMethod: true,
       actions: true,
     });
     const [showColumnMenu, setShowColumnMenu] = useState(false);
     const [showActionMenu, setShowActionMenu] = useState(null);
-    const [mapCenter, setMapCenter] = useState([24.7136, 46.6753]); 
-    const [mapZoom, setMapZoom] = useState(5); 
-    const [showMap, setShowMap] = useState(false); 
+    const [mapCenter, setMapCenter] = useState([24.7136, 46.6753]); // مركز الخريطة الافتراضي (الرياض)
+    const [mapZoom, setMapZoom] = useState(5); // مستوى التكبير الافتراضي
+    const [showMap, setShowMap] = useState(false); // حالة إظهار/إخفاء الخريطة
   
     const itemsPerPage = 6;
   
     // تحديث مركز الخريطة عند تحديد صف
     useEffect(() => {
       if (selectedRows.size === 1) {
-        const selectedUser = data.find((user) => selectedRows.has(user.id));
+        const selectedUser = usersData.find((user) => selectedRows.has(user.id));
         if (selectedUser && selectedUser.location) {
           setMapCenter(selectedUser.location);
           setMapZoom(8);
@@ -48,11 +48,11 @@ const ElectedTablePage = () => {
         setMapCenter([24.7136, 46.6753]);
         setMapZoom(5);
       }
-    }, [selectedRows, data]);
+    }, [selectedRows, usersData]);
   
     // تصفية البيانات
     const filteredData = useMemo(() => {
-      return data.filter(
+      return usersData.filter(
         (item) =>
           item.name.toLowerCase().includes(filterText.toLowerCase()) ||
           item.phone.includes(filterText) ||
@@ -60,7 +60,7 @@ const ElectedTablePage = () => {
           item.registrationDate.includes(filterText) ||
           item.registrationMethod.toLowerCase().includes(filterText.toLowerCase())
       );
-    }, [data, filterText]);
+    }, [usersData, filterText]);
   
     // ترتيب البيانات
     const sortedData = useMemo(() => {
@@ -129,7 +129,7 @@ const ElectedTablePage = () => {
         <Sidebar />
         <div className="w-full max-w-[1440px] mx-auto p-6 bg-white" dir="rtl">
           <div className="mb-6">
-            <UserTableTitle title="الناخبين" subtitle="قائمة الناخبين" />
+            <UserTableTitle title="المستخدمين" subtitle="قائمة المستخدمين" />
   
             {/* خريطة المستخدمين */}
             <div className="mb-4">
@@ -141,7 +141,7 @@ const ElectedTablePage = () => {
               </button>
               {showMap && (
                 <UsersMap
-                  data={data}
+                  data={usersData}
                   selectedRows={selectedRows}
                   handleSelectRow={handleSelectRow}
                   mapCenter={mapCenter}
@@ -159,14 +159,14 @@ const ElectedTablePage = () => {
               setVisibleColumns={setVisibleColumns}
             />
   
-            <UserTableStats data={data} />
+            <UserTableStats data={usersData} />
           </div>
   
           {/* الجدول */}
           <div className="border border-gray-200 rounded-lg shadow-sm">
             <table className="w-full">
               <UserTableHeader
-                tableHeaders={tableHeaders}
+                tableHeaders={userTableHeaders}
                 visibleColumns={visibleColumns}
                 selectedRows={selectedRows}
                 paginatedData={paginatedData}
@@ -225,10 +225,17 @@ const ElectedTablePage = () => {
                           <div className="text-sm text-gray-900">{row.phone}</div>
                         </td>
                       )}
-                      {visibleColumns.birthYear && (
+                      {visibleColumns.pollingCenter && (
                         <td className="px-4 py-3">
                           <div className="text-sm text-gray-900">
-                            {row.birthYear}
+                            {row.pollingCenter}
+                          </div>
+                        </td>
+                      )}
+                       {visibleColumns.addBy && (
+                        <td className="px-4 py-3">
+                          <div className="text-sm text-gray-900">
+                            {row.addBy}
                           </div>
                         </td>
                       )}
@@ -239,13 +246,7 @@ const ElectedTablePage = () => {
                           </div>
                         </td>
                       )}
-                      {visibleColumns.registrationMethod && (
-                        <td className="px-4 py-3">
-                          <div className="text-sm text-gray-900">
-                            {row.registrationMethod}
-                          </div>
-                        </td>
-                      )}
+                     
                       {visibleColumns.actions && (
                         <td className="px-4 py-3">
                           <div className="relative">
@@ -347,4 +348,4 @@ const ElectedTablePage = () => {
     );
   };
 
-export default ElectedTablePage
+export default UserTablePage
