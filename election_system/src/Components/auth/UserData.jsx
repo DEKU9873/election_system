@@ -153,5 +153,97 @@ export const useUserData = () => {
     },
   ]);
 
-  return { data, electedData, coordinatorData, usersData  };
+  const governorateData = [
+    {
+      id: "1",
+      code: "123",
+      name: "بغداد",
+      numberOfElections: "2",
+      numberOfCenters: "10",
+      numberOfElected: "5",
+      numberOfVoters: "100",
+      percentageOfVoters: "50%",
+    },
+    {
+      id: "2",
+      code: "456",
+      name: "البصرة",
+      numberOfElections: "1",
+      numberOfCenters: "5",
+      numberOfElected: "3",
+      numberOfVoters: "80",
+      percentageOfVoters: "30%",
+    },
+  ];
+
+  const districtsData = [
+    {
+      id: "1",
+      name: "ابوغريب",
+      governorate: "بغداد",
+      numberOfSubdistricts: "3",
+      numberOfElections: "2",
+      numberOfCenters: "10",
+      numberOfElected: "5",
+      numberOfVoters: "100",
+      percentageOfVoters: "50%",
+    },
+    {
+      id: "2",
+      name: "المحمودية",
+      governorate: "بغداد",
+      numberOfSubdistricts: "2",
+      numberOfElections: "1",
+      numberOfCenters: "5",
+      numberOfElected: "3",
+      numberOfVoters: "80",
+      percentageOfVoters: "30%",
+    },
+  ]
+  const subdistrictsData = [
+    {
+      id: "1",
+      name: "الحي",
+      district: "ابوغريب",
+      governorate: "بغداد",
+      numberOfSubdistricts: "3",
+      numberOfElections: "2",
+      numberOfCenters: "10",
+      numberOfElected: "5",
+      numberOfVoters: "100",
+      percentageOfVoters: "50%",
+    },
+    {
+      id: "2",
+      name: "الحي",
+      district: "ابوغريب",
+      governorate: "بغداد",
+      numberOfSubdistricts: "2",
+      numberOfElections: "1",
+      numberOfCenters: "5",
+      numberOfElected: "3",
+      numberOfVoters: "80",
+      percentageOfVoters: "30%",
+    },
+  ]
+
+  const CenterManagersData = [
+    {
+      id: "1",
+      name: "محمد",
+      phone: "07717234",
+      pollingCenter: "مركز 1",
+      governorate: "بغداد",
+      district: "ابوغريب",
+    },
+    {
+      id: "2",
+      name: "مريم",
+      phone: "07717234",
+      pollingCenter: "مركز 2",
+      governorate: "بغداد",
+      district: "المحمودية",
+    },
+  ]
+  return { data, electedData, coordinatorData, usersData, governorateData, districtsData,subdistrictsData, CenterManagersData  };
 };

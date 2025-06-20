@@ -1,16 +1,15 @@
 import React, { useMemo, useState } from "react";
-import { useUserData } from "../Components/auth/UserData";
-import Sidebar from "../Components/Uitily/Sidebar";
-import UserTableTitle from "../Components/auth/UserTableTitle";
-import UsersMap from "../Components/auth/UsersMap";
-import UserTableToolbar from "../Components/auth/UserTableToolbar";
-import UserTableStats from "../Components/auth/UserTableStats";
-import UserTableHeader from "../Components/auth/UserTableHeader";
-import { electedTableHeaders } from "../Components/auth/TableHeaderData";
+import { useUserData } from "../../Components/auth/UserData";
+import Sidebar from "../../Components/Uitily/Sidebar";
+import UserTableTitle from "../../Components/auth/UserTableTitle";
+import UserTableToolbar from "../../Components/auth/UserTableToolbar";
+import UserTableStats from "../../Components/auth/UserTableStats";
+import UserTableHeader from "../../Components/auth/UserTableHeader";
+import { subdistrictsTableHeader } from "../../Components/auth/TableHeaderData";
 import { MoreHorizontal, User } from "lucide-react";
-import UserTablePagination from "../Components/auth/UserTablePagination";
-const MonitorsTablePage = () => {
-  const { electedData } = useUserData();
+import UserTablePagination from "../../Components/auth/UserTablePagination";
+const SubdistrictPage = () => {
+  const { subdistrictsData } = useUserData();
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -20,10 +19,15 @@ const MonitorsTablePage = () => {
   const [visibleColumns, setVisibleColumns] = useState({
     select: true,
     id: true,
+    district: true,
+    governorate: true,
     name: true,
-    phone: true,
-    state: true,
-    addBy: true,
+    numberOfSubdistricts: true,
+    numberOfElections: true,
+    numberOfCenters: true,
+    numberOfElected: true,
+    numberOfVoters: true,
+    percentageOfVoters: true,
     actions: true,
   });
   const [showColumnMenu, setShowColumnMenu] = useState(false);
@@ -33,7 +37,7 @@ const MonitorsTablePage = () => {
 
   // تصفية البيانات
   const filteredData = useMemo(() => {
-    return electedData.filter(
+    return subdistrictsData.filter(
       (item) =>
         item.name.toLowerCase().includes(filterText.toLowerCase()) ||
         item.phone.includes(filterText) ||
@@ -41,7 +45,7 @@ const MonitorsTablePage = () => {
         item.registrationDate.includes(filterText) ||
         item.registrationMethod.toLowerCase().includes(filterText.toLowerCase())
     );
-  }, [electedData, filterText]);
+  }, [subdistrictsData, filterText]);
 
   // ترتيب البيانات
   const sortedData = useMemo(() => {
@@ -110,7 +114,7 @@ const MonitorsTablePage = () => {
       <Sidebar />
       <div className="w-full max-w-[1440px] mx-auto p-6 bg-white" dir="rtl">
         <div className="mb-6">
-          <UserTableTitle title="المشرفين" subtitle="قائمة المشرفين" />
+          <UserTableTitle title="النواحي" subtitle="قائمة النواحي" />
 
           <UserTableToolbar
             filterText={filterText}
@@ -121,14 +125,14 @@ const MonitorsTablePage = () => {
             setVisibleColumns={setVisibleColumns}
           />
 
-          <UserTableStats data={electedData} />
+          <UserTableStats data={subdistrictsData} />
         </div>
 
         {/* الجدول */}
         <div className="border border-gray-200 rounded-lg shadow-sm">
           <table className="w-full">
             <UserTableHeader
-              tableHeaders={electedTableHeaders}
+              tableHeaders={subdistrictsTableHeader}
               visibleColumns={visibleColumns}
               selectedRows={selectedRows}
               paginatedData={paginatedData}
@@ -160,6 +164,7 @@ const MonitorsTablePage = () => {
                         <div className="text-sm text-gray-900">{row.id}</div>
                       </td>
                     )}
+
                     {visibleColumns.name && (
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
@@ -169,19 +174,54 @@ const MonitorsTablePage = () => {
                         </div>
                       </td>
                     )}
-                    {visibleColumns.phone && (
+                    {visibleColumns.district && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.phone}</div>
+                        <div className="text-sm text-gray-900">
+                          {row.district}
+                        </div>
                       </td>
                     )}
-                    {visibleColumns.state && (
+                    {visibleColumns.governorate && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.state}</div>
+                        <div className="text-sm text-gray-900">
+                          {row.governorate}
+                        </div>
                       </td>
                     )}
-                    {visibleColumns.addBy && (
+                    {visibleColumns.numberOfSubdistricts && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.addBy}</div>
+                        <div className="text-sm text-gray-900">
+                          {row.numberOfSubdistricts}
+                        </div>
+                      </td>
+                    )}
+
+                    {visibleColumns.numberOfCenters && (
+                      <td className="px-4 py-3">
+                        <div className="text-sm text-gray-900">
+                          {row.numberOfCenters}
+                        </div>
+                      </td>
+                    )}
+                    {visibleColumns.numberOfElected && (
+                      <td className="px-4 py-3">
+                        <div className="text-sm text-gray-900">
+                          {row.numberOfElected}
+                        </div>
+                      </td>
+                    )}
+                    {visibleColumns.numberOfVoters && (
+                      <td className="px-4 py-3">
+                        <div className="text-sm text-gray-900">
+                          {row.numberOfVoters}
+                        </div>
+                      </td>
+                    )}
+                    {visibleColumns.percentageOfVoters && (
+                      <td className="px-4 py-3">
+                        <div className="text-sm text-gray-900">
+                          {row.percentageOfVoters}
+                        </div>
                       </td>
                     )}
 
@@ -206,13 +246,13 @@ const MonitorsTablePage = () => {
                                   onClick={() => handleUserAction("view", row)}
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
-                                   عرض التفاصيل
+                                  عرض التفاصيل
                                 </button>
                                 <button
                                   onClick={() => handleUserAction("edit", row)}
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
-                                   تعديل
+                                  تعديل
                                 </button>
                                 <button
                                   onClick={() =>
@@ -220,7 +260,7 @@ const MonitorsTablePage = () => {
                                   }
                                   className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
                                 >
-                                   حذف
+                                  حذف
                                 </button>
                                 <button
                                   onClick={() =>
@@ -228,7 +268,7 @@ const MonitorsTablePage = () => {
                                   }
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
-                                   إدارة الصلاحيات
+                                  إدارة الصلاحيات
                                 </button>
                                 <hr className="my-1" />
                                 <button
@@ -286,4 +326,4 @@ const MonitorsTablePage = () => {
   );
 };
 
-export default MonitorsTablePage;
+export default SubdistrictPage;

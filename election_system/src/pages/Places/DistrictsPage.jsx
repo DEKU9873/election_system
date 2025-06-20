@@ -1,15 +1,15 @@
 import React, { useMemo, useState } from "react";
-import { useUserData } from "../Components/auth/UserData";
-import Sidebar from "../Components/Uitily/Sidebar";
-import UserTableTitle from "../Components/auth/UserTableTitle";
-import UserTableToolbar from "../Components/auth/UserTableToolbar";
-import UserTableStats from "../Components/auth/UserTableStats";
-import UserTableHeader from "../Components/auth/UserTableHeader";
-import { coordinatorTableHeaders } from "../Components/auth/TableHeaderData";
+import { useUserData } from "../../Components/auth/UserData";
+import Sidebar from "../../Components/Uitily/Sidebar";
+import UserTableTitle from "../../Components/auth/UserTableTitle";
+import UserTableToolbar from "../../Components/auth/UserTableToolbar";
+import UserTableStats from "../../Components/auth/UserTableStats";
+import UserTableHeader from "../../Components/auth/UserTableHeader";
+import { districtsTableHeader } from "../../Components/auth/TableHeaderData";
 import { MoreHorizontal, User } from "lucide-react";
-import UserTablePagination from "../Components/auth/UserTablePagination";
-const CoordinatorTablePage = () => {
-  const { coordinatorData } = useUserData();
+import UserTablePagination from "../../Components/auth/UserTablePagination";
+const DistrictsPage = () => {
+  const { districtsData } = useUserData();
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -19,9 +19,14 @@ const CoordinatorTablePage = () => {
   const [visibleColumns, setVisibleColumns] = useState({
     select: true,
     id: true,
+    governorate: true,
     name: true,
-    phone: true,
+    numberOfSubdistricts: true,
+    numberOfElections: true,
     numberOfCenters: true,
+    numberOfElected: true,
+    numberOfVoters: true,
+    percentageOfVoters: true,
     actions: true,
   });
   const [showColumnMenu, setShowColumnMenu] = useState(false);
@@ -31,7 +36,7 @@ const CoordinatorTablePage = () => {
 
   // تصفية البيانات
   const filteredData = useMemo(() => {
-    return coordinatorData.filter(
+    return districtsData.filter(
       (item) =>
         item.name.toLowerCase().includes(filterText.toLowerCase()) ||
         item.phone.includes(filterText) ||
@@ -39,7 +44,7 @@ const CoordinatorTablePage = () => {
         item.registrationDate.includes(filterText) ||
         item.registrationMethod.toLowerCase().includes(filterText.toLowerCase())
     );
-  }, [coordinatorData, filterText]);
+  }, [districtsData, filterText]);
 
   // ترتيب البيانات
   const sortedData = useMemo(() => {
@@ -108,7 +113,7 @@ const CoordinatorTablePage = () => {
       <Sidebar />
       <div className="w-full max-w-[1440px] mx-auto p-6 bg-white" dir="rtl">
         <div className="mb-6">
-          <UserTableTitle title="المرتكزين" subtitle="قائمة المرتكزين" />
+          <UserTableTitle title="الاقضية" subtitle="قائمة الاقضية" />
 
           <UserTableToolbar
             filterText={filterText}
@@ -119,14 +124,14 @@ const CoordinatorTablePage = () => {
             setVisibleColumns={setVisibleColumns}
           />
 
-          <UserTableStats data={coordinatorData} />
+          <UserTableStats data={districtsData} />
         </div>
 
         {/* الجدول */}
         <div className="border border-gray-200 rounded-lg shadow-sm">
           <table className="w-full">
             <UserTableHeader
-              tableHeaders={coordinatorTableHeaders}
+              tableHeaders={districtsTableHeader}
               visibleColumns={visibleColumns}
               selectedRows={selectedRows}
               paginatedData={paginatedData}
@@ -158,6 +163,7 @@ const CoordinatorTablePage = () => {
                         <div className="text-sm text-gray-900">{row.id}</div>
                       </td>
                     )}
+
                     {visibleColumns.name && (
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
@@ -167,17 +173,49 @@ const CoordinatorTablePage = () => {
                         </div>
                       </td>
                     )}
-                    {visibleColumns.phone && (
+                    {visibleColumns.governorate && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.phone}</div>
+                        <div className="text-sm text-gray-900">
+                          {row.governorate}
+                        </div>
                       </td>
                     )}
+                    {visibleColumns.numberOfSubdistricts && (
+                      <td className="px-4 py-3">
+                        <div className="text-sm text-gray-900">
+                          {row.numberOfSubdistricts}
+                        </div>
+                      </td>
+                    )}
+
                     {visibleColumns.numberOfCenters && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.numberOfCenters}</div>
+                        <div className="text-sm text-gray-900">
+                          {row.numberOfCenters}
+                        </div>
                       </td>
                     )}
-                   
+                    {visibleColumns.numberOfElected && (
+                      <td className="px-4 py-3">
+                        <div className="text-sm text-gray-900">
+                          {row.numberOfElected}
+                        </div>
+                      </td>
+                    )}
+                    {visibleColumns.numberOfVoters && (
+                      <td className="px-4 py-3">
+                        <div className="text-sm text-gray-900">
+                          {row.numberOfVoters}
+                        </div>
+                      </td>
+                    )}
+                    {visibleColumns.percentageOfVoters && (
+                      <td className="px-4 py-3">
+                        <div className="text-sm text-gray-900">
+                          {row.percentageOfVoters}
+                        </div>
+                      </td>
+                    )}
 
                     {visibleColumns.actions && (
                       <td className="px-4 py-3">
@@ -200,13 +238,13 @@ const CoordinatorTablePage = () => {
                                   onClick={() => handleUserAction("view", row)}
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
-                                   عرض التفاصيل
+                                  عرض التفاصيل
                                 </button>
                                 <button
                                   onClick={() => handleUserAction("edit", row)}
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
-                                   تعديل
+                                  تعديل
                                 </button>
                                 <button
                                   onClick={() =>
@@ -214,7 +252,7 @@ const CoordinatorTablePage = () => {
                                   }
                                   className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
                                 >
-                                   حذف
+                                  حذف
                                 </button>
                                 <button
                                   onClick={() =>
@@ -222,7 +260,7 @@ const CoordinatorTablePage = () => {
                                   }
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
-                                   إدارة الصلاحيات
+                                  إدارة الصلاحيات
                                 </button>
                                 <hr className="my-1" />
                                 <button
@@ -280,4 +318,4 @@ const CoordinatorTablePage = () => {
   );
 };
 
-export default CoordinatorTablePage;
+export default DistrictsPage;

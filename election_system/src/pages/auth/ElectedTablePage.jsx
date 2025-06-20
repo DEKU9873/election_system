@@ -1,14 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import {useUserData} from '../Components/auth/UserData';
-import Sidebar from '../Components/Uitily/Sidebar';
-import UserTableTitle from '../Components/auth/UserTableTitle';
-import UsersMap from '../Components/auth/UsersMap';
-import UserTableToolbar from '../Components/auth/UserTableToolbar';
-import UserTableStats from '../Components/auth/UserTableStats';
-import UserTableHeader from '../Components/auth/UserTableHeader';
-import { tableHeaders } from '../Components/auth/TableHeaderData';
-import { MoreHorizontal, User } from 'lucide-react';
-import UserTablePagination from '../Components/auth/UserTablePagination';
+import { useUserData } from "../../Components/auth/UserData";
+import Sidebar from "../../Components/Uitily/Sidebar";
+import UserTableTitle from "../../Components/auth/UserTableTitle";
+import UserTableToolbar from "../../Components/auth/UserTableToolbar";
+import { MoreHorizontal, User } from "lucide-react";
+import UserTablePagination from "../../Components/auth/UserTablePagination";
+import UserTableHeader from "../../Components/auth/UserTableHeader";
+import UserTableStats from "../../Components/auth/UserTableStats";
+import { tableHeaders } from '../../Components/auth/TableHeaderData';
 
 const ElectedTablePage = () => {
     const { data } = useUserData();

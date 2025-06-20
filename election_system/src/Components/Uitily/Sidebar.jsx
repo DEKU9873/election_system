@@ -11,6 +11,7 @@ import {
   UserCog,
   Vote,
   Bell,
+  LogIn,
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -27,6 +28,8 @@ const Sidebar = () => {
     }
   }, [location]);
 
+  const [openSubmenu, setOpenSubmenu] = useState(null);
+
   const menuItems = [
     { id: "dashboard", label: "لوحة التحكم", icon: Home, href: "/dashboard" },
     { id: "voters", label: "الناخبين", icon: Vote, href: "/elected" },
@@ -37,7 +40,19 @@ const Sidebar = () => {
       href: "/monitors",
     },
     { id: "coordinators", label: "المرتكزين", icon: Vote, href: "/coordinators" },
-
+    {
+      id: "centers",
+      label: "إدارة المراكز",
+      icon: UserCog,
+      submenu: [
+        { id: "election-centers", label: "المراكز الانتخابية", href: "/election-centers" },
+        { id: "governorates", label: "المحافظات", href: "/governorate" },
+        { id: "districts", label: "الأقضية", href: "/districts" },
+        { id: "sub-districts", label: "النواحي", href: "/subdistricts" },
+        { id: "center-managers", label: "مدراء المراكز", href: "/centerManagers" },
+        { id: "district-managers", label: "مدراء الأقضية", href: "/district-managers" },
+      ],
+    },
     { id: "users", label: "المستخدمين", icon: Users, href: "/users" },
   ];
 
@@ -100,13 +115,22 @@ const Sidebar = () => {
             </h1>
           </div>
           <div className="flex items-center space-x-4 rtl:space-x-reverse">
-            <button
-              className="p-2 hover:bg-gray-100 rounded-full relative transition-colors duration-200"
-              title="الإشعارات"
-            >
-              <Bell size={20} className="text-gray-600" />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-            </button>
+            <div className="flex items-center gap-4">
+              <button
+                className="p-2 hover:bg-gray-100 rounded-full relative transition-colors duration-200"
+                title="الإشعارات"
+              >
+                <Bell size={20} className="text-gray-600" />
+                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+              </button>
+              <Link
+                to="/login"
+                className="p-2.5 hover:bg-gray-100 rounded-full transition-colors duration-200"
+                title="تسجيل الدخول"
+              >
+                <LogIn size={22} className="text-gray-700" />
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -156,6 +180,54 @@ const Sidebar = () => {
           <div className="px-4 space-y-1">
             {menuItems.map((item) => {
               const Icon = item.icon;
+              if (item.submenu) {
+                return (
+                  <div key={item.id}>
+                    <button
+                      onClick={() => setOpenSubmenu(openSubmenu === item.id ? null : item.id)}
+                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-all duration-300 hover:bg-gray-50 ${
+                        activeItem === item.id
+                          ? "bg-blue-50 text-blue-700 shadow-sm"
+                          : "text-gray-700"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <Icon
+                          size={20}
+                          className={`transition-all duration-200 ${activeItem === item.id ? "text-blue-600" : ""}`}
+                        />
+                        <span className="font-medium">{item.label}</span>
+                      </div>
+                      <svg
+                        className={`w-4 h-4 transition-transform duration-200 ${openSubmenu === item.id ? "transform rotate-180" : ""}`}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    {openSubmenu === item.id && (
+                      <div className="mt-1 mr-4 space-y-1">
+                        {item.submenu.map((subItem) => (
+                          <Link
+                            key={subItem.id}
+                            to={subItem.href}
+                            onClick={closeSidebar}
+                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-gray-50 ${
+                              activeItem === subItem.id
+                                ? "bg-blue-50 text-blue-700 shadow-sm"
+                                : "text-gray-700"
+                            }`}
+                          >
+                            <span className="font-medium">{subItem.label}</span>
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
               return (
                 <Link
                   key={item.id}
@@ -169,9 +241,7 @@ const Sidebar = () => {
                 >
                   <Icon
                     size={20}
-                    className={`transition-all duration-200 ${
-                      activeItem === item.id ? "text-blue-600" : ""
-                    }`}
+                    className={`transition-all duration-200 ${activeItem === item.id ? "text-blue-600" : ""}`}
                   />
                   <span className="font-medium">{item.label}</span>
                 </Link>

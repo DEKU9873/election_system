@@ -1,5 +1,5 @@
-import React from 'react';
-import { Search, User, ChevronDown } from 'lucide-react';
+import React from "react";
+import { Search, User, ChevronDown } from "lucide-react";
 
 const UserTableToolbar = ({
   filterText,
@@ -7,7 +7,7 @@ const UserTableToolbar = ({
   showColumnMenu,
   setShowColumnMenu,
   visibleColumns,
-  setVisibleColumns
+  setVisibleColumns,
 }) => {
   return (
     <div className="flex items-center justify-between gap-4 mb-4">
@@ -15,7 +15,7 @@ const UserTableToolbar = ({
         <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
         <input
           type="text"
-          placeholder="البحث في المستخدمين..."
+          placeholder="البحث ..."
           value={filterText}
           onChange={(e) => setFilterText(e.target.value)}
           className="w-full pr-10 pl-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -78,8 +78,25 @@ const UserTableToolbar = ({
                             ? "الولاية"
                             : key === "addBy"
                             ? "تمت إضافة بواسطة"
-                            : key === "numberOfCenters" ? "عدد المراكز" : 
-                            key === "pollingCenter" ? "المركز الانتخابي": key }
+                            : key === "numberOfCenters"
+                            ? "عدد المراكز"
+                            : key === "pollingCenter"
+                            ? "المركز الانتخابي"
+                            : key === "numberOfElections"
+                            ? "عدد الاقضية"
+                            : key === "numberOfVoters"
+                            ? "عدد المصوتين"
+                            : key === "percentageOfVoters"
+                            ? "نسبة التصويت"
+                            : key === "numberOfElected"
+                            ? "عدد الناخبين"
+                            : key === "code"
+                            ? "الرمز"
+                            : key === "governorate"
+                            ? "المحافظات"
+                            : key === "numberOfSubdistricts"
+                            ? "عدد النواحي"
+                            : key === "district" ? "الاقضية": key}
                         </span>
                       </label>
                     )
