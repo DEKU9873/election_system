@@ -2,14 +2,15 @@ import React, { useMemo, useState } from "react";
 import { useUserData } from "../../Components/auth/UserData";
 import Sidebar from "../../Components/Uitily/Sidebar";
 import UserTableTitle from "../../Components/auth/UserTableTitle";
+import UsersMap from "../../Components/auth/UsersMap";
 import UserTableToolbar from "../../Components/auth/UserTableToolbar";
 import UserTableStats from "../../Components/auth/UserTableStats";
 import UserTableHeader from "../../Components/auth/UserTableHeader";
-import { districtsTableHeader } from "../../Components/auth/TableHeaderData";
+import { ElectoralStripsHeader } from "../../Components/auth/TableHeaderData";
 import { MoreHorizontal, User } from "lucide-react";
 import UserTablePagination from "../../Components/auth/UserTablePagination";
-const DistrictsPage = () => {
-  const { districtsData } = useUserData();
+const ElectoralStrips = () => {
+  const { electoralStripsData } = useUserData();
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -19,14 +20,13 @@ const DistrictsPage = () => {
   const [visibleColumns, setVisibleColumns] = useState({
     select: true,
     id: true,
-    governorate: true,
     name: true,
-    numberOfSubdistricts: true,
-    numberOfElections: true,
-    numberOfCenters: true,
-    numberOfElected: true,
-    numberOfVoters: true,
-    percentageOfVoters: true,
+    pollingCenter: true,
+    station: true,
+    electionDayDate: true,
+    uploadedBy: true,
+    uploadDate: true,
+    state: true,
     actions: true,
   });
   const [showColumnMenu, setShowColumnMenu] = useState(false);
@@ -36,15 +36,15 @@ const DistrictsPage = () => {
 
   // تصفية البيانات
   const filteredData = useMemo(() => {
-    return districtsData.filter(
+    return electoralStripsData.filter(
       (item) =>
-        item.name.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.pollingCenter.toLowerCase().includes(filterText.toLowerCase()) ||
         item.phone.includes(filterText) ||
         item.birthYear.includes(filterText) ||
         item.registrationDate.includes(filterText) ||
         item.registrationMethod.toLowerCase().includes(filterText.toLowerCase())
     );
-  }, [districtsData, filterText]);
+  }, [electoralStripsData, filterText]);
 
   // ترتيب البيانات
   const sortedData = useMemo(() => {
@@ -113,10 +113,13 @@ const DistrictsPage = () => {
       <Sidebar />
       <div className="w-full max-w-[1440px] mx-auto p-6 bg-white" dir="rtl">
         <div className="mb-6">
-          <UserTableTitle title="الاقضية" subtitle="قائمة الاقضية" />
+          <UserTableTitle
+            title="الاشرطة الانتخابية"
+            subtitle="قائمة الاشرطة الانتخابية"
+          />
 
           <UserTableToolbar
-            title="اضافة قضاء"
+            title="رفع شريط انتخابي"
             filterText={filterText}
             setFilterText={setFilterText}
             showColumnMenu={showColumnMenu}
@@ -125,14 +128,14 @@ const DistrictsPage = () => {
             setVisibleColumns={setVisibleColumns}
           />
 
-          <UserTableStats data={districtsData} />
+          <UserTableStats data={electoralStripsData} />
         </div>
 
         {/* الجدول */}
         <div className="border border-gray-200 rounded-lg shadow-sm">
           <table className="w-full">
             <UserTableHeader
-              tableHeaders={districtsTableHeader}
+              tableHeaders={ElectoralStripsHeader}
               visibleColumns={visibleColumns}
               selectedRows={selectedRows}
               paginatedData={paginatedData}
@@ -164,57 +167,44 @@ const DistrictsPage = () => {
                         <div className="text-sm text-gray-900">{row.id}</div>
                       </td>
                     )}
-
-                    {visibleColumns.name && (
+                    {visibleColumns.pollingCenter && (
                       <td className="px-4 py-3">
-                        <div className="flex items-center gap-2">
-                          <div className="font-medium text-gray-900">
-                            {row.name}
-                          </div>
+                        <div className="text-sm text-gray-900">
+                          {row.pollingCenter}
                         </div>
                       </td>
                     )}
-                    {visibleColumns.governorate && (
+                    {visibleColumns.station && (
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-900">
-                          {row.governorate}
+                          {row.station}
                         </div>
                       </td>
                     )}
-                    {visibleColumns.numberOfSubdistricts && (
+                    {visibleColumns.electionDayDate && (
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-900">
-                          {row.numberOfSubdistricts}
+                          {row.electionDayDate}
                         </div>
                       </td>
                     )}
-
-                    {visibleColumns.numberOfCenters && (
+                    {visibleColumns.uploadedBy && (
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-900">
-                          {row.numberOfCenters}
+                          {row.uploadedBy}
                         </div>
                       </td>
                     )}
-                    {visibleColumns.numberOfElected && (
+                    {visibleColumns.uploadDate && (
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-900">
-                          {row.numberOfElected}
+                          {row.uploadDate}
                         </div>
                       </td>
                     )}
-                    {visibleColumns.numberOfVoters && (
+                    {visibleColumns.state && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">
-                          {row.numberOfVoters}
-                        </div>
-                      </td>
-                    )}
-                    {visibleColumns.percentageOfVoters && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">
-                          {row.percentageOfVoters}
-                        </div>
+                        <div className="text-sm text-gray-900">{row.state}</div>
                       </td>
                     )}
 
@@ -319,4 +309,4 @@ const DistrictsPage = () => {
   );
 };
 
-export default DistrictsPage;
+export default ElectoralStrips;

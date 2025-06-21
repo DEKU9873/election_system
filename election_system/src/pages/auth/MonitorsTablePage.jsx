@@ -113,6 +113,8 @@ const MonitorsTablePage = () => {
           <UserTableTitle title="المشرفين" subtitle="قائمة المشرفين" />
 
           <UserTableToolbar
+                      title="اضافة مشرف"
+
             filterText={filterText}
             setFilterText={setFilterText}
             showColumnMenu={showColumnMenu}

@@ -2,6 +2,7 @@ import React from "react";
 import { Search, User, ChevronDown } from "lucide-react";
 
 const UserTableToolbar = ({
+  title,
   filterText,
   setFilterText,
   showColumnMenu,
@@ -26,7 +27,7 @@ const UserTableToolbar = ({
         {/* زر إضافة مستخدم جديد */}
         <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500">
           <User className="w-4 h-4" />
-          إضافة مستخدم
+          {title}
         </button>
 
         {/* قائمة الأعمدة */}
@@ -75,7 +76,7 @@ const UserTableToolbar = ({
                             : key === "registrationMethod"
                             ? "طريقة التسجيل"
                             : key === "state"
-                            ? "الولاية"
+                            ? "الحالة"
                             : key === "addBy"
                             ? "تمت إضافة بواسطة"
                             : key === "numberOfCenters"
@@ -96,7 +97,9 @@ const UserTableToolbar = ({
                             ? "المحافظات"
                             : key === "numberOfSubdistricts"
                             ? "عدد النواحي"
-                            : key === "district" ? "الاقضية": key}
+                            : key === "district" ? "الاقضية": key === "station" ? "المحطة" 
+                            :key === "electionDayDate" ? "تاريخ اليوم الانتخابي": key === "electionDayTime" ? "وقت اليوم الانتخابي"
+                            :key === "uploadedBy" ? "تم الرفع بواسطة":key === "uploadDate" ? "تاريخ الرفع":key}
                         </span>
                       </label>
                     )

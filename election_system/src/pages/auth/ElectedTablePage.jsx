@@ -8,6 +8,7 @@ import UserTablePagination from "../../Components/auth/UserTablePagination";
 import UserTableHeader from "../../Components/auth/UserTableHeader";
 import UserTableStats from "../../Components/auth/UserTableStats";
 import { tableHeaders } from '../../Components/auth/TableHeaderData';
+import UsersMap from '../../Components/auth/UsersMap';
 
 const ElectedTablePage = () => {
     const { data } = useUserData();
@@ -150,6 +151,7 @@ const ElectedTablePage = () => {
             </div>
   
             <UserTableToolbar
+              title = "اضافة ناخب"
               filterText={filterText}
               setFilterText={setFilterText}
               showColumnMenu={showColumnMenu}

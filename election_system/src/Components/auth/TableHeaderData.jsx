@@ -436,3 +436,106 @@ export const CenterManagersHeader = [
     icon: null,
   },
 ];
+
+export const DistrictsManagersHeader = [
+  {
+    id: "select",
+    label: "",
+    sortable: false,
+    icon: null,
+  },
+  {
+    id: "id",
+    label: "ت",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "name",
+    label: "الاسم",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "phone",
+    label: "رقم الهاتف",
+    sortable: true,
+    icon: null,
+  },
+
+  {
+    id: "governorate",
+    label: "المحافظة",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "district",
+    label: "القضاء",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "actions",
+    label: "الإجراءات",
+    sortable: false,
+    icon: null,
+  },
+];
+
+export const ElectoralStripsHeader = [
+  {
+    id: "select",
+    label: "",
+    sortable: false,
+    icon: null,
+  },
+  {
+    id: "id",
+    label: "ت",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "pollingCenter",
+    label: "المركز الانتخابي",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "station",
+    label: "المحطة",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "electionDayDate",
+    label: "تاريخ اليوم الانتخابي",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "uploadedBy",
+    label: "تم الرفع بواسطة",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "uploadDate",
+    label: "تاريخ الرفع",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "state",
+    label: "الحالة",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "actions",
+    label: "الإجراءات",
+    sortable: false,
+    icon: null,
+  },
+];

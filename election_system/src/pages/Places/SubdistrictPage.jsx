@@ -117,6 +117,7 @@ const SubdistrictPage = () => {
           <UserTableTitle title="النواحي" subtitle="قائمة النواحي" />
 
           <UserTableToolbar
+            title="اضافة ناحية"
             filterText={filterText}
             setFilterText={setFilterText}
             showColumnMenu={showColumnMenu}

@@ -39,21 +39,44 @@ const Sidebar = () => {
       icon: UserCog,
       href: "/monitors",
     },
-    { id: "coordinators", label: "المرتكزين", icon: Vote, href: "/coordinators" },
+    {
+      id: "coordinators",
+      label: "المرتكزين",
+      icon: Vote,
+      href: "/coordinators",
+    },
     {
       id: "centers",
       label: "إدارة المراكز",
       icon: UserCog,
       submenu: [
-        { id: "election-centers", label: "المراكز الانتخابية", href: "/election-centers" },
+        {
+          id: "election-centers",
+          label: "المراكز الانتخابية",
+          href: "/election-centers",
+        },
         { id: "governorates", label: "المحافظات", href: "/governorate" },
         { id: "districts", label: "الأقضية", href: "/districts" },
         { id: "sub-districts", label: "النواحي", href: "/subdistricts" },
-        { id: "center-managers", label: "مدراء المراكز", href: "/centerManagers" },
-        { id: "district-managers", label: "مدراء الأقضية", href: "/district-managers" },
+        {
+          id: "center-managers",
+          label: "مدراء المراكز",
+          href: "/centerManagers",
+        },
+        {
+          id: "district-managers",
+          label: "مدراء الأقضية",
+          href: "/districtsManagers",
+        },
       ],
     },
-    { id: "users", label: "المستخدمين", icon: Users, href: "/users" },
+    {
+      id: "electoralStrips",
+      label: "الاشرطة الانتخابية",
+      icon: Vote,
+      href: "/electoralStrips",
+    },
+    { id: "users", label: "الموظفين", icon: Users, href: "/users" },
   ];
 
   // تحديد حجم الشاشة
@@ -184,7 +207,9 @@ const Sidebar = () => {
                 return (
                   <div key={item.id}>
                     <button
-                      onClick={() => setOpenSubmenu(openSubmenu === item.id ? null : item.id)}
+                      onClick={() =>
+                        setOpenSubmenu(openSubmenu === item.id ? null : item.id)
+                      }
                       className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-all duration-300 hover:bg-gray-50 ${
                         activeItem === item.id
                           ? "bg-blue-50 text-blue-700 shadow-sm"
@@ -194,17 +219,26 @@ const Sidebar = () => {
                       <div className="flex items-center gap-3">
                         <Icon
                           size={20}
-                          className={`transition-all duration-200 ${activeItem === item.id ? "text-blue-600" : ""}`}
+                          className={`transition-all duration-200 ${
+                            activeItem === item.id ? "text-blue-600" : ""
+                          }`}
                         />
                         <span className="font-medium">{item.label}</span>
                       </div>
                       <svg
-                        className={`w-4 h-4 transition-transform duration-200 ${openSubmenu === item.id ? "transform rotate-180" : ""}`}
+                        className={`w-4 h-4 transition-transform duration-200 ${
+                          openSubmenu === item.id ? "transform rotate-180" : ""
+                        }`}
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
                       >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
                       </svg>
                     </button>
                     {openSubmenu === item.id && (
@@ -241,7 +275,9 @@ const Sidebar = () => {
                 >
                   <Icon
                     size={20}
-                    className={`transition-all duration-200 ${activeItem === item.id ? "text-blue-600" : ""}`}
+                    className={`transition-all duration-200 ${
+                      activeItem === item.id ? "text-blue-600" : ""
+                    }`}
                   />
                   <span className="font-medium">{item.label}</span>
                 </Link>

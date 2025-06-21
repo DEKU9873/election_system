@@ -20,7 +20,7 @@ const GovernoratePage = () => {
   const [visibleColumns, setVisibleColumns] = useState({
     select: true,
     id: true,
-    code:true,
+    code: true,
     name: true,
     numberOfElections: true,
     numberOfCenters: true,
@@ -116,6 +116,7 @@ const GovernoratePage = () => {
           <UserTableTitle title="المحافظات" subtitle="قائمة المحافظات" />
 
           <UserTableToolbar
+            title="اضافة محافظة"
             filterText={filterText}
             setFilterText={setFilterText}
             showColumnMenu={showColumnMenu}
@@ -179,27 +180,37 @@ const GovernoratePage = () => {
                     )}
                     {visibleColumns.numberOfElections && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.numberOfElections}</div>
+                        <div className="text-sm text-gray-900">
+                          {row.numberOfElections}
+                        </div>
                       </td>
                     )}
                     {visibleColumns.numberOfCenters && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.numberOfCenters}</div>
+                        <div className="text-sm text-gray-900">
+                          {row.numberOfCenters}
+                        </div>
                       </td>
                     )}
                     {visibleColumns.numberOfElected && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.numberOfElected}</div>
+                        <div className="text-sm text-gray-900">
+                          {row.numberOfElected}
+                        </div>
                       </td>
                     )}
                     {visibleColumns.numberOfVoters && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.numberOfVoters}</div>
+                        <div className="text-sm text-gray-900">
+                          {row.numberOfVoters}
+                        </div>
                       </td>
                     )}
                     {visibleColumns.percentageOfVoters && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.percentageOfVoters}</div>
+                        <div className="text-sm text-gray-900">
+                          {row.percentageOfVoters}
+                        </div>
                       </td>
                     )}
 
@@ -224,13 +235,13 @@ const GovernoratePage = () => {
                                   onClick={() => handleUserAction("view", row)}
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
-                                   عرض التفاصيل
+                                  عرض التفاصيل
                                 </button>
                                 <button
                                   onClick={() => handleUserAction("edit", row)}
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
-                                   تعديل
+                                  تعديل
                                 </button>
                                 <button
                                   onClick={() =>
@@ -238,7 +249,7 @@ const GovernoratePage = () => {
                                   }
                                   className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
                                 >
-                                   حذف
+                                  حذف
                                 </button>
                                 <button
                                   onClick={() =>
@@ -246,7 +257,7 @@ const GovernoratePage = () => {
                                   }
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
-                                   إدارة الصلاحيات
+                                  إدارة الصلاحيات
                                 </button>
                                 <hr className="my-1" />
                                 <button

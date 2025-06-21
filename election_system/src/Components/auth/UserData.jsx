@@ -245,5 +245,33 @@ export const useUserData = () => {
       district: "المحمودية",
     },
   ]
-  return { data, electedData, coordinatorData, usersData, governorateData, districtsData,subdistrictsData, CenterManagersData  };
+  const districtManagersData = [
+    {
+      id: "1",
+      name: "محمد",
+      phone: "07717234",
+      governorate: "بغداد",
+      district: "ابوغريب",
+    },
+    {
+      id: "2",
+      name: "مريم",
+      phone: "07717234",
+      governorate: "بغداد",
+      district: "المحمودية",
+    },
+  ]
+  const electoralStripsData = [
+    {
+      id: "1",
+      pollingCenter: "مركز 1",
+      station: "محطة 1",
+      electionDayDate: "2023-01-01",
+      uploadedBy: "الحسن",
+      uploadDate: "2023-01-01",
+      state: "مقبول",
+    },
+    
+  ]
+  return { data, electedData, coordinatorData, usersData, governorateData, districtsData,subdistrictsData, CenterManagersData, districtManagersData, electoralStripsData  };
 };

@@ -111,9 +111,13 @@ const CenterManagers = () => {
       <Sidebar />
       <div className="w-full max-w-[1440px] mx-auto p-6 bg-white" dir="rtl">
         <div className="mb-6">
-          <UserTableTitle title="مدراء المراكز" subtitle="قائمة مدراء المراكز" />
+          <UserTableTitle
+            title="مدراء المراكز"
+            subtitle="قائمة مدراء المراكز"
+          />
 
           <UserTableToolbar
+            title="اضافة مدير مركز"
             filterText={filterText}
             setFilterText={setFilterText}
             showColumnMenu={showColumnMenu}
@@ -177,17 +181,23 @@ const CenterManagers = () => {
                     )}
                     {visibleColumns.pollingCenter && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.pollingCenter}</div>
+                        <div className="text-sm text-gray-900">
+                          {row.pollingCenter}
+                        </div>
                       </td>
                     )}
                     {visibleColumns.governorate && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.governorate}</div>
+                        <div className="text-sm text-gray-900">
+                          {row.governorate}
+                        </div>
                       </td>
                     )}
                     {visibleColumns.district && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.district}</div>
+                        <div className="text-sm text-gray-900">
+                          {row.district}
+                        </div>
                       </td>
                     )}
 
@@ -212,13 +222,13 @@ const CenterManagers = () => {
                                   onClick={() => handleUserAction("view", row)}
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
-                                   عرض التفاصيل
+                                  عرض التفاصيل
                                 </button>
                                 <button
                                   onClick={() => handleUserAction("edit", row)}
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
-                                   تعديل
+                                  تعديل
                                 </button>
                                 <button
                                   onClick={() =>
@@ -226,7 +236,7 @@ const CenterManagers = () => {
                                   }
                                   className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
                                 >
-                                   حذف
+                                  حذف
                                 </button>
                                 <button
                                   onClick={() =>
@@ -234,7 +244,7 @@ const CenterManagers = () => {
                                   }
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
-                                   إدارة الصلاحيات
+                                  إدارة الصلاحيات
                                 </button>
                                 <hr className="my-1" />
                                 <button

@@ -2,14 +2,15 @@ import React, { useMemo, useState } from "react";
 import { useUserData } from "../../Components/auth/UserData";
 import Sidebar from "../../Components/Uitily/Sidebar";
 import UserTableTitle from "../../Components/auth/UserTableTitle";
+import UsersMap from "../../Components/auth/UsersMap";
 import UserTableToolbar from "../../Components/auth/UserTableToolbar";
 import UserTableStats from "../../Components/auth/UserTableStats";
 import UserTableHeader from "../../Components/auth/UserTableHeader";
-import { districtsTableHeader } from "../../Components/auth/TableHeaderData";
+import { DistrictsManagersHeader } from "../../Components/auth/TableHeaderData";
 import { MoreHorizontal, User } from "lucide-react";
 import UserTablePagination from "../../Components/auth/UserTablePagination";
-const DistrictsPage = () => {
-  const { districtsData } = useUserData();
+const DistrictsManagers = () => {
+  const { CenterManagersData } = useUserData();
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -19,14 +20,10 @@ const DistrictsPage = () => {
   const [visibleColumns, setVisibleColumns] = useState({
     select: true,
     id: true,
-    governorate: true,
     name: true,
-    numberOfSubdistricts: true,
-    numberOfElections: true,
-    numberOfCenters: true,
-    numberOfElected: true,
-    numberOfVoters: true,
-    percentageOfVoters: true,
+    phone: true,
+    governorate: true,
+    district: true,
     actions: true,
   });
   const [showColumnMenu, setShowColumnMenu] = useState(false);
@@ -36,7 +33,7 @@ const DistrictsPage = () => {
 
   // تصفية البيانات
   const filteredData = useMemo(() => {
-    return districtsData.filter(
+    return CenterManagersData.filter(
       (item) =>
         item.name.toLowerCase().includes(filterText.toLowerCase()) ||
         item.phone.includes(filterText) ||
@@ -44,7 +41,7 @@ const DistrictsPage = () => {
         item.registrationDate.includes(filterText) ||
         item.registrationMethod.toLowerCase().includes(filterText.toLowerCase())
     );
-  }, [districtsData, filterText]);
+  }, [CenterManagersData, filterText]);
 
   // ترتيب البيانات
   const sortedData = useMemo(() => {
@@ -113,10 +110,13 @@ const DistrictsPage = () => {
       <Sidebar />
       <div className="w-full max-w-[1440px] mx-auto p-6 bg-white" dir="rtl">
         <div className="mb-6">
-          <UserTableTitle title="الاقضية" subtitle="قائمة الاقضية" />
+          <UserTableTitle
+            title="مدراء الاقضية"
+            subtitle="قائمة مدراء الاقضية"
+          />
 
           <UserTableToolbar
-            title="اضافة قضاء"
+            title="اضافة مدير قضاء"
             filterText={filterText}
             setFilterText={setFilterText}
             showColumnMenu={showColumnMenu}
@@ -125,14 +125,14 @@ const DistrictsPage = () => {
             setVisibleColumns={setVisibleColumns}
           />
 
-          <UserTableStats data={districtsData} />
+          <UserTableStats data={CenterManagersData} />
         </div>
 
         {/* الجدول */}
         <div className="border border-gray-200 rounded-lg shadow-sm">
           <table className="w-full">
             <UserTableHeader
-              tableHeaders={districtsTableHeader}
+              tableHeaders={DistrictsManagersHeader}
               visibleColumns={visibleColumns}
               selectedRows={selectedRows}
               paginatedData={paginatedData}
@@ -164,7 +164,6 @@ const DistrictsPage = () => {
                         <div className="text-sm text-gray-900">{row.id}</div>
                       </td>
                     )}
-
                     {visibleColumns.name && (
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
@@ -174,6 +173,12 @@ const DistrictsPage = () => {
                         </div>
                       </td>
                     )}
+                    {visibleColumns.phone && (
+                      <td className="px-4 py-3">
+                        <div className="text-sm text-gray-900">{row.phone}</div>
+                      </td>
+                    )}
+
                     {visibleColumns.governorate && (
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-900">
@@ -181,39 +186,10 @@ const DistrictsPage = () => {
                         </div>
                       </td>
                     )}
-                    {visibleColumns.numberOfSubdistricts && (
+                    {visibleColumns.district && (
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-900">
-                          {row.numberOfSubdistricts}
-                        </div>
-                      </td>
-                    )}
-
-                    {visibleColumns.numberOfCenters && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">
-                          {row.numberOfCenters}
-                        </div>
-                      </td>
-                    )}
-                    {visibleColumns.numberOfElected && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">
-                          {row.numberOfElected}
-                        </div>
-                      </td>
-                    )}
-                    {visibleColumns.numberOfVoters && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">
-                          {row.numberOfVoters}
-                        </div>
-                      </td>
-                    )}
-                    {visibleColumns.percentageOfVoters && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">
-                          {row.percentageOfVoters}
+                          {row.district}
                         </div>
                       </td>
                     )}
@@ -319,4 +295,4 @@ const DistrictsPage = () => {
   );
 };
 
-export default DistrictsPage;
+export default DistrictsManagers;

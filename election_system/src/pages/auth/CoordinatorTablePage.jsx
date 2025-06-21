@@ -112,6 +112,7 @@ const CoordinatorTablePage = () => {
           <UserTableTitle title="المرتكزين" subtitle="قائمة المرتكزين" />
 
           <UserTableToolbar
+            title="اضافة مرتكز"
             filterText={filterText}
             setFilterText={setFilterText}
             showColumnMenu={showColumnMenu}
@@ -175,10 +176,11 @@ const CoordinatorTablePage = () => {
                     )}
                     {visibleColumns.numberOfCenters && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.numberOfCenters}</div>
+                        <div className="text-sm text-gray-900">
+                          {row.numberOfCenters}
+                        </div>
                       </td>
                     )}
-                   
 
                     {visibleColumns.actions && (
                       <td className="px-4 py-3">
@@ -201,13 +203,13 @@ const CoordinatorTablePage = () => {
                                   onClick={() => handleUserAction("view", row)}
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
-                                   عرض التفاصيل
+                                  عرض التفاصيل
                                 </button>
                                 <button
                                   onClick={() => handleUserAction("edit", row)}
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
-                                   تعديل
+                                  تعديل
                                 </button>
                                 <button
                                   onClick={() =>
@@ -215,7 +217,7 @@ const CoordinatorTablePage = () => {
                                   }
                                   className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
                                 >
-                                   حذف
+                                  حذف
                                 </button>
                                 <button
                                   onClick={() =>
@@ -223,7 +225,7 @@ const CoordinatorTablePage = () => {
                                   }
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
-                                   إدارة الصلاحيات
+                                  إدارة الصلاحيات
                                 </button>
                                 <hr className="my-1" />
                                 <button
@@ -232,7 +234,7 @@ const CoordinatorTablePage = () => {
                                   }
                                   className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
                                 >
-                                   حذف المستخدم
+                                  حذف المستخدم
                                 </button>
                               </div>
                             </div>
