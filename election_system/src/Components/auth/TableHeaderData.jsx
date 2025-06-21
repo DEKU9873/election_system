@@ -149,13 +149,13 @@ export const userTableHeaders = [
     icon: null,
   },
   {
-    id: "name",
+    id: "full_name",
     label: "الاسم",
     sortable: true,
     icon: User,
   },
   {
-    id: "phone",
+    id: "phone_number",
     label: "رقم الهاتف",
     sortable: true,
     icon: null,
@@ -167,13 +167,19 @@ export const userTableHeaders = [
     icon: null,
   },
   {
+    id: "role",
+    label: "الدور",
+    sortable: true,
+    icon: null,
+  },
+  {
     id: "addBy",
     label: "اضيف بواسطة",
     sortable: true,
     icon: null,
   },
   {
-    id: "registrationDate",
+    id: "createdAt",
     label: "تاريخ التسجيل",
     sortable: true,
     icon: null,

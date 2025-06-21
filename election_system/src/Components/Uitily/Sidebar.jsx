@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
   const [activeItem, setActiveItem] = useState("");
@@ -105,8 +105,6 @@ const Sidebar = () => {
   React.useEffect(() => {
     if (isMobile) {
       setIsOpen(false);
-    } else {
-      setIsOpen(true);
     }
   }, [isMobile]);
 

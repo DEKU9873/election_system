@@ -12,6 +12,7 @@ import SubdistrictPage from './pages/Places/SubdistrictPage';
 import CenterManagers from './pages/auth/CenterManagers';
 import DistrictsManagers from './pages/auth/DistrictsManagers';
 import ElectoralStrips from './pages/Electoral Strips/ElectoralStrips';
+import UserDetailsPage from './pages/auth/UserDetailsPage';
 
 
 const App = () => {
@@ -31,6 +32,7 @@ const App = () => {
           <Route path="/centerManagers" element={<CenterManagers />} />
           <Route path="/districtsManagers" element={<DistrictsManagers />} />
           <Route path="/electoralStrips" element={<ElectoralStrips />} />
+          <Route path="/userDetails" element={<UserDetailsPage />} />
         </Routes>
       </BrowserRouter>
       
