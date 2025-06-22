@@ -12,7 +12,16 @@ import AllUserHook from "../../hook/auth/all-user-hook";
 import formatDate from "../../hook/UtilsFunctions/FormatDate";
 const UserTablePage = () => {
   // const { allUsers } = useUserData();
-  const [allUsers, Loading] = AllUserHook();
+  const [
+    allUsers,
+    Loading,
+    system_admin,
+    coordinator,
+    observer,
+    center_manager,
+    district_manager,
+    finance_auditor,
+  ] = AllUserHook();
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
@@ -31,9 +40,9 @@ const UserTablePage = () => {
   });
   const [showColumnMenu, setShowColumnMenu] = useState(false);
   const [showActionMenu, setShowActionMenu] = useState(null);
-  const [mapCenter, setMapCenter] = useState([24.7136, 46.6753]); 
-  const [mapZoom, setMapZoom] = useState(5); 
-  const [showMap, setShowMap] = useState(false); 
+  const [mapCenter, setMapCenter] = useState([24.7136, 46.6753]);
+  const [mapZoom, setMapZoom] = useState(5);
+  const [showMap, setShowMap] = useState(false);
 
   const itemsPerPage = 6;
 
@@ -60,7 +69,7 @@ const UserTablePage = () => {
         item.pollingCenter.toLowerCase().includes(filterText.toLowerCase()) ||
         item.role.toLowerCase().includes(filterText.toLowerCase()) ||
         item.addBy.toLowerCase().includes(filterText.toLowerCase()) ||
-        item.createdAt.includes(filterText) 
+        item.createdAt.includes(filterText)
     );
   }, [allUsers, filterText]);
 
@@ -239,9 +248,7 @@ const UserTablePage = () => {
                     )}
                     {visibleColumns.role && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">
-                          {row.role}
-                        </div>
+                        <div className="text-sm text-gray-900">{row.role}</div>
                       </td>
                     )}
                     {visibleColumns.addBy && (

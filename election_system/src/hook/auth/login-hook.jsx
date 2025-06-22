@@ -82,7 +82,12 @@ const LoginHook = () => {
     if (!loading && loginClicked) {
       if (user?.data) {
         try {
-          Cookies.set("user", JSON.stringify(user.data), { 
+          Cookies.set("user", user.data, { 
+            expires: 7,
+            secure: true,
+            sameSite: 'strict'
+          });
+          Cookies.set("token", user.token, { 
             expires: 7,
             secure: true,
             sameSite: 'strict'

@@ -9,9 +9,18 @@ import UserTableHeader from "../../Components/auth/UserTableHeader";
 import { CenterManagersHeader } from "../../Components/auth/TableHeaderData";
 import { MoreHorizontal, User } from "lucide-react";
 import UserTablePagination from "../../Components/auth/UserTablePagination";
+import AllUserHook from "../../hook/auth/all-user-hook";
 const CenterManagers = () => {
-  const { CenterManagersData } = useUserData();
-
+const [
+    allUsers,
+    Loading,
+    system_admin,
+    coordinator,
+    observer,
+    center_manager,
+    district_manager,
+    finance_auditor,
+  ] = AllUserHook();
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
@@ -20,8 +29,8 @@ const CenterManagers = () => {
   const [visibleColumns, setVisibleColumns] = useState({
     select: true,
     id: true,
-    name: true,
-    phone: true,
+    full_name: true,
+    phone_number: true,
     pollingCenter: true,
     governorate: true,
     district: true,
@@ -34,15 +43,16 @@ const CenterManagers = () => {
 
   // تصفية البيانات
   const filteredData = useMemo(() => {
-    return CenterManagersData.filter(
+    return center_manager.filter(
       (item) =>
-        item.name.toLowerCase().includes(filterText.toLowerCase()) ||
-        item.phone.includes(filterText) ||
-        item.birthYear.includes(filterText) ||
-        item.registrationDate.includes(filterText) ||
-        item.registrationMethod.toLowerCase().includes(filterText.toLowerCase())
+        item.full_name.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.phone_number.includes(filterText) ||
+        item.pollingCenter.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.role.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.addBy.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.createdAt.includes(filterText)
     );
-  }, [CenterManagersData, filterText]);
+  }, [center_manager, filterText]);
 
   // ترتيب البيانات
   const sortedData = useMemo(() => {
@@ -126,7 +136,7 @@ const CenterManagers = () => {
             setVisibleColumns={setVisibleColumns}
           />
 
-          <UserTableStats data={CenterManagersData} />
+          <UserTableStats data={center_manager} />
         </div>
 
         {/* الجدول */}
@@ -165,18 +175,18 @@ const CenterManagers = () => {
                         <div className="text-sm text-gray-900">{row.id}</div>
                       </td>
                     )}
-                    {visibleColumns.name && (
+                    {visibleColumns.full_name && (
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
                           <div className="font-medium text-gray-900">
-                            {row.name}
+                            {row.full_name}
                           </div>
                         </div>
                       </td>
                     )}
-                    {visibleColumns.phone && (
+                    {visibleColumns.phone_number && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.phone}</div>
+                        <div className="text-sm text-gray-900">{row.phone_number}</div>
                       </td>
                     )}
                     {visibleColumns.pollingCenter && (

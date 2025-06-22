@@ -1,7 +1,7 @@
 // src/redux/slices/userSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { useInsertData } from "../hooks/useInsertData";
-import { useGetData, useGetDataWithCookies } from "../hooks/useGetData";
+import { useGetData, useGetDataToken } from "../hooks/useGetData";
 
 export const loginUser = createAsyncThunk(
   "user/login",
@@ -22,7 +22,7 @@ export const getAllUsers = createAsyncThunk(
   "auth/getAllUsers",
   async (_, thunkAPI) => {
     try {
-      const response = await useGetData("api/users/");
+      const response = await useGetDataToken("api/users/");
       return response.data.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(

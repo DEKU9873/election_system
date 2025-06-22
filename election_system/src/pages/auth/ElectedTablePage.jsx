@@ -9,10 +9,23 @@ import UserTableHeader from "../../Components/auth/UserTableHeader";
 import UserTableStats from "../../Components/auth/UserTableStats";
 import { tableHeaders } from '../../Components/auth/TableHeaderData';
 import UsersMap from '../../Components/auth/UsersMap';
+import AllUserHook from '../../hook/auth/all-user-hook';
+import formatDate from '../../hook/UtilsFunctions/FormatDate';
 
 const ElectedTablePage = () => {
-    const { data } = useUserData();
+ const [
+    allUsers,
+    Loading,
+    system_admin,
+    coordinator,
+    observer,
+    center_manager,
+    district_manager,
+    finance_auditor,
+    voter,
+  ] = AllUserHook();
 
+  console.log(allUsers);
     // حالات التطبيق
     const [selectedRows, setSelectedRows] = useState(new Set());
     const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
@@ -21,10 +34,10 @@ const ElectedTablePage = () => {
     const [visibleColumns, setVisibleColumns] = useState({
       select: true,
       id: true,
-      name: true,
-      phone: true,
-      birthYear: true,
-      registrationDate: true,
+      full_name: true,
+      phone_number: true,
+      birth_year: true,
+      createdAt: true,
       registrationMethod: true,
       actions: true,
     });
@@ -39,7 +52,7 @@ const ElectedTablePage = () => {
     // تحديث مركز الخريطة عند تحديد صف
     useEffect(() => {
       if (selectedRows.size === 1) {
-        const selectedUser = data.find((user) => selectedRows.has(user.id));
+        const selectedUser = voter.find((user) => selectedRows.has(user.id));
         if (selectedUser && selectedUser.location) {
           setMapCenter(selectedUser.location);
           setMapZoom(8);
@@ -48,19 +61,18 @@ const ElectedTablePage = () => {
         setMapCenter([24.7136, 46.6753]);
         setMapZoom(5);
       }
-    }, [selectedRows, data]);
+    }, [selectedRows, voter]);
   
     // تصفية البيانات
     const filteredData = useMemo(() => {
-      return data.filter(
+      return voter.filter(
         (item) =>
-          item.name.toLowerCase().includes(filterText.toLowerCase()) ||
-          item.phone.includes(filterText) ||
-          item.birthYear.includes(filterText) ||
-          item.registrationDate.includes(filterText) ||
-          item.registrationMethod.toLowerCase().includes(filterText.toLowerCase())
+          item.full_name.toLowerCase().includes(filterText.toLowerCase()) ||
+          item.phone_number.includes(filterText) ||
+          item.birth_year.toString().includes(filterText)||
+          item.createdAt.toLowerCase().includes(filterText.toLowerCase())
       );
-    }, [data, filterText]);
+    }, [voter, filterText]);
   
     // ترتيب البيانات
     const sortedData = useMemo(() => {
@@ -141,7 +153,7 @@ const ElectedTablePage = () => {
               </button>
               {showMap && (
                 <UsersMap
-                  data={data}
+                  data={voter}
                   selectedRows={selectedRows}
                   handleSelectRow={handleSelectRow}
                   mapCenter={mapCenter}
@@ -160,7 +172,7 @@ const ElectedTablePage = () => {
               setVisibleColumns={setVisibleColumns}
             />
   
-            <UserTableStats data={data} />
+            <UserTableStats data={voter} />
           </div>
   
           {/* الجدول */}
@@ -199,7 +211,7 @@ const ElectedTablePage = () => {
                           <div className="text-sm text-gray-900">{row.id}</div>
                         </td>
                       )}
-                      {visibleColumns.name && (
+                      {visibleColumns.full_name && (
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-2">
                             <div
@@ -216,27 +228,27 @@ const ElectedTablePage = () => {
                                 setMapZoom(12);
                               }}
                             >
-                              {row.name}
+                              {row.full_name}
                             </div>
                           </div>
                         </td>
                       )}
-                      {visibleColumns.phone && (
+                      {visibleColumns.phone_number && (
                         <td className="px-4 py-3">
-                          <div className="text-sm text-gray-900">{row.phone}</div>
+                          <div className="text-sm text-gray-900">{row.phone_number}</div>
                         </td>
                       )}
-                      {visibleColumns.birthYear && (
+                      {visibleColumns.birth_year && (
                         <td className="px-4 py-3">
                           <div className="text-sm text-gray-900">
-                            {row.birthYear}
+                            {row.birth_year}
                           </div>
                         </td>
                       )}
-                      {visibleColumns.registrationDate && (
+                      {visibleColumns.createdAt && (
                         <td className="px-4 py-3">
                           <div className="text-sm text-gray-900">
-                            {row.registrationDate}
+                          {formatDate(row.createdAt)}
                           </div>
                         </td>
                       )}
