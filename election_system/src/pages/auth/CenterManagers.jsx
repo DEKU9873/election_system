@@ -11,7 +11,7 @@ import { MoreHorizontal, User } from "lucide-react";
 import UserTablePagination from "../../Components/auth/UserTablePagination";
 import AllUserHook from "../../hook/auth/all-user-hook";
 const CenterManagers = () => {
-const [
+  const [
     allUsers,
     Loading,
     system_admin,
@@ -186,7 +186,9 @@ const [
                     )}
                     {visibleColumns.phone_number && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.phone_number}</div>
+                        <div className="text-sm text-gray-900">
+                          {row.phone_number}
+                        </div>
                       </td>
                     )}
                     {visibleColumns.pollingCenter && (

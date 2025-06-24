@@ -1,10 +1,25 @@
 // src/redux/slices/userSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { useInsertData } from "../hooks/useInsertData";
-import { useGetData, useGetDataToken } from "../hooks/useGetData";
+import { useInsertData, useInsertDataWithImage } from "../hooks/useInsertData";
+import { useGetDataToken } from "../hooks/useGetData";
+import { useDeleteDataWithToken } from "../hooks/useDeleteData";
 
+// Register User
+export const registerUser = createAsyncThunk(
+  "auth/registerUser",
+  async (formData, thunkAPI) => {
+    try {
+      const res = await useInsertDataWithImage("/api/register", formData);
+      return res;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err);
+    }
+  }
+);
+
+// Login User
 export const loginUser = createAsyncThunk(
-  "user/login",
+  "auth/login",
   async (data, thunkAPI) => {
     try {
       const response = await useInsertData(`api/login/`, data);
@@ -26,7 +41,37 @@ export const getAllUsers = createAsyncThunk(
       return response.data.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data|| "حدث خطأ غير متوقع"
+        error.response?.data || "حدث خطأ غير متوقع"
+      );
+    }
+  }
+);
+
+// Get One User
+export const getUser = createAsyncThunk(
+  "auth/getUser",
+  async (userId, thunkAPI) => {
+    try {
+      const response = await useGetDataToken(`/api/users/${userId}/`);
+      return response.data.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "فشل في جلب بيانات المستخدم"
+      );
+    }
+  }
+);
+
+// Delete User
+export const deleteUser = createAsyncThunk(
+  "auth/deleteUser",
+  async (userId, thunkAPI) => {
+    try {
+      await useDeleteDataWithToken(`/api/users/${userId}/`);
+      return userId;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "فشل في حذف المستخدم"
       );
     }
   }
@@ -35,19 +80,36 @@ export const getAllUsers = createAsyncThunk(
 // Initial State
 const initialState = {
   user: null,
+  singleUser: null,
   allUsers: [],
   loading: false,
   error: null,
+  deleteSuccess: false,
 };
 
 // Slice
 const authSlice = createSlice({
-  name: "user",
+  name: "auth",
   initialState,
-  reducers: {}, // يمكنك إضافة reducers متزامنة هنا
+  reducers: {},
   extraReducers: (builder) => {
     builder
 
+      // Register
+      .addCase(registerUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Login
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -74,6 +136,41 @@ const authSlice = createSlice({
       .addCase(getAllUsers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+
+      // Get One User
+      .addCase(getUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.singleUser = null;
+      })
+      .addCase(getUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.singleUser = action.payload;
+      })
+      .addCase(getUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.singleUser = null;
+      })
+
+      // Delete User
+      .addCase(deleteUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.deleteSuccess = false;
+      })
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.deleteSuccess = true;
+        state.allUsers = state.allUsers.filter(
+          (user) => user._id !== action.payload
+        );
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.deleteSuccess = false;
       });
   },
 });

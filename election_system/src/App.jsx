@@ -13,6 +13,7 @@ import CenterManagers from './pages/auth/CenterManagers';
 import DistrictsManagers from './pages/auth/DistrictsManagers';
 import ElectoralStrips from './pages/Electoral Strips/ElectoralStrips';
 import UserDetailsPage from './pages/auth/UserDetailsPage';
+import SelfRegister from './pages/auth/SelfRegister';
 
 
 const App = () => {
@@ -22,6 +23,7 @@ const App = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/selfRegister" element={<SelfRegister />} />
           <Route path="/elected" element={<ElectedTablePage />} />
           <Route path="/monitors" element={<MonitorsTablePage />} />
           <Route path="/coordinators" element={<CoordinatorTablePage />} />
@@ -32,7 +34,7 @@ const App = () => {
           <Route path="/centerManagers" element={<CenterManagers />} />
           <Route path="/districtsManagers" element={<DistrictsManagers />} />
           <Route path="/electoralStrips" element={<ElectoralStrips />} />
-          <Route path="/userDetails" element={<UserDetailsPage />} />
+          <Route path="/userDetails/:id" element={<UserDetailsPage />} />
         </Routes>
       </BrowserRouter>
       

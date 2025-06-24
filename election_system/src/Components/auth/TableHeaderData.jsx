@@ -65,13 +65,13 @@ export const MonitorsTableHeaders = [
     icon: null,
   },
   {
-    id: "name",
+    id: "full_name",
     label: "الاسم",
     sortable: true,
     icon: User,
   },
   {
-    id: "phone",
+    id: "phone_number",
     label: "رقم الهاتف",
     sortable: true,
     icon: null,
@@ -457,13 +457,13 @@ export const DistrictsManagersHeader = [
     icon: null,
   },
   {
-    id: "name",
+    id: "full_name",
     label: "الاسم",
     sortable: true,
     icon: null,
   },
   {
-    id: "phone",
+    id: "phone_number",
     label: "رقم الهاتف",
     sortable: true,
     icon: null,

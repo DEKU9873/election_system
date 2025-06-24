@@ -1,9 +1,16 @@
-import React from "react";
+import React, { use } from "react";
 import Sidebar from "../../Components/Uitily/Sidebar";
 import logo from "../../assets/urlogo.png";
+import { useParams } from "react-router-dom";
+import OneUserHook from "../../hook/auth/one-user-hook";
 // استخدام div بدلاً من Card
 
 const UserDetailsPage = () => {
+
+const {id} = useParams();
+const [singleUser, isLoading] = OneUserHook(id);
+console.log(singleUser);
+
   // بيانات ثابتة للعرض
   const userData = {
     personalInfo: {

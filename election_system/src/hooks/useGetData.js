@@ -7,7 +7,7 @@ const useGetData = async (url, parmas) => {
 };
 
 const useGetDataToken = async (url, parmas) => {
-  const token = Cookies.get("token"); // جلب التوكن من الكوكيز
+  const token = Cookies.get("token"); 
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };

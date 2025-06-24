@@ -10,7 +10,12 @@ import UsersMap from "../../Components/auth/UsersMap";
 import UserTableHeader from "../../Components/auth/UserTableHeader";
 import AllUserHook from "../../hook/auth/all-user-hook";
 import formatDate from "../../hook/UtilsFunctions/FormatDate";
+import { deleteUser, getAllUsers } from "../../redux/authSlice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 const UserTablePage = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   // const { allUsers } = useUserData();
   const [
     allUsers,
@@ -134,6 +139,20 @@ const UserTablePage = () => {
     console.log(`${action} للمستخدم:`, user);
     setShowActionMenu(null);
   };
+
+
+  const handleDeleteConfirm = async (id) => {
+    if (id) {
+      await dispatch(deleteUser(id));
+    }
+  };
+
+  const handleDetailsUserAction = async (id) => {
+    if (id) {
+      navigate(`/userDetails/${id}`);
+    }
+  };
+
 
   return (
     <div>
@@ -282,7 +301,7 @@ const UserTablePage = () => {
                             <div className="absolute left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-999999999">
                               <div className="py-1">
                                 <button
-                                  onClick={() => handleUserAction("view", row)}
+                                  onClick={() => handleDetailsUserAction(row.id)}
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
                                   عرض التفاصيل
@@ -294,9 +313,7 @@ const UserTablePage = () => {
                                   تعديل
                                 </button>
                                 <button
-                                  onClick={() =>
-                                    handleUserAction("delete", row)
-                                  }
+                                  onClick={() => handleDeleteConfirm(row.id)}
                                   className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
                                 >
                                   حذف
@@ -311,9 +328,7 @@ const UserTablePage = () => {
                                 </button>
                                 <hr className="my-1" />
                                 <button
-                                  onClick={() =>
-                                    handleUserAction("delete", row)
-                                  }
+                                  onClick={() => handleDeleteConfirm(row.id)}
                                   className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
                                 >
                                   حذف المستخدم

@@ -9,8 +9,18 @@ import UserTableHeader from "../../Components/auth/UserTableHeader";
 import { MonitorsTableHeaders } from "../../Components/auth/TableHeaderData";
 import { MoreHorizontal, User } from "lucide-react";
 import UserTablePagination from "../../Components/auth/UserTablePagination";
+import AllUserHook from "../../hook/auth/all-user-hook";
 const MonitorsTablePage = () => {
-  const { electedData } = useUserData();
+  const [
+    allUsers,
+    Loading,
+    system_admin,
+    coordinator,
+    observer,
+    center_manager,
+    district_manager,
+    finance_auditor,
+  ] = AllUserHook();
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -20,8 +30,8 @@ const MonitorsTablePage = () => {
   const [visibleColumns, setVisibleColumns] = useState({
     select: true,
     id: true,
-    name: true,
-    phone: true,
+    full_name: true,
+    phone_number: true,
     state: true,
     addBy: true,
     actions: true,
@@ -33,15 +43,16 @@ const MonitorsTablePage = () => {
 
   // تصفية البيانات
   const filteredData = useMemo(() => {
-    return electedData.filter(
+    return observer.filter(
       (item) =>
-        item.name.toLowerCase().includes(filterText.toLowerCase()) ||
-        item.phone.includes(filterText) ||
-        item.birthYear.includes(filterText) ||
-        item.registrationDate.includes(filterText) ||
-        item.registrationMethod.toLowerCase().includes(filterText.toLowerCase())
+       item.full_name.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.phone_number.includes(filterText) ||
+        item.pollingCenter.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.role.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.addBy.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.createdAt.includes(filterText)
     );
-  }, [electedData, filterText]);
+  }, [observer, filterText]);
 
   // ترتيب البيانات
   const sortedData = useMemo(() => {
@@ -123,7 +134,7 @@ const MonitorsTablePage = () => {
             setVisibleColumns={setVisibleColumns}
           />
 
-          <UserTableStats data={electedData} />
+          <UserTableStats data={observer} />
         </div>
 
         {/* الجدول */}
@@ -162,18 +173,18 @@ const MonitorsTablePage = () => {
                         <div className="text-sm text-gray-900">{row.id}</div>
                       </td>
                     )}
-                    {visibleColumns.name && (
+                    {visibleColumns.full_name && (
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
                           <div className="font-medium text-gray-900">
-                            {row.name}
+                            {row.full_name}
                           </div>
                         </div>
                       </td>
                     )}
-                    {visibleColumns.phone && (
+                    {visibleColumns.phone_number && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.phone}</div>
+                        <div className="text-sm text-gray-900">{row.phone_number}</div>
                       </td>
                     )}
                     {visibleColumns.state && (
