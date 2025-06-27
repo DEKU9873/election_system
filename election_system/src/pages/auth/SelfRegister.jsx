@@ -1,32 +1,35 @@
 import { Camera, IdCard, Lock, Phone, User, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/urlogo.png";
-import RegisterHook from "../../hook/auth/register-hook";
+import SelfRegisterHook from "../../hook/auth/self-register-hook";
+import { Toaster } from "react-hot-toast";
 
 const SelfRegister = () => {
   const [
     firstName,
-    setFirstName,
+    handleFirstNameChange,
     fatherName,
-    setFatherName,
+    handleFatherNameChange,
     grandFatherName,
-    setGrandFatherName,
+    handleGrandFatherNameChange,
     phone,
-    setPhone,
+    handlePhoneChange,
     birthYear,
-    setBirthYear,
+    handleBirthYearChange,
     password,
-    setPassword,
+    handlePasswordChange,
     confirmPassword,
-    setConfirmPassword,
+    handleConfirmPasswordChange,
     electionCenter,
-    setElectionCenter,
+    handleElectionCenterChange,
     hasVotingRight,
-    setHasVotingRight,
+    handleHasVotingRightChange,
     idCardUpdated,
-    setIdCardUpdated,
+    handleIdCardUpdatedChange,
     personalPhoto,
     handleFileChange,
+    setPersonalPhoto,
+    setPersonalPhotoPreview,
     personalPhotoPreview,
     idPhoto,
     idPhotoPreview,
@@ -37,9 +40,8 @@ const SelfRegister = () => {
     setIdPhotoPreview,
     setElectionCardPhoto,
     setElectionCardPhotoPreview,
-    setPersonalPhoto,
-    setPersonalPhotoPreview,
-  ] = RegisterHook();
+  ] = SelfRegisterHook();
+
 
   return (
     <div
@@ -67,7 +69,7 @@ const SelfRegister = () => {
                   type="text"
                   placeholder="الاسم الأول"
                   value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
+                  onChange={handleFirstNameChange}
                   className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
                 />
               </div>
@@ -78,7 +80,7 @@ const SelfRegister = () => {
                   type="text"
                   placeholder="اسم الأب"
                   value={fatherName}
-                  onChange={(e) => setFatherName(e.target.value)}
+                  onChange={handleFatherNameChange}
                   className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
                 />
               </div>
@@ -89,7 +91,7 @@ const SelfRegister = () => {
                   type="text"
                   placeholder="اسم الجد"
                   value={grandFatherName}
-                  onChange={(e) => setGrandFatherName(e.target.value)}
+                  onChange={handleGrandFatherNameChange}
                   className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
                 />
               </div>
@@ -100,7 +102,7 @@ const SelfRegister = () => {
                   type="tel"
                   placeholder="رقم الهاتف"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={handlePhoneChange}
                   className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
                 />
               </div>
@@ -111,7 +113,7 @@ const SelfRegister = () => {
                   type="number"
                   placeholder="سنة الميلاد"
                   value={birthYear}
-                  onChange={(e) => setBirthYear(e.target.value)}
+                  onChange={handleBirthYearChange}
                   className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
                 />
               </div>
@@ -122,7 +124,7 @@ const SelfRegister = () => {
                   type="password"
                   placeholder="كلمة المرور"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={handlePasswordChange}
                   className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
                 />
               </div>
@@ -133,7 +135,7 @@ const SelfRegister = () => {
                   type="password"
                   placeholder="تأكيد كلمة المرور"
                   value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onChange={handleConfirmPasswordChange}
                   className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
                 />
               </div>
@@ -151,7 +153,7 @@ const SelfRegister = () => {
                 type="text"
                 placeholder="اسم المركز الانتخابي"
                 value={electionCenter}
-                onChange={(e) => setElectionCenter(e.target.value)}
+                onChange={handleElectionCenterChange}
                 className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
               />
             </div>
@@ -167,7 +169,7 @@ const SelfRegister = () => {
                 type="checkbox"
                 id="hasVotingRight"
                 checked={hasVotingRight}
-                onChange={(e) => setHasVotingRight(e.target.checked)}
+                onChange={handleHasVotingRightChange}
                 className="h-4 w-4 text-blue-500"
               />
               <label htmlFor="hasVotingRight" className="text-gray-700">
@@ -180,7 +182,7 @@ const SelfRegister = () => {
                 type="checkbox"
                 id="idUpdated"
                 checked={idCardUpdated}
-                onChange={(e) => setIdCardUpdated(e.target.checked)}
+                onChange={handleIdCardUpdatedChange}
                 className="h-4 w-4 text-blue-500"
               />
               <label htmlFor="idUpdated" className="text-gray-700">
@@ -289,6 +291,8 @@ const SelfRegister = () => {
           </div>
         </form>
       </div>
+      <Toaster />
+
     </div>
   );
 };

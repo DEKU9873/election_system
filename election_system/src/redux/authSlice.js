@@ -17,6 +17,22 @@ export const registerUser = createAsyncThunk(
   }
 );
 
+// Add User
+export const addUser = createAsyncThunk(
+  "auth/addUser",
+  async (userData, thunkAPI) => {
+    try {
+      const response = await useInsertDataWithImage("/api/users", userData);
+      console.log("Response from addUser:", response);
+      return response;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "فشل في إضافة المستخدم"
+      );
+    }
+  }
+);
+
 // Login User
 export const loginUser = createAsyncThunk(
   "auth/login",
@@ -171,6 +187,21 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         state.deleteSuccess = false;
+      })
+
+      // Add User
+      .addCase(addUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+        state.error = null;
+      })
+      .addCase(addUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });

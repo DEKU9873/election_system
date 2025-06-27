@@ -29,10 +29,10 @@ const LoginHook = () => {
     }
 
     // التحقق من صحة تنسيق رقم الهاتف (يجب أن يكون 11 رقم)
-    if (!/^\d{11}$/.test(phone.trim())) {
-      notify("رقم الهاتف يجب أن يتكون من 11 رقم", "error");
-      return false;
-    }
+    // if (!/^\d{11}$/.test(phone.trim())) {
+    //   notify("رقم الهاتف يجب أن يتكون من 11 رقم", "error");
+    //   return false;
+    // }
 
     if (!password) {
       notify("من فضلك ادخل كلمة السر", "error");

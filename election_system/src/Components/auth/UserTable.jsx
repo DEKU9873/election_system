@@ -326,12 +326,12 @@ const UsersTable = () => {
         </div>
 
         <UserTablePagination
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-          totalPages={totalPages}
-          selectedRows={selectedRows}
-          sortedData={sortedData}
-        />
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              totalPages={totalPages}
+              selectedRows={selectedRows}
+              sortedData={sortedData}
+            />
 
         {/* إغلاق القوائم عند النقر خارجها */}
         {(showColumnMenu || showActionMenu) && (

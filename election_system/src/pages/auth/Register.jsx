@@ -1,111 +1,51 @@
-import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { User, Lock, Phone, IdCard, MapPin, Camera, PlusCircle } from 'lucide-react';
 import logo from "../../assets/urlogo.png"
+import RegisterHook from '../../hook/auth/register-hook';
+import { Toaster } from 'react-hot-toast';
 
 const Register = () => {
-  const [registrationType, setRegistrationType] = useState('voter');
-
-  const [firstName, setFirstName] = useState('');
-  const [fatherName, setFatherName] = useState('');
-  const [grandFatherName, setGrandFatherName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [birthYear, setBirthYear] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-
-  const [personalPhoto, setPersonalPhoto] = useState(null);
-  const [personalPhotoPreview, setPersonalPhotoPreview] = useState(null);
-  const [idPhoto, setIdPhoto] = useState(null);
-  const [idPhotoPreview, setIdPhotoPreview] = useState(null);
-  const [electionCardPhoto, setElectionCardPhoto] = useState(null);
-  const [electionCardPhotoPreview, setElectionCardPhotoPreview] = useState(null);
-
-  const [centers, setCenters] = useState([]);
-  const [newCenter, setNewCenter] = useState('');
-
-  const [hasVotingRight, setHasVotingRight] = useState(false);
-  const [idUpdated, setIdUpdated] = useState(false);
-
-  const handleFirstNameChange = (e) => {
-    setFirstName(e.target.value);
-  };
-
-  const handleFatherNameChange = (e) => {
-    setFatherName(e.target.value);
-  };
-
-  const handleGrandFatherNameChange = (e) => {
-    setGrandFatherName(e.target.value);
-  };
-
-  const handlePhoneChange = (e) => {
-    setPhone(e.target.value);
-  };
-
-  const handleBirthYearChange = (e) => {
-    setBirthYear(e.target.value);
-  };
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const handleConfirmPasswordChange = (e) => {
-    setConfirmPassword(e.target.value);
-  };
-
-  const handleRegistrationTypeChange = (type) => {
-    setRegistrationType(type);
-  };
-
-  const handleFileChange = (e, setFile, setPreview) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleHasVotingRightChange = (e) => {
-    setHasVotingRight(e.target.checked);
-  };
-
-  const handleIdUpdatedChange = (e) => {
-    setIdUpdated(e.target.checked);
-  };
-
-  const handleNewCenterChange = (e) => {
-    setNewCenter(e.target.value);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const dataToSend = {
-      registrationType,
-      firstName,
-      fatherName,
-      grandFatherName,
-      phone,
-      birthYear,
-      password,
-      confirmPassword,
-
-      personalPhoto,
-      idPhoto,
-      electionCardPhoto,
-
-      centers: registrationType === 'pillar' ? centers : [],
-
-      hasVotingRight,
-      idUpdated
-    };
-
-    console.log(dataToSend);
-  };
+  const [
+    registrationType,
+    handleRegistrationTypeChange,
+    firstName,
+    handleFirstNameChange,
+    fatherName,
+    handleFatherNameChange,
+    grandFatherName,
+    handleGrandFatherNameChange,
+    phone,
+    handlePhoneChange,
+    birthYear,
+    handleBirthYearChange,
+    password,
+    handlePasswordChange,
+    confirmPassword,
+    handleConfirmPasswordChange,
+    personalPhoto,
+    personalPhotoPreview,
+    handleFileChange,
+    idPhoto,
+    idPhotoPreview,
+    electionCardPhoto,
+    electionCardPhotoPreview,
+    centers,
+    newCenter,
+    handleNewCenterChange,
+    handleAddCenter,
+    handleRemoveCenter,
+    hasVotingRight,
+    handleHasVotingRightChange,
+    idUpdated,
+    handleIdUpdatedChange,
+    handleSubmit,
+    setPersonalPhoto,
+    setPersonalPhotoPreview,
+    setIdPhoto,
+    setIdPhotoPreview,
+    setElectionCardPhoto,
+    setElectionCardPhotoPreview
+  ] = RegisterHook();
 
   return (
     <div dir="rtl" className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-purple-100 p-4 md:p-8">
@@ -404,6 +344,22 @@ const Register = () => {
             </div>
           )}
 
+          {(registrationType === 'voter' || registrationType === 'observer') && (
+            <div className="space-y-4">
+              <h3 className="text-xl font-semibold text-gray-700 mb-4">معلومات المركز الانتخابي</h3>
+              <div className="relative">
+                <MapPin className="absolute right-3 top-3 text-gray-400" size={20} />
+                <input
+                  type="text"
+                  placeholder="اسم المركز الانتخابي"
+                  className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
+                  value={newCenter}
+                  onChange={handleNewCenterChange}
+                />
+              </div>
+            </div>
+          )}
+
           {registrationType === 'voter' && (
             <div className="space-y-4">
               <h3 className="text-xl font-semibold text-gray-700 mb-4">معلومات إضافية</h3>
@@ -451,6 +407,8 @@ const Register = () => {
           </div>
         </form>
       </div>
+      <Toaster />
+
     </div>
   );
 };

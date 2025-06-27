@@ -1,12 +1,11 @@
-// src/hook/auth/register-hook.js
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { registerUser } from "../../redux/authSlice";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addUser } from "../../redux/authSlice";
 import notify from "../useNotification";
 
 const RegisterHook = () => {
   const dispatch = useDispatch();
-
+  const [registrationType, setRegistrationType] = useState("voter");
   const [firstName, setFirstName] = useState("");
   const [fatherName, setFatherName] = useState("");
   const [grandFatherName, setGrandFatherName] = useState("");
@@ -14,10 +13,6 @@ const RegisterHook = () => {
   const [birthYear, setBirthYear] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [electionCenter, setElectionCenter] = useState("");
-  const [hasVotingRight, setHasVotingRight] = useState(false);
-  const [idCardUpdated, setIdCardUpdated] = useState(false);
-
   const [personalPhoto, setPersonalPhoto] = useState(null);
   const [personalPhotoPreview, setPersonalPhotoPreview] = useState(null);
   const [idPhoto, setIdPhoto] = useState(null);
@@ -26,7 +21,43 @@ const RegisterHook = () => {
   const [electionCardPhotoPreview, setElectionCardPhotoPreview] =
     useState(null);
 
-  const { user, error } = useSelector((state) => state.auth);
+  const [centers, setCenters] = useState([]);
+  const [newCenter, setNewCenter] = useState("");
+
+  const [hasVotingRight, setHasVotingRight] = useState(false);
+  const [idUpdated, setIdUpdated] = useState(false);
+
+  const handleFirstNameChange = (e) => {
+    setFirstName(e.target.value);
+  };
+
+  const handleFatherNameChange = (e) => {
+    setFatherName(e.target.value);
+  };
+
+  const handleGrandFatherNameChange = (e) => {
+    setGrandFatherName(e.target.value);
+  };
+
+  const handlePhoneChange = (e) => {
+    setPhone(e.target.value);
+  };
+
+  const handleBirthYearChange = (e) => {
+    setBirthYear(e.target.value);
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleConfirmPasswordChange = (e) => {
+    setConfirmPassword(e.target.value);
+  };
+
+  const handleRegistrationTypeChange = (type) => {
+    setRegistrationType(type);
+  };
 
   const handleFileChange = (e, setFile, setPreview) => {
     const file = e.target.files[0];
@@ -38,20 +69,93 @@ const RegisterHook = () => {
     }
   };
 
+  const handleHasVotingRightChange = (e) => {
+    setHasVotingRight(e.target.checked);
+  };
+
+  const handleIdUpdatedChange = (e) => {
+    setIdUpdated(e.target.checked);
+  };
+
+  const handleNewCenterChange = (e) => {
+    setNewCenter(e.target.value);
+  };
+
+  const handleAddCenter = () => {
+    if (newCenter.trim()) {
+      setCenters([...centers, newCenter]);
+      setNewCenter("");
+    }
+  };
+
+  const handleRemoveCenter = (index) => {
+    setCenters(centers.filter((_, i) => i !== index));
+  };
+
   const validationValues = () => {
-    if (password === "") {
-      notify("من فضلك ادخل كلمة السر", "error");
+    if (!firstName.trim()) {
+      notify("من فضلك ادخل الاسم الأول", "error");
       return false;
     }
 
-    if (phone.length <= 10) {
-      notify("من فضلك ادخل رقم هاتف صحيح", "error");
+    if (!fatherName.trim()) {
+      notify("من فضلك ادخل اسم الأب", "error");
       return false;
     }
+
+    if (!grandFatherName.trim()) {
+      notify("من فضلك ادخل اسم الجد", "error");
+      return false;
+    }
+
+    if (!phone.trim()) {
+      notify("من فضلك ادخل رقم الهاتف", "error");
+      return false;
+    }
+
+    if (phone.length < 11) {
+      notify("رقم الهاتف يجب أن يكون 11 رقم على الأقل", "error");
+      return false;
+    }
+
+    if (!birthYear) {
+      notify("من فضلك ادخل سنة الميلاد", "error");
+      return false;
+    }
+
+    if (!password) {
+      notify("من فضلك ادخل كلمة المرور", "error");
+      return false;
+    }
+
+    if (password.length < 6) {
+      notify("كلمة المرور يجب أن تكون 6 أحرف على الأقل", "error");
+      return false;
+    }
+
     if (password !== confirmPassword) {
-      notify("من فضلك تاكد من كلمه السر", "error");
+      notify("كلمة المرور غير متطابقة", "error");
       return false;
     }
+
+    if (!personalPhoto) {
+      notify("من فضلك اختر الصورة الشخصية", "error");
+      return false;
+    }
+
+    if (!idPhoto) {
+      notify("من فضلك اختر صورة الهوية", "error");
+      return false;
+    }
+
+    if (
+      (registrationType === "observer" || registrationType === "pillar") &&
+      !electionCardPhoto
+    ) {
+      notify("من فضلك اختر صورة بطاقة الانتخاب", "error");
+      return false;
+    }
+
     return true;
   };
 
@@ -60,6 +164,15 @@ const RegisterHook = () => {
     if (!validationValues()) return;
 
     const formData = new FormData();
+    formData.append("registrationType", registrationType);
+    formData.append(
+      "role",
+      registrationType === "observer"
+        ? "observer"
+        : registrationType === "voter"
+        ? "voter"
+        : "coordinator"
+    );
     formData.append("first_name", firstName);
     formData.append("second_name", fatherName);
     formData.append("last_name", grandFatherName);
@@ -67,8 +180,13 @@ const RegisterHook = () => {
     formData.append("birth_year", birthYear);
     formData.append("password", password);
     formData.append("can_vote", hasVotingRight);
-    formData.append("has_updated_card", idCardUpdated);
-    formData.append("election_center", electionCenter);
+    formData.append("has_updated_card", idUpdated);
+
+    if (registrationType === "pillar") {
+      formData.append("centers", JSON.stringify(centers));
+    } else {
+      formData.append("election_center", newCenter);
+    }
 
     if (personalPhoto) formData.append("profile_image", personalPhoto);
     if (idPhoto) formData.append("identity_image", idPhoto);
@@ -76,46 +194,78 @@ const RegisterHook = () => {
       formData.append("voting_card_image", electionCardPhoto);
 
     try {
-      await dispatch(registerUser(formData)).unwrap();
-      notify("تم التسجيل بنجاح", "success");
+      const result = await dispatch(addUser(formData)).unwrap();
+
+      if (result && result.data) {
+        notify("تم التسجيل بنجاح", "success");
+        // Reset form
+        setFirstName("");
+        setFatherName("");
+        setGrandFatherName("");
+        setPhone("");
+        setBirthYear("");
+        setPassword("");
+        setConfirmPassword("");
+        setPersonalPhoto(null);
+        setPersonalPhotoPreview(null);
+        setIdPhoto(null);
+        setIdPhotoPreview(null);
+        setElectionCardPhoto(null);
+        setElectionCardPhotoPreview(null);
+        setNewCenter("");
+        setCenters([]);
+        setHasVotingRight(false);
+        setIdUpdated(false);
+      } else {
+        throw new Error("لم يتم استلام رد من الخادم");
+      }
     } catch (err) {
       if (err.errors && Array.isArray(err.errors)) {
         err.errors.forEach((e) => notify(e.msg, "error"));
+      } else if (err.response && err.response.data) {
+        notify(err.response.data.message || "حدث خطأ أثناء التسجيل", "error");
       } else {
-        notify(err.message || "حدث خطأ أثناء التسجيل", "error");
+        notify(err.message || "حدث خطأ في الاتصال بالخادم", "error");
       }
     }
   };
 
   return [
+    registrationType,
+    handleRegistrationTypeChange,
     firstName,
-    setFirstName,
+    handleFirstNameChange,
     fatherName,
-    setFatherName,
+    handleFatherNameChange,
     grandFatherName,
-    setGrandFatherName,
+    handleGrandFatherNameChange,
     phone,
-    setPhone,
+    handlePhoneChange,
     birthYear,
-    setBirthYear,
+    handleBirthYearChange,
     password,
-    setPassword,
+    handlePasswordChange,
     confirmPassword,
-    setConfirmPassword,
-    electionCenter,
-    setElectionCenter,
-    hasVotingRight,
-    setHasVotingRight,
-    idCardUpdated,
-    setIdCardUpdated,
+    handleConfirmPasswordChange,
     personalPhoto,
-    handleFileChange,
     personalPhotoPreview,
+    handleFileChange,
     idPhoto,
     idPhotoPreview,
     electionCardPhoto,
     electionCardPhotoPreview,
+    centers,
+    newCenter,
+    handleNewCenterChange,
+    handleAddCenter,
+    handleRemoveCenter,
+    hasVotingRight,
+    handleHasVotingRightChange,
+    idUpdated,
+    handleIdUpdatedChange,
     handleSubmit,
+    setPersonalPhoto,
+    setPersonalPhotoPreview,
     setIdPhoto,
     setIdPhotoPreview,
     setElectionCardPhoto,
