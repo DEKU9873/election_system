@@ -8,8 +8,14 @@ import UserTableHeader from "../../Components/auth/UserTableHeader";
 import { districtsTableHeader } from "../../Components/auth/TableHeaderData";
 import { MoreHorizontal, User } from "lucide-react";
 import UserTablePagination from "../../Components/auth/UserTablePagination";
+import GetallDistricts from "../../hook/Districts/get-all-districts";
+import { useDispatch } from "react-redux";
+import { deleteDistrict } from "../../redux/placeSlice";
 const DistrictsPage = () => {
-  const { districtsData } = useUserData();
+  const dispatch = useDispatch();
+
+  const [districts, isLoading] = GetallDistricts();
+  console.log(districts);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -21,11 +27,10 @@ const DistrictsPage = () => {
     id: true,
     governorate: true,
     name: true,
-    numberOfSubdistricts: true,
-    numberOfElections: true,
-    numberOfCenters: true,
-    numberOfElected: true,
-    numberOfVoters: true,
+    subdistricts_count: true,
+    election_centers_count: true,
+    users_count: true,
+    confirmed_voting_users_count: true,
     percentageOfVoters: true,
     actions: true,
   });
@@ -36,15 +41,10 @@ const DistrictsPage = () => {
 
   // تصفية البيانات
   const filteredData = useMemo(() => {
-    return districtsData.filter(
-      (item) =>
-        item.name.toLowerCase().includes(filterText.toLowerCase()) ||
-        item.phone.includes(filterText) ||
-        item.birthYear.includes(filterText) ||
-        item.registrationDate.includes(filterText) ||
-        item.registrationMethod.toLowerCase().includes(filterText.toLowerCase())
+    return districts.filter((item) =>
+      item.name.toLowerCase().includes(filterText.toLowerCase())
     );
-  }, [districtsData, filterText]);
+  }, [districts, filterText]);
 
   // ترتيب البيانات
   const sortedData = useMemo(() => {
@@ -108,6 +108,12 @@ const DistrictsPage = () => {
     setShowActionMenu(null);
   };
 
+  const handleDeleteConfirm = async (id) => {
+    if (id) {
+      await dispatch(deleteDistrict(id));
+    }
+  };
+
   return (
     <div>
       <Sidebar />
@@ -125,7 +131,7 @@ const DistrictsPage = () => {
             setVisibleColumns={setVisibleColumns}
           />
 
-          <UserTableStats data={districtsData} />
+          <UserTableStats data={districts} />
         </div>
 
         {/* الجدول */}
@@ -181,32 +187,32 @@ const DistrictsPage = () => {
                         </div>
                       </td>
                     )}
-                    {visibleColumns.numberOfSubdistricts && (
+                    {visibleColumns.subdistricts_count && (
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-900">
-                          {row.numberOfSubdistricts}
+                          {row.subdistricts_count}
                         </div>
                       </td>
                     )}
 
-                    {visibleColumns.numberOfCenters && (
+                    {visibleColumns.election_centers_count && (
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-900">
-                          {row.numberOfCenters}
+                          {row.election_centers_count}
                         </div>
                       </td>
                     )}
-                    {visibleColumns.numberOfElected && (
+                    {visibleColumns.users_count && (
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-900">
-                          {row.numberOfElected}
+                          {row.users_count}
                         </div>
                       </td>
                     )}
-                    {visibleColumns.numberOfVoters && (
+                    {visibleColumns.confirmed_voting_users_count && (
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-900">
-                          {row.numberOfVoters}
+                          {row.confirmed_voting_users_count}
                         </div>
                       </td>
                     )}
@@ -235,12 +241,12 @@ const DistrictsPage = () => {
                           {showActionMenu === row.id && (
                             <div className="absolute left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-999999999">
                               <div className="py-1">
-                                <button
+                                {/* <button
                                   onClick={() => handleUserAction("view", row)}
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
                                   عرض التفاصيل
-                                </button>
+                                </button> */}
                                 <button
                                   onClick={() => handleUserAction("edit", row)}
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
@@ -248,30 +254,28 @@ const DistrictsPage = () => {
                                   تعديل
                                 </button>
                                 <button
-                                  onClick={() =>
-                                    handleUserAction("delete", row)
-                                  }
+                                  onClick={() => handleDeleteConfirm(row.id)}
                                   className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
                                 >
                                   حذف
                                 </button>
-                                <button
+                                {/* <button
                                   onClick={() =>
                                     handleUserAction("permissions", row)
                                   }
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
                                   إدارة الصلاحيات
-                                </button>
-                                <hr className="my-1" />
+                                </button> */}
+                                {/* <hr className="my-1" />
                                 <button
                                   onClick={() =>
                                     handleUserAction("delete", row)
                                   }
                                   className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
                                 >
-                                  🗑️ حذف المستخدم
-                                </button>
+                                   حذف المستخدم
+                                </button> */}
                               </div>
                             </div>
                           )}

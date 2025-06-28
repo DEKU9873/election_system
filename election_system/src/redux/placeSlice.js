@@ -1,13 +1,14 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { useInsertData } from '../hooks/useInsertData';
-import useGetData from '../hooks/useGetData';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { useInsertData } from "../hooks/useInsertData";
+import { useGetData } from "../hooks/useGetData";
+import { useDeleteDataWithToken } from "../hooks/useDeleteData";
 
 // إجراءات المحافظات
 export const addGovernate = createAsyncThunk(
-  'place/addGovernate',
+  "place/addGovernate",
   async (governateData, thunkAPI) => {
     try {
-      const response = await useInsertData('/api/governate', governateData);
+      const response = await useInsertData("/api/governate", governateData);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -16,11 +17,11 @@ export const addGovernate = createAsyncThunk(
 );
 
 export const getGovernates = createAsyncThunk(
-  'place/getGovernates',
+  "place/getGovernates",
   async (_, thunkAPI) => {
     try {
-      const response = await useGetData('/api/governate');
-      return response.data;
+      const response = await useGetData("/api/governate");
+      return response.data.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -28,7 +29,7 @@ export const getGovernates = createAsyncThunk(
 );
 
 export const getOneGovernate = createAsyncThunk(
-  'place/getOneGovernate',
+  "place/getOneGovernate",
   async (id, thunkAPI) => {
     try {
       const response = await useGetData(`/api/governate/${id}`);
@@ -40,10 +41,14 @@ export const getOneGovernate = createAsyncThunk(
 );
 
 export const deleteGovernate = createAsyncThunk(
-  'place/deleteGovernate',
+  "place/deleteGovernate",
   async (id, thunkAPI) => {
     try {
-      const response = await useInsertData(`/api/governate/${id}`, {}, 'DELETE');
+      const response = await useDeleteDataWithToken(
+        `/api/governate/${id}`,
+        {},
+        "DELETE"
+      );
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -53,10 +58,10 @@ export const deleteGovernate = createAsyncThunk(
 
 // إجراءات المناطق الفرعية
 export const addSubdistrict = createAsyncThunk(
-  'place/addSubdistrict',
+  "place/addSubdistrict",
   async (subdistrictData, thunkAPI) => {
     try {
-      const response = await useInsertData('/api/subdistrict', subdistrictData);
+      const response = await useInsertData("/api/subdistrict", subdistrictData);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -65,11 +70,13 @@ export const addSubdistrict = createAsyncThunk(
 );
 
 export const getSubdistricts = createAsyncThunk(
-  'place/getSubdistricts',
+  "place/getSubdistricts",
   async (governateId, thunkAPI) => {
     try {
-      const response = await useGetData(`/api/subdistrict?governateId=${governateId}`);
-      return response.data;
+      const response = await useGetData(
+        `/api/subdistrict?governateId=${governateId}`
+      );
+      return response.data.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -77,7 +84,7 @@ export const getSubdistricts = createAsyncThunk(
 );
 
 export const getOneSubdistrict = createAsyncThunk(
-  'place/getOneSubdistrict',
+  "place/getOneSubdistrict",
   async (id, thunkAPI) => {
     try {
       const response = await useGetData(`/api/subdistrict/${id}`);
@@ -89,10 +96,14 @@ export const getOneSubdistrict = createAsyncThunk(
 );
 
 export const deleteSubdistrict = createAsyncThunk(
-  'place/deleteSubdistrict',
+  "place/deleteSubdistrict",
   async (id, thunkAPI) => {
     try {
-      const response = await useInsertData(`/api/subdistrict/${id}`, {}, 'DELETE');
+      const response = await useDeleteDataWithToken(
+        `/api/subdistrict/${id}`,
+        {},
+        "DELETE"
+      );
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -102,10 +113,10 @@ export const deleteSubdistrict = createAsyncThunk(
 
 // إجراءات المناطق
 export const addDistrict = createAsyncThunk(
-  'place/addDistrict',
+  "place/addDistrict",
   async (districtData, thunkAPI) => {
     try {
-      const response = await useInsertData('/api/district', districtData);
+      const response = await useInsertData("/api/district", districtData);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -114,11 +125,13 @@ export const addDistrict = createAsyncThunk(
 );
 
 export const getDistricts = createAsyncThunk(
-  'place/getDistricts',
+  "place/getDistricts",
   async (subdistrictId, thunkAPI) => {
     try {
-      const response = await useGetData(`/api/district?subdistrictId=${subdistrictId}`);
-      return response.data;
+      const response = await useGetData(
+        `/api/district?subdistrictId=${subdistrictId}`
+      );
+      return response.data.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -126,7 +139,7 @@ export const getDistricts = createAsyncThunk(
 );
 
 export const getOneDistrict = createAsyncThunk(
-  'place/getOneDistrict',
+  "place/getOneDistrict",
   async (id, thunkAPI) => {
     try {
       const response = await useGetData(`/api/district/${id}`);
@@ -138,10 +151,10 @@ export const getOneDistrict = createAsyncThunk(
 );
 
 export const deleteDistrict = createAsyncThunk(
-  'place/deleteDistrict',
+  "place/deleteDistrict",
   async (id, thunkAPI) => {
     try {
-      const response = await useInsertData(`/api/district/${id}`, {}, 'DELETE');
+      const response = await useDeleteDataWithToken(`/api/district/${id}`, {}, "DELETE");
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -151,10 +164,13 @@ export const deleteDistrict = createAsyncThunk(
 
 // إجراءات مراكز الانتخابات
 export const addElectionCenter = createAsyncThunk(
-  'place/addElectionCenter',
+  "place/addElectionCenter",
   async (electionCenterData, thunkAPI) => {
     try {
-      const response = await useInsertData('/api/electioncenter', electionCenterData);
+      const response = await useInsertData(
+        "/api/electioncenter",
+        electionCenterData
+      );
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -163,10 +179,12 @@ export const addElectionCenter = createAsyncThunk(
 );
 
 export const getElectionCenters = createAsyncThunk(
-  'place/getElectionCenters',
+  "place/getElectionCenters",
   async (districtId, thunkAPI) => {
     try {
-      const response = await useGetData(`/api/electioncenter?districtId=${districtId}`);
+      const response = await useGetData(
+        `/api/electioncenter?districtId=${districtId}`
+      );
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -175,7 +193,7 @@ export const getElectionCenters = createAsyncThunk(
 );
 
 export const getOneElectionCenter = createAsyncThunk(
-  'place/getOneElectionCenter',
+  "place/getOneElectionCenter",
   async (id, thunkAPI) => {
     try {
       const response = await useGetData(`/api/electioncenter/${id}`);
@@ -187,10 +205,14 @@ export const getOneElectionCenter = createAsyncThunk(
 );
 
 export const deleteElectionCenter = createAsyncThunk(
-  'place/deleteElectionCenter',
+  "place/deleteElectionCenter",
   async (id, thunkAPI) => {
     try {
-      const response = await useInsertData(`/api/electioncenter/${id}`, {}, 'DELETE');
+      const response = await useInsertData(
+        `/api/electioncenter/${id}`,
+        {},
+        "DELETE"
+      );
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -209,17 +231,17 @@ const initialState = {
   selectedElectionCenter: null,
   loading: false,
   error: null,
-  success: false
+  success: false,
 };
 
 const placeSlice = createSlice({
-  name: 'place',
+  name: "place",
   initialState,
   reducers: {
     resetState: (state) => {
       state.error = null;
       state.success = false;
-    }
+    },
   },
   extraReducers: (builder) => {
     // معالجات المحافظات
@@ -270,7 +292,9 @@ const placeSlice = createSlice({
       })
       .addCase(deleteGovernate.fulfilled, (state, action) => {
         state.loading = false;
-        state.governates = state.governates.filter(gov => gov.id !== action.payload.id);
+        state.governates = state.governates.filter(
+          (gov) => gov.id !== action.payload.id
+        );
         state.success = true;
       })
       .addCase(deleteGovernate.rejected, (state, action) => {
@@ -324,7 +348,9 @@ const placeSlice = createSlice({
       })
       .addCase(deleteSubdistrict.fulfilled, (state, action) => {
         state.loading = false;
-        state.subdistricts = state.subdistricts.filter(sub => sub.id !== action.payload.id);
+        state.subdistricts = state.subdistricts.filter(
+          (sub) => sub.id !== action.payload.id
+        );
         state.success = true;
       })
       .addCase(deleteSubdistrict.rejected, (state, action) => {
@@ -378,7 +404,9 @@ const placeSlice = createSlice({
       })
       .addCase(deleteDistrict.fulfilled, (state, action) => {
         state.loading = false;
-        state.districts = state.districts.filter(dist => dist.id !== action.payload.id);
+        state.districts = state.districts.filter(
+          (dist) => dist.id !== action.payload.id
+        );
         state.success = true;
       })
       .addCase(deleteDistrict.rejected, (state, action) => {
@@ -432,14 +460,16 @@ const placeSlice = createSlice({
       })
       .addCase(deleteElectionCenter.fulfilled, (state, action) => {
         state.loading = false;
-        state.electionCenters = state.electionCenters.filter(center => center.id !== action.payload.id);
+        state.electionCenters = state.electionCenters.filter(
+          (center) => center.id !== action.payload.id
+        );
         state.success = true;
       })
       .addCase(deleteElectionCenter.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
-  }
+  },
 });
 
 export const placeReducer = placeSlice.reducer;

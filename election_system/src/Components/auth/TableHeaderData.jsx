@@ -219,25 +219,25 @@ export const governorateTableHeader = [
     icon: User,
   },
   {
-    id: "numberOfElections",
+    id: "districts_count",
     label: "عدد الاقضية",
     sortable: true,
     icon: User,
   },
   {
-    id: "numberOfCenters",
+    id: "election_centers_count",
     label: "عدد المراكز",
     sortable: true,
     icon: null,
   },
   {
-    id: "numberOfElected",
+    id: "users_count",
     label: "عدد الناخبين",
     sortable: true,
     icon: null,
   },
   {
-    id: "numberOfVoters",
+    id: "confirmed_voting_users_count",
     label: "عدد المصوتين",
     sortable: true,
     icon: null,
@@ -283,26 +283,26 @@ export const districtsTableHeader = [
     icon: null,
   },
   {
-    id: "numberOfSubdistricts",
+    id: "subdistricts_count",
     label: "عدد النواحي",
     sortable: true,
     icon: null,
   },
   {
-    id: "numberOfCenters",
+    id: "election_centers_count",
     label: "عدد المراكز",
     sortable: true,
     icon: null,
   },
 
   {
-    id: "numberOfElected",
+    id: "users_count",
     label: "عدد الناخبين",
     sortable: true,
     icon: null,
   },
   {
-    id: "numberOfVoters",
+    id: "confirmed_voting_users_count",
     label: "عدد المصوتين",
     sortable: true,
     icon: null,
@@ -335,7 +335,7 @@ export const subdistrictsTableHeader = [
   },
   {
     id: "name",
-    label: "اسم القضاء",
+    label: "اسم الناحية",
     sortable: true,
     icon: null,
   },
@@ -351,27 +351,22 @@ export const subdistrictsTableHeader = [
     sortable: true,
     icon: null,
   },
+
   {
-    id: "numberOfSubdistricts",
-    label: "عدد النواحي",
-    sortable: true,
-    icon: null,
-  },
-  {
-    id: "numberOfCenters",
+    id: "election_centers_count",
     label: "عدد المراكز",
     sortable: true,
     icon: null,
   },
 
   {
-    id: "numberOfElected",
+    id: "users_count",
     label: "عدد الناخبين",
     sortable: true,
     icon: null,
   },
   {
-    id: "numberOfVoters",
+    id: "confirmed_voting_users_count",
     label: "عدد المصوتين",
     sortable: true,
     icon: null,

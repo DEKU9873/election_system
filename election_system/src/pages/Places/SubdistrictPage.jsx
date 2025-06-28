@@ -8,8 +8,15 @@ import UserTableHeader from "../../Components/auth/UserTableHeader";
 import { subdistrictsTableHeader } from "../../Components/auth/TableHeaderData";
 import { MoreHorizontal, User } from "lucide-react";
 import UserTablePagination from "../../Components/auth/UserTablePagination";
+import GetAllSubdistricts from "../../hook/Subdistricts/get-all-subdistricts";
+import { useDispatch } from "react-redux";
+import { deleteSubdistrict } from "../../redux/placeSlice";
 const SubdistrictPage = () => {
-  const { subdistrictsData } = useUserData();
+  const dispatch = useDispatch();
+
+  // const { subdistrictsData } = useUserData();
+  const [subdistricts, isLoading] = GetAllSubdistricts();
+  console.log(subdistricts);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -22,11 +29,10 @@ const SubdistrictPage = () => {
     district: true,
     governorate: true,
     name: true,
-    numberOfSubdistricts: true,
     numberOfElections: true,
-    numberOfCenters: true,
-    numberOfElected: true,
-    numberOfVoters: true,
+    election_centers_count: true,
+    users_count: true,
+    confirmed_voting_users_count: true,
     percentageOfVoters: true,
     actions: true,
   });
@@ -37,15 +43,10 @@ const SubdistrictPage = () => {
 
   // تصفية البيانات
   const filteredData = useMemo(() => {
-    return subdistrictsData.filter(
-      (item) =>
-        item.name.toLowerCase().includes(filterText.toLowerCase()) ||
-        item.phone.includes(filterText) ||
-        item.birthYear.includes(filterText) ||
-        item.registrationDate.includes(filterText) ||
-        item.registrationMethod.toLowerCase().includes(filterText.toLowerCase())
+    return subdistricts.filter((item) =>
+      item.name.toLowerCase().includes(filterText.toLowerCase())
     );
-  }, [subdistrictsData, filterText]);
+  }, [subdistricts, filterText]);
 
   // ترتيب البيانات
   const sortedData = useMemo(() => {
@@ -109,6 +110,12 @@ const SubdistrictPage = () => {
     setShowActionMenu(null);
   };
 
+  const handleDeleteConfirm = async (id) => {
+    if (id) {
+      await dispatch(deleteSubdistrict(id));
+    }
+  };
+
   return (
     <div>
       <Sidebar />
@@ -126,7 +133,7 @@ const SubdistrictPage = () => {
             setVisibleColumns={setVisibleColumns}
           />
 
-          <UserTableStats data={subdistrictsData} />
+          <UserTableStats data={subdistricts} />
         </div>
 
         {/* الجدول */}
@@ -189,32 +196,25 @@ const SubdistrictPage = () => {
                         </div>
                       </td>
                     )}
-                    {visibleColumns.numberOfSubdistricts && (
+                    {visibleColumns.election_centers_count && (
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-900">
-                          {row.numberOfSubdistricts}
+                          {row.election_centers_count}
                         </div>
                       </td>
                     )}
 
-                    {visibleColumns.numberOfCenters && (
+                    {visibleColumns.users_count && (
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-900">
-                          {row.numberOfCenters}
+                          {row.users_count}
                         </div>
                       </td>
                     )}
-                    {visibleColumns.numberOfElected && (
+                    {visibleColumns.confirmed_voting_users_count && (
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-900">
-                          {row.numberOfElected}
-                        </div>
-                      </td>
-                    )}
-                    {visibleColumns.numberOfVoters && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">
-                          {row.numberOfVoters}
+                          {row.confirmed_voting_users_count}
                         </div>
                       </td>
                     )}
@@ -243,12 +243,12 @@ const SubdistrictPage = () => {
                           {showActionMenu === row.id && (
                             <div className="absolute left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-999999999">
                               <div className="py-1">
-                                <button
+                                {/* <button
                                   onClick={() => handleUserAction("view", row)}
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
                                   عرض التفاصيل
-                                </button>
+                                </button> */}
                                 <button
                                   onClick={() => handleUserAction("edit", row)}
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
@@ -256,30 +256,28 @@ const SubdistrictPage = () => {
                                   تعديل
                                 </button>
                                 <button
-                                  onClick={() =>
-                                    handleUserAction("delete", row)
-                                  }
+                                  onClick={() => handleDeleteConfirm(row.id)}
                                   className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
                                 >
                                   حذف
                                 </button>
-                                <button
+                                {/* <button
                                   onClick={() =>
                                     handleUserAction("permissions", row)
                                   }
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
                                   إدارة الصلاحيات
-                                </button>
-                                <hr className="my-1" />
+                                </button> */}
+                                {/* <hr className="my-1" />
                                 <button
                                   onClick={() =>
                                     handleUserAction("delete", row)
                                   }
                                   className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
                                 >
-                                  🗑️ حذف المستخدم
-                                </button>
+                                   حذف المستخدم
+                                </button> */}
                               </div>
                             </div>
                           )}

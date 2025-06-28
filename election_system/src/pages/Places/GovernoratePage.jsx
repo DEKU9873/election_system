@@ -9,8 +9,13 @@ import UserTableHeader from "../../Components/auth/UserTableHeader";
 import { governorateTableHeader } from "../../Components/auth/TableHeaderData";
 import { MoreHorizontal, User } from "lucide-react";
 import UserTablePagination from "../../Components/auth/UserTablePagination";
+import GetAllGovernorate from "../../hook/Governate/get-all-governorate";
+import { useDispatch } from "react-redux";
+import { deleteGovernate } from "../../redux/placeSlice";
 const GovernoratePage = () => {
-  const { governorateData } = useUserData();
+  const dispatch = useDispatch();
+  const [governates, isLoading] = GetAllGovernorate();
+  console.log(governates);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -22,10 +27,10 @@ const GovernoratePage = () => {
     id: true,
     code: true,
     name: true,
-    numberOfElections: true,
-    numberOfCenters: true,
-    numberOfElected: true,
-    numberOfVoters: true,
+    districts_count: true,
+    election_centers_count: true,
+    users_count: true,
+    confirmed_voting_users_count: true,
     percentageOfVoters: true,
     actions: true,
   });
@@ -36,15 +41,14 @@ const GovernoratePage = () => {
 
   // تصفية البيانات
   const filteredData = useMemo(() => {
-    return governorateData.filter(
-      (item) =>
-        item.name.toLowerCase().includes(filterText.toLowerCase()) ||
-        item.phone.includes(filterText) ||
-        item.birthYear.includes(filterText) ||
-        item.registrationDate.includes(filterText) ||
-        item.registrationMethod.toLowerCase().includes(filterText.toLowerCase())
+    return governates.filter(
+      (item) => item.name.toLowerCase().includes(filterText.toLowerCase())
+      // item.phone.includes(filterText) ||
+      // item.birthYear.includes(filterText) ||
+      // item.registrationDate.includes(filterText) ||
+      // item.registrationMethod.toLowerCase().includes(filterText.toLowerCase())
     );
-  }, [governorateData, filterText]);
+  }, [governates, filterText]);
 
   // ترتيب البيانات
   const sortedData = useMemo(() => {
@@ -108,6 +112,13 @@ const GovernoratePage = () => {
     setShowActionMenu(null);
   };
 
+
+    const handleDeleteConfirm = async (id) => {
+      if (id) {
+        await dispatch(deleteGovernate(id));
+      }
+    };
+
   return (
     <div>
       <Sidebar />
@@ -125,7 +136,7 @@ const GovernoratePage = () => {
             setVisibleColumns={setVisibleColumns}
           />
 
-          <UserTableStats data={governorateData} />
+          <UserTableStats data={governates} />
         </div>
 
         {/* الجدول */}
@@ -178,31 +189,31 @@ const GovernoratePage = () => {
                         </div>
                       </td>
                     )}
-                    {visibleColumns.numberOfElections && (
+                    {visibleColumns.districts_count && (
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-900">
-                          {row.numberOfElections}
+                          {row.districts_count}
                         </div>
                       </td>
                     )}
-                    {visibleColumns.numberOfCenters && (
+                    {visibleColumns.election_centers_count && (
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-900">
-                          {row.numberOfCenters}
+                          {row.election_centers_count}
                         </div>
                       </td>
                     )}
-                    {visibleColumns.numberOfElected && (
+                    {visibleColumns.users_count && (
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-900">
-                          {row.numberOfElected}
+                          {row.users_count}
                         </div>
                       </td>
                     )}
-                    {visibleColumns.numberOfVoters && (
+                    {visibleColumns.confirmed_voting_users_count && (
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-900">
-                          {row.numberOfVoters}
+                          {row.confirmed_voting_users_count}
                         </div>
                       </td>
                     )}
@@ -231,12 +242,12 @@ const GovernoratePage = () => {
                           {showActionMenu === row.id && (
                             <div className="absolute left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-999999999">
                               <div className="py-1">
-                                <button
+                                {/* <button
                                   onClick={() => handleUserAction("view", row)}
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
                                   عرض التفاصيل
-                                </button>
+                                </button> */}
                                 <button
                                   onClick={() => handleUserAction("edit", row)}
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
@@ -244,30 +255,28 @@ const GovernoratePage = () => {
                                   تعديل
                                 </button>
                                 <button
-                                  onClick={() =>
-                                    handleUserAction("delete", row)
-                                  }
+                                  onClick={() => handleDeleteConfirm(row.id)}
                                   className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
                                 >
                                   حذف
                                 </button>
-                                <button
+                                {/* <button
                                   onClick={() =>
                                     handleUserAction("permissions", row)
                                   }
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
                                   إدارة الصلاحيات
-                                </button>
-                                <hr className="my-1" />
+                                </button> */}
+                                {/* <hr className="my-1" />
                                 <button
                                   onClick={() =>
                                     handleUserAction("delete", row)
                                   }
                                   className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
                                 >
-                                  🗑️ حذف المستخدم
-                                </button>
+                                   حذف المستخدم
+                                </button> */}
                               </div>
                             </div>
                           )}
