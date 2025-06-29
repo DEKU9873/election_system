@@ -1,30 +1,30 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import notify from "../useNotification";
-import { addGovernate } from '../../redux/placeSlice';
+import { addDistrict } from "../../redux/placeSlice"; 
 
 const AddDistrictsHook = () => {
   const dispatch = useDispatch();
 
-  const [governorate, setGovernorate] = useState("");
-  const [code, setCode] = useState("");
+  const [district, setDistrict] = useState("");
+  const [governorateId, setGovernorateId] = useState("");
   const [loading, setLoading] = useState(false);
-  const [loginClicked, setLoginClicked] = useState(false);
+  const [submitClicked, setSubmitClicked] = useState(false);
 
-  const onChangeGovernorate = (e) => {
-    setGovernorate(e.target.value);
+  const onChangeDistrict = (e) => {
+    setDistrict(e.target.value);
   };
 
-  const onChangeCode = (e) => {
-    setCode(e.target.value);
+  const onChangeGovernorateId = (e) => {
+    setGovernorateId(Number(e.target.value));
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    setLoginClicked(true);
+    setSubmitClicked(true);
     setLoading(true);
 
-    if (!governorate || !code) {
+    if (!district || !governorateId) {
       notify("يرجى إدخال جميع الحقول", "warning");
       setLoading(false);
       return;
@@ -32,13 +32,13 @@ const AddDistrictsHook = () => {
 
     try {
       const res = await dispatch(
-        addGovernate({ name: governorate, code: code })
+        addDistrict({ name: district, governorate_id: governorateId })
       );
 
-      if (res.type === "place/addGovernate/fulfilled") {
-        notify("تمت إضافة المحافظة بنجاح", "success");
-        setGovernorate("");
-        setCode("");
+      if (res.type === "place/addDistrict/fulfilled") {
+        notify("تمت إضافة القضاء بنجاح", "success");
+        setDistrict("");
+        setGovernorateId("");
       } else {
         notify(res.payload?.message || "حدث خطأ أثناء الإضافة", "error");
       }
@@ -50,12 +50,12 @@ const AddDistrictsHook = () => {
   };
 
   return [
-    governorate,
-    code,
+    district,
+    governorateId,
     loading,
-    loginClicked,
-    onChangeGovernorate,
-    onChangeCode,
+    submitClicked,
+    onChangeDistrict,
+    onChangeGovernorateId,
     onSubmit,
   ];
 };

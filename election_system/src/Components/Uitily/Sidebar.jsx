@@ -51,9 +51,9 @@ const Sidebar = () => {
       icon: UserCog,
       submenu: [
         {
-          id: "election-centers",
+          id: "centers",
           label: "المراكز الانتخابية",
-          href: "/election-centers",
+          href: "/centers",
         },
         { id: "governorates", label: "المحافظات", href: "/governorate" },
         { id: "districts", label: "الأقضية", href: "/districts" },

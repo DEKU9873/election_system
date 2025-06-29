@@ -183,9 +183,9 @@ export const getElectionCenters = createAsyncThunk(
   async (districtId, thunkAPI) => {
     try {
       const response = await useGetData(
-        `/api/electioncenter?districtId=${districtId}`
+        `/api/electioncenter/`
       );
-      return response.data;
+      return response.data.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }

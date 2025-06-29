@@ -540,3 +540,66 @@ export const ElectoralStripsHeader = [
     icon: null,
   },
 ];
+
+export const CenterHeader = [
+  {
+    id: "select",
+    label: "",
+    sortable: false,
+    icon: null,
+  },
+  {
+    id: "id",
+    label: "ت",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "code",
+    label: "رمز المركز",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "governorate_name",
+    label: "المحافظة",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "district_name",
+    label: "اسم القضاء",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "subdistrict_name",
+    label: "اسم الناحية",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "stations_count",
+    label: "عدد المحطات",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "users_count",
+    label: "عدد الناخبين",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "percentageOfVoters",
+    label: "نسبة التصويت",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "actions",
+    label: "الإجراءات",
+    sortable: false,
+    icon: null,
+  },
+];
