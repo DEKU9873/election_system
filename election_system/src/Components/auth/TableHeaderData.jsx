@@ -561,6 +561,12 @@ export const CenterHeader = [
     icon: null,
   },
   {
+    id: "name",
+    label: "اسم المركز",
+    sortable: true,
+    icon: null,
+  },
+  {
     id: "governorate_name",
     label: "المحافظة",
     sortable: true,
@@ -593,6 +599,44 @@ export const CenterHeader = [
   {
     id: "percentageOfVoters",
     label: "نسبة التصويت",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "actions",
+    label: "الإجراءات",
+    sortable: false,
+    icon: null,
+  },
+];
+export const StationHeader = [
+  {
+    id: "select",
+    label: "",
+    sortable: false,
+    icon: null,
+  },
+  {
+    id: "id",
+    label: "ت",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "code",
+    label: "رمز المحطة",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "name",
+    label: "اسم المحطة",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "tape_count",
+    label: "عدد الاشرطة",
     sortable: true,
     icon: null,
   },

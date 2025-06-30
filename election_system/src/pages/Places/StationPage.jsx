@@ -5,21 +5,21 @@ import UserTableTitle from "../../Components/auth/UserTableTitle";
 import UserTableToolbar from "../../Components/auth/UserTableToolbar";
 import UserTableStats from "../../Components/auth/UserTableStats";
 import UserTableHeader from "../../Components/auth/UserTableHeader";
-import { CenterHeader } from "../../Components/auth/TableHeaderData";
+import { StationHeader } from "../../Components/auth/TableHeaderData";
 import { MoreHorizontal, User } from "lucide-react";
 import UserTablePagination from "../../Components/auth/UserTablePagination";
-import GetallDistricts from "../../hook/Districts/get-all-districts";
+import GetAllSubdistricts from "../../hook/Subdistricts/get-all-subdistricts";
 import { useDispatch } from "react-redux";
-import { deleteDistrict, deleteElectionCenter } from "../../redux/placeSlice";
-import GetAllCenter from "../../hook/Center/get-all-center";
-import { useNavigate } from "react-router-dom";
-const CenterPage = () => {
+import { deleteStation, deleteSubdistrict } from "../../redux/placeSlice";
+import GetStationByCenter from "../../hook/Stations/get-station-by-center";
+import { useParams } from "react-router-dom";
+const StationPage = () => {
   const dispatch = useDispatch();
-    const navigate = useNavigate();
+  const {id} = useParams();
 
-
-  const [electionCenters, isLoading] = GetAllCenter();
-  console.log(electionCenters);
+  // const { subdistrictsData } = useUserData();
+  const [stations, isLoading] = GetStationByCenter(id);
+  console.log(stations);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -31,12 +31,7 @@ const CenterPage = () => {
     id: true,
     code: true,
     name: true,
-    governorate_name: true,
-    district_name: true,
-    subdistrict_name: true,
-    stations_count: true,
-    users_count: true,
-    percentageOfVoters: true,
+    tape_count: true,
     actions: true,
   });
   const [showColumnMenu, setShowColumnMenu] = useState(false);
@@ -46,10 +41,10 @@ const CenterPage = () => {
 
   // تصفية البيانات
   const filteredData = useMemo(() => {
-    return electionCenters.filter((item) =>
+    return stations.filter((item) =>
       item.name.toLowerCase().includes(filterText.toLowerCase())
     );
-  }, [electionCenters, filterText]);
+  }, [stations, filterText]);
 
   // ترتيب البيانات
   const sortedData = useMemo(() => {
@@ -115,13 +110,7 @@ const CenterPage = () => {
 
   const handleDeleteConfirm = async (id) => {
     if (id) {
-      await dispatch(deleteElectionCenter(id));
-    }
-  };
-
-    const handleCenterStations = (id) => {
-    if (id) {
-      navigate(`/stations/${id}`);
+      await dispatch(deleteStation(id));
     }
   };
 
@@ -130,10 +119,10 @@ const CenterPage = () => {
       <Sidebar />
       <div className="w-full max-w-[1440px] mx-auto p-6 bg-white" dir="rtl">
         <div className="mb-6">
-          <UserTableTitle title="الاقضية" subtitle="قائمة الاقضية" />
+          <UserTableTitle title="المحطات" subtitle="قائمة المحطات" />
 
           <UserTableToolbar
-            title="اضافة قضاء"
+            title="اضافة ناحية"
             filterText={filterText}
             setFilterText={setFilterText}
             showColumnMenu={showColumnMenu}
@@ -142,14 +131,14 @@ const CenterPage = () => {
             setVisibleColumns={setVisibleColumns}
           />
 
-          <UserTableStats data={electionCenters} />
+          <UserTableStats data={stations} />
         </div>
 
         {/* الجدول */}
         <div className="border border-gray-200 rounded-lg shadow-sm">
           <table className="w-full">
             <UserTableHeader
-              tableHeaders={CenterHeader}
+              tableHeaders={StationHeader}
               visibleColumns={visibleColumns}
               selectedRows={selectedRows}
               paginatedData={paginatedData}
@@ -193,55 +182,22 @@ const CenterPage = () => {
                     )}
                     {visibleColumns.name && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">
-                          {row.name}
+                        <div className="flex items-center gap-2">
+                          <div className="font-medium text-gray-900">
+                            {row.name}
+                          </div>
                         </div>
                       </td>
                     )}
-                    {visibleColumns.governorate_name && (
+           
+                    {visibleColumns.tape_count && (
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-900">
-                          {row.governorate_name}
+                          {row.tape_count}
                         </div>
                       </td>
                     )}
-
-                    {visibleColumns.district_name && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">
-                          {row.district_name}
-                        </div>
-                      </td>
-                    )}
-                    {visibleColumns.subdistrict_name && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">
-                          {row.subdistrict_name}
-                        </div>
-                      </td>
-                    )}
-                    {visibleColumns.stations_count && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">
-                          {row.stations_count}
-                        </div>
-                      </td>
-                    )}
-                    {visibleColumns.users_count && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">
-                          {row.users_count}
-                        </div>
-                      </td>
-                    )}
-                    {visibleColumns.percentageOfVoters && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">
-                          {row.percentageOfVoters}
-                        </div>
-                      </td>
-                    )}
-
+                   
                     {visibleColumns.actions && (
                       <td className="px-4 py-3">
                         <div className="relative">
@@ -259,12 +215,12 @@ const CenterPage = () => {
                           {showActionMenu === row.id && (
                             <div className="absolute left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-999999999">
                               <div className="py-1">
-                                <button
-                                  onClick={() => handleCenterStations(row.id)}
+                                {/* <button
+                                  onClick={() => handleUserAction("view", row)}
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
-                                  عرض المحطات
-                                </button>
+                                  عرض التفاصيل
+                                </button> */}
                                 <button
                                   onClick={() => handleUserAction("edit", row)}
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
@@ -341,4 +297,4 @@ const CenterPage = () => {
   );
 };
 
-export default CenterPage;
+export default StationPage;

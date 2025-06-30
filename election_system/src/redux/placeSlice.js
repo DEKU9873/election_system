@@ -154,7 +154,11 @@ export const deleteDistrict = createAsyncThunk(
   "place/deleteDistrict",
   async (id, thunkAPI) => {
     try {
-      const response = await useDeleteDataWithToken(`/api/district/${id}`, {}, "DELETE");
+      const response = await useDeleteDataWithToken(
+        `/api/district/${id}`,
+        {},
+        "DELETE"
+      );
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -182,9 +186,7 @@ export const getElectionCenters = createAsyncThunk(
   "place/getElectionCenters",
   async (districtId, thunkAPI) => {
     try {
-      const response = await useGetData(
-        `/api/electioncenter/`
-      );
+      const response = await useGetData(`/api/electioncenter/`);
       return response.data.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -208,8 +210,51 @@ export const deleteElectionCenter = createAsyncThunk(
   "place/deleteElectionCenter",
   async (id, thunkAPI) => {
     try {
-      const response = await useInsertData(
+      const response = await useDeleteDataWithToken(
         `/api/electioncenter/${id}`,
+        {},
+        "DELETE"
+      );
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// إضافة محطة
+export const addStation = createAsyncThunk(
+  "place/addStation",
+  async (stationData, thunkAPI) => {
+    try {
+      const response = await useInsertData("/api/station/", stationData);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// جلب محطات باستخدام ID المركز
+export const getStationsByCenterId = createAsyncThunk(
+  "place/getStationsByCenterId",
+  async (centerId, thunkAPI) => {
+    try {
+      const response = await useGetData(`/api/station/center/${centerId}`);
+      return response.data.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// حذف محطة
+export const deleteStation = createAsyncThunk(
+  "place/deleteStation",
+  async (id, thunkAPI) => {
+    try {
+      const response = await useDeleteDataWithToken(
+        `/api/station/${id}`,
         {},
         "DELETE"
       );
@@ -229,6 +274,8 @@ const initialState = {
   selectedDistrict: null,
   electionCenters: [],
   selectedElectionCenter: null,
+  stations: [],
+  selectedStation: null,
   loading: false,
   error: null,
   success: false,
@@ -465,10 +512,50 @@ const placeSlice = createSlice({
         );
         state.success = true;
       })
-      .addCase(deleteElectionCenter.rejected, (state, action) => {
+      // معالجات المحطات
+      .addCase(addStation.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addStation.fulfilled, (state, action) => {
+        state.loading = false;
+        state.stations.push(action.payload);
+        state.success = true;
+      })
+      .addCase(addStation.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // جلب المحطات باستخدام ID المركز
+      .addCase(getStationsByCenterId.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getStationsByCenterId.fulfilled, (state, action) => {
+        state.loading = false;
+        state.stations = action.payload;
+      })
+      .addCase(getStationsByCenterId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // حذف محطة
+      .addCase(deleteStation.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteStation.fulfilled, (state, action) => {
+        state.loading = false;
+        state.stations = state.stations.filter(
+          (station) => station.id !== action.payload.id
+        );
+        state.success = true;
+      })
+      .addCase(deleteStation.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
+
   },
 });
 

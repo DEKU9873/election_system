@@ -18,6 +18,8 @@ import AddGovernoratePage from './pages/Places/AddGovernoratePage';
 import AddDistrictsPage from './pages/Places/AddDistrictsPage';
 import AddSubdistrictsPage from './pages/Places/AddSubdistrictsPage';
 import CenterPage from './pages/Places/CenterPage';
+import StationPage from './pages/Places/StationPage';
+import AddCenterPage from './pages/Places/AddCenterPage';
 
 
 const App = () => {
@@ -43,6 +45,8 @@ const App = () => {
           <Route path="/addDistrict/" element={<AddDistrictsPage />} />
           <Route path="/addSubistrict/" element={<AddSubdistrictsPage />} />
           <Route path="/centers/" element={<CenterPage />} />
+          <Route path="/addCenter/" element={<AddCenterPage />} />
+          <Route path="/stations/:id/" element={<StationPage />} />
         </Routes>
       </BrowserRouter>
       
