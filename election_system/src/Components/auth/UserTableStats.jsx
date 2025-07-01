@@ -1,14 +1,14 @@
 import React from 'react';
 import { User } from 'lucide-react';
 
-const UserTableStats = ({ data }) => {
+const UserTableStats = ({ data, title }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
       <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
         <div className="flex items-center gap-2">
-          <User className="w-5 h-5 text-blue-600" />
+          {/* <User className="w-5 h-5 text-blue-600" /> */}
           <span className="text-sm font-medium text-blue-800">
-            إجمالي المستخدمين
+            {title}
           </span>
         </div>
         <p className="text-2xl font-bold text-blue-900 mt-1">{data.length}</p>

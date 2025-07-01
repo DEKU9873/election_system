@@ -5,6 +5,7 @@ import GetAllCenter from "../../hook/Center/get-all-center";
 import AddTapesHook from "../../hook/tapes/add-tapse-hooks";
 import GetAllSubdistricts from "../../hook/Subdistricts/get-all-subdistricts";
 import GetAllStation from "../../hook/Stations/get-all-station";
+import Select from 'react-select';
 
 const AddElectoralStripsPage = () => {
   const [
@@ -25,60 +26,94 @@ const AddElectoralStripsPage = () => {
     onSubmit,
   ] = AddTapesHook();
 
-  const [electionCenters, isLoadingCenters] = GetAllCenter();
+  const [centers] = GetAllCenter();
   const [stations] = GetAllStation();
+
+  const centerOptions = centers?.map(center => ({
+    value: center.id,
+    label: center.name
+  }));
+
+  const stationOptions = stations?.map(station => ({
+    value: station.id,
+    label: station.name
+  }));
+
+  const handleCenterChange = (selectedOption) => {
+    onChangeElectionCenterId({ target: { value: selectedOption.value } });
+  };
+
+  const handleStationChange = (selectedOption) => {
+    onChangeStationId({ target: { value: selectedOption.value } });
+  };
+
+  const selectStyles = {
+    control: (base) => ({
+      ...base,
+      paddingRight: '10px',
+      borderRadius: '0.5rem',
+      borderColor: '#E5E7EB',
+      '&:hover': {
+        borderColor: '#E5E7EB'
+      }
+    }),
+    placeholder: (base) => ({
+      ...base,
+      textAlign: 'right'
+    }),
+    input: (base) => ({
+      ...base,
+      textAlign: 'right'
+    })
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-purple-100 p-4">
       <div className="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-full max-w-lg flex flex-col items-center">
+        <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">إضافة شريط انتخابي جديد</h1>
         <div className="w-full grid grid-cols-1 gap-6">
-
-          {/* المركز الانتخابي */}
           <div>
             <label className="block text-gray-700 font-medium mb-2 text-right">
-              المركز الانتخابي
+              المركز
             </label>
             <div className="relative">
-              <select
-                className="w-full pr-12 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right bg-white"
-                value={electionCenterId}
-                onChange={onChangeElectionCenterId}
-              >
-                <option value="">اختر المركز</option>
-                {!isLoadingCenters &&
-                  electionCenters?.map((center) => (
-                    <option key={center.id} value={center.id}>
-                      {center.name}
-                    </option>
-                  ))}
-              </select>
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-indigo-600" size={20} />
+              <Select
+                options={centerOptions}
+                value={centerOptions?.find(option => option.value === electionCenterId)}
+                onChange={handleCenterChange}
+                placeholder="اختر المركز"
+                isSearchable={true}
+                className="text-right"
+                styles={selectStyles}
+              />
+              <Lock
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-600"
+                size={20}
+              />
             </div>
           </div>
 
-          {/* المحطة */}
           <div>
             <label className="block text-gray-700 font-medium mb-2 text-right">
               المحطة
             </label>
             <div className="relative">
-              <select
-                className="w-full pr-12 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right bg-white"
-                value={stationId}
-                onChange={onChangeStationId}
-              >
-                <option value="">اختر المحطة</option>
-                {stations?.map((st) => (
-                  <option key={st.id} value={st.id}>
-                    {st.name}
-                  </option>
-                ))}
-              </select>
-              <Layers className="absolute left-3 top-1/2 transform -translate-y-1/2 text-indigo-600" size={20} />
+              <Select
+                options={stationOptions}
+                value={stationOptions?.find(option => option.value === stationId)}
+                onChange={handleStationChange}
+                placeholder="اختر المحطة"
+                isSearchable={true}
+                className="text-right"
+                styles={selectStyles}
+              />
+              <Lock
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-600"
+                size={20}
+              />
             </div>
           </div>
 
-          {/* التاريخ */}
           <div>
             <label className="block text-gray-700 font-medium mb-2 text-right">
               التاريخ
@@ -86,68 +121,85 @@ const AddElectoralStripsPage = () => {
             <div className="relative">
               <input
                 type="date"
-                className="w-full pr-12 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
+                className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right appearance-none bg-white"
                 value={date}
                 onChange={onChangeDate}
+                style={{
+                  direction: 'rtl',
+                  colorScheme: 'light'
+                }}
               />
-              <CalendarDays className="absolute left-3 top-1/2 transform -translate-y-1/2 text-indigo-600" size={20} />
+              <CalendarDays
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-600 pointer-events-none"
+                size={20}
+              />
             </div>
           </div>
 
-          {/* صورة الشريط */}
           <div>
             <label className="block text-gray-700 font-medium mb-2 text-right">
               صورة الشريط
             </label>
             <div className="relative">
-              <input
-                type="file"
-                accept="image/*"
-                className="w-full pr-12 py-2 border rounded-lg text-right"
-                onChange={onChangeTapeImage}
-              />
-              <ImagePlus className="absolute left-3 top-1/2 transform -translate-y-1/2 text-indigo-600" size={20} />
+              <div className="relative group">
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right rtl file:ml-4 file:mr-0 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100 cursor-pointer"
+                  onChange={onChangeTapeImage}
+                  dir="rtl"
+                />
+                <ImagePlus
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-600 pointer-events-none"
+                  size={20}
+                />
+              </div>
             </div>
           </div>
 
-          {/* الملاحظات */}
           <div>
             <label className="block text-gray-700 font-medium mb-2 text-right">
               الملاحظات
             </label>
             <div className="relative">
               <textarea
-                placeholder="اكتب الملاحظات هنا"
-                className="w-full pr-12 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
+                className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
                 value={notes}
                 onChange={onChangeNotes}
-              ></textarea>
-              <FileText className="absolute left-3 top-3 text-indigo-600" size={20} />
+                rows={4}
+                placeholder="أدخل الملاحظات هنا"
+                dir="rtl"
+              />
+              <FileText
+                className="absolute left-4 top-4 transform text-blue-600"
+                size={20}
+              />
             </div>
           </div>
 
-          {/* الحالة */}
           <div>
             <label className="block text-gray-700 font-medium mb-2 text-right">
               الحالة
             </label>
             <div className="relative">
               <select
-                className="w-full pr-12 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right bg-white"
+                className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right bg-white"
                 value={status}
                 onChange={onChangeStatus}
+                dir="rtl"
               >
                 <option value="">اختر الحالة</option>
-                <option value="bending">قيد المراجعة</option>
-                <option value="verified">مقبول</option>
-                <option value="rejected">مرفوض</option>
+                <option value="تم التدقيق">تم التدقيق</option>
+                <option value="لم يتم التدقيق">لم يتم التدقيق</option>
               </select>
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-indigo-600" size={20} />
+              <Layers
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-600"
+                size={20}
+              />
             </div>
           </div>
         </div>
 
-        {/* زر الإرسال */}
         <button
           onClick={onSubmit}
           className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium text-base shadow-md mt-6 flex items-center justify-center gap-3"

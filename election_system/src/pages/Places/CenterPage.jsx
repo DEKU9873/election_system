@@ -143,7 +143,7 @@ const CenterPage = () => {
             link="/addCenter"
           />
 
-          <UserTableStats data={electionCenters} />
+          <UserTableStats data={electionCenters} title = "اجمالي المراكز"/>
         </div>
 
         {/* الجدول */}

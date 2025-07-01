@@ -135,7 +135,7 @@ const [
             setVisibleColumns={setVisibleColumns}
           />
 
-          <UserTableStats data={district_manager} />
+          <UserTableStats data={district_manager} title = "اجمالي مدراء الاقضية" />
         </div>
 
         {/* الجدول */}

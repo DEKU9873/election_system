@@ -132,7 +132,7 @@ const DistrictsPage = () => {
             link="/addDistrict"
           />
 
-          <UserTableStats data={districts} />
+          <UserTableStats data={districts} title = "اجمالي الاقضية" />
         </div>
 
         {/* الجدول */}

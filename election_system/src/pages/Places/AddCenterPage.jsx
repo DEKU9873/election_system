@@ -7,10 +7,11 @@ import AddSubDistrictsHook from "../../hook/Subdistricts/add-subdistricts-hook";
 import GetallDistricts from "../../hook/Districts/get-all-districts";
 import GetAllSubdistricts from "../../hook/Subdistricts/get-all-subdistricts";
 import AddCenterHook from "../../hook/Center/add-center-hook";
+import Select from "react-select";
 
 const AddCenterPage = () => {
   const [
-    center,
+   center,
     code,
     governorateId,
     districtId,
@@ -27,14 +28,74 @@ const AddCenterPage = () => {
 
   const [governates, isLoading] = GetAllGovernorate();
   const [districts] = GetallDistricts();
-    const [subdistricts] = GetAllSubdistricts();
+  const [subdistricts] = GetAllSubdistricts();
 
+  const governorateOptions = governates?.map((governorate) => ({
+    value: governorate.id,
+    label: governorate.name,
+  }));
+
+  const districtOptions = districts?.map((district) => ({
+    value: district.id,
+    label: district.name,
+  }));
+
+  const subdistrictOptions = subdistricts?.map((subdistrict) => ({
+    value: subdistrict.id,
+    label: subdistrict.name,
+  }));
+
+  const handleGovernorateChange = (selectedOption) => {
+    if (selectedOption) {
+      onChangeGovernorateId({ target: { value: selectedOption.value } });
+    } else {
+      onChangeGovernorateId({ target: { value: "" } });
+    }
+  };
+
+  const handleDistrictChange = (selectedOption) => {
+    if (selectedOption) {
+      onChangeDistrictId({ target: { value: selectedOption.value } });
+    } else {
+      onChangeDistrictId({ target: { value: "" } });
+    }
+  };
+
+  const handleSubdistrictChange = (selectedOption) => {
+    if (selectedOption) {
+      onChangeSubdistrictId({ target: { value: selectedOption.value } });
+    } else {
+      onChangeSubdistrictId({ target: { value: "" } });
+    }
+  };
+
+  const selectStyles = {
+    control: (base) => ({
+      ...base,
+      paddingRight: "10px",
+      borderRadius: "0.5rem",
+      borderColor: "#E5E7EB",
+      "&:hover": {
+        borderColor: "#E5E7EB",
+      },
+    }),
+    placeholder: (base) => ({
+      ...base,
+      textAlign: "right",
+    }),
+    input: (base) => ({
+      ...base,
+      textAlign: "right",
+    }),
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-purple-100 p-4">
       <div className="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-full max-w-lg flex flex-col items-center">
+        <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+          إضافة مركز جديد
+        </h1>
         <div className="w-full grid grid-cols-1 gap-6">
-          {/* District Name Input */}
           <div>
             <label className="block text-gray-700 font-medium mb-2 text-right">
               اسم المركز
@@ -42,13 +103,14 @@ const AddCenterPage = () => {
             <div className="relative">
               <input
                 type="text"
-                placeholder="اسم المركز"
                 className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
                 value={center}
                 onChange={onChangeCenter}
+                dir="rtl"
+                placeholder="أدخل اسم المركز"
               />
-              <Phone
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-indigo-600"
+              <Lock
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-600"
                 size={20}
               />
             </div>
@@ -60,37 +122,37 @@ const AddCenterPage = () => {
             <div className="relative">
               <input
                 type="text"
-                placeholder="رمز المركز"
                 className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
                 value={code}
                 onChange={onChangeCode}
+                dir="rtl"
+                placeholder="أدخل رمز المركز"
               />
-              <Phone
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-indigo-600"
+              <Lock
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-600"
                 size={20}
               />
             </div>
           </div>
+
           <div>
             <label className="block text-gray-700 font-medium mb-2 text-right">
               المحافظة
             </label>
             <div className="relative">
-              <select
-                className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right bg-white"
-                value={governorateId}
-                onChange={onChangeGovernorateId}
-              >
-                <option value="">اختر المحافظة</option>
-                {!isLoading &&
-                  governates?.map((gov) => (
-                    <option key={gov.id} value={gov.id}>
-                      {gov.name}
-                    </option>
-                  ))}
-              </select>
+              <Select
+                options={governorateOptions}
+                value={governorateOptions?.find(
+                  (option) => option.value === governorateId
+                )}
+                onChange={handleGovernorateChange}
+                placeholder="اختر المحافظة"
+                isSearchable={true}
+                className="text-right"
+                styles={selectStyles}
+              />
               <Lock
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-indigo-600"
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-600"
                 size={20}
               />
             </div>
@@ -101,52 +163,48 @@ const AddCenterPage = () => {
               القضاء
             </label>
             <div className="relative">
-              <select
-                className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right bg-white"
-                value={districtId}
-                onChange={onChangeDistrictId}
-              >
-                <option value="">اختر القضاء</option>
-                {!isLoading &&
-                  districts?.map((dis) => (
-                    <option key={dis.id} value={dis.id}>
-                      {dis.name}
-                    </option>
-                  ))}
-              </select>
+              <Select
+                options={districtOptions}
+                value={districtOptions?.find(
+                  (option) => option.value === districtId
+                )}
+                onChange={handleDistrictChange}
+                placeholder="اختر القضاء"
+                isSearchable={true}
+                className="text-right"
+                styles={selectStyles}
+              />
               <Lock
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-indigo-600"
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-600"
                 size={20}
               />
             </div>
           </div>
+
           <div>
             <label className="block text-gray-700 font-medium mb-2 text-right">
               الناحية
             </label>
             <div className="relative">
-              <select
-                className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right bg-white"
-                value={subdistrictId}
-                onChange={onChangeSubdistrictId}
-              >
-                <option value="">اختر الناحية</option>
-                {!isLoading &&
-                  subdistricts?.map((subdis) => (
-                    <option key={subdis.id} value={subdis.id}>
-                      {subdis.name}
-                    </option>
-                  ))}
-              </select>
+              <Select
+                options={subdistrictOptions}
+                value={subdistrictOptions?.find(
+                  (option) => option.value === subdistrictId
+                )}
+                onChange={handleSubdistrictChange}
+                placeholder="اختر الناحية"
+                isSearchable={true}
+                className="text-right"
+                styles={selectStyles}
+              />
               <Lock
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-indigo-600"
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-600"
                 size={20}
               />
             </div>
           </div>
         </div>
 
-        {/* Submit Button */}
         <button
           onClick={onSubmit}
           className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium text-base shadow-md mt-6 flex items-center justify-center gap-3"

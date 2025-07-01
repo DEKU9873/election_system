@@ -134,7 +134,7 @@ const MonitorsTablePage = () => {
             link="/register"
           />
 
-          <UserTableStats data={observer} />
+          <UserTableStats data={observer} title = "اجمالي المشرفين" />
         </div>
 
         {/* الجدول */}

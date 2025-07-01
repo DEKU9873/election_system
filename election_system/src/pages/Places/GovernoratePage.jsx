@@ -137,7 +137,7 @@ const GovernoratePage = () => {
             link="/addGovernorate"
           />
 
-          <UserTableStats data={governates} />
+          <UserTableStats data={governates} title = "اجمالي المحافظات" />
         </div>
 
         {/* الجدول */}

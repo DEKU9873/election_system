@@ -21,7 +21,6 @@ const RegisterHook = () => {
   const [electionCardPhotoPreview, setElectionCardPhotoPreview] =
     useState(null);
 
-  const [centers, setCenters] = useState([]);
   const [newCenter, setNewCenter] = useState("");
 
   const [hasVotingRight, setHasVotingRight] = useState(false);
@@ -81,16 +80,7 @@ const RegisterHook = () => {
     setNewCenter(e.target.value);
   };
 
-  const handleAddCenter = () => {
-    if (newCenter.trim()) {
-      setCenters([...centers, newCenter]);
-      setNewCenter("");
-    }
-  };
 
-  const handleRemoveCenter = (index) => {
-    setCenters(centers.filter((_, i) => i !== index));
-  };
 
   const validationValues = () => {
     if (!firstName.trim()) {
@@ -149,7 +139,7 @@ const RegisterHook = () => {
     }
 
     if (
-      (registrationType === "observer" || registrationType === "pillar") &&
+      (registrationType === "observer" || registrationType === "center_manager") &&
       !electionCardPhoto
     ) {
       notify("من فضلك اختر صورة بطاقة الانتخاب", "error");
@@ -171,6 +161,8 @@ const RegisterHook = () => {
         ? "observer"
         : registrationType === "voter"
         ? "voter"
+        : registrationType === "center_manager"
+        ? "center_manager"
         : "coordinator"
     );
     formData.append("first_name", firstName);
@@ -182,11 +174,7 @@ const RegisterHook = () => {
     formData.append("can_vote", hasVotingRight);
     formData.append("has_updated_card", idUpdated);
 
-    if (registrationType === "pillar") {
-      formData.append("centers", JSON.stringify(centers));
-    } else {
-      formData.append("election_center", newCenter);
-    }
+    formData.append("election_center", newCenter);
 
     if (personalPhoto) formData.append("profile_image", personalPhoto);
     if (idPhoto) formData.append("identity_image", idPhoto);
@@ -213,7 +201,6 @@ const RegisterHook = () => {
         setElectionCardPhoto(null);
         setElectionCardPhotoPreview(null);
         setNewCenter("");
-        setCenters([]);
         setHasVotingRight(false);
         setIdUpdated(false);
       } else {
@@ -254,11 +241,8 @@ const RegisterHook = () => {
     idPhotoPreview,
     electionCardPhoto,
     electionCardPhotoPreview,
-    centers,
     newCenter,
     handleNewCenterChange,
-    handleAddCenter,
-    handleRemoveCenter,
     hasVotingRight,
     handleHasVotingRightChange,
     idUpdated,

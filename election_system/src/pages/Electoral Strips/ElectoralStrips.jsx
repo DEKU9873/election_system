@@ -145,7 +145,7 @@ const ElectoralStrips = () => {
             link="/addElectoralStrips"
           />
 
-          <UserTableStats data={tapes} />
+          <UserTableStats data={tapes} title = "اجمالي الاشرطة"/>
         </div>
 
         {/* الجدول */}

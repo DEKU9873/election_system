@@ -136,7 +136,7 @@ const CenterManagers = () => {
             setVisibleColumns={setVisibleColumns}
           />
 
-          <UserTableStats data={center_manager} />
+          <UserTableStats data={center_manager} title = "اجمالي مدراء المراكز" />
         </div>
 
         {/* الجدول */}

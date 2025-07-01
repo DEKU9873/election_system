@@ -134,7 +134,7 @@ const SubdistrictPage = () => {
             link="/addSubistrict"
           />
 
-          <UserTableStats data={subdistricts} />
+          <UserTableStats data={subdistricts} title = "اجمالي النواحي" />
         </div>
 
         {/* الجدول */}

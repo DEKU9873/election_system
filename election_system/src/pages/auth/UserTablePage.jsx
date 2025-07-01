@@ -191,7 +191,7 @@ const UserTablePage = () => {
             link="/register"
           />
 
-          <UserTableStats data={allUsers} />
+          <UserTableStats data={allUsers} title = "اجمالي السمتخدمين" />
         </div>
 
         {/* الجدول */}

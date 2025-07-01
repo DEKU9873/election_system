@@ -128,7 +128,7 @@ const CoordinatorTablePage = () => {
             link = "/register"
           />
 
-          <UserTableStats data={coordinator} />
+          <UserTableStats data={coordinator} title = "اجمالي المرتكزين" />
         </div>
 
         {/* الجدول */}

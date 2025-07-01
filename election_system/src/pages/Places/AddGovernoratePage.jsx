@@ -16,6 +16,7 @@ const AddGovernoratePage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-purple-100 p-4">
       <div className="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-full max-w-lg flex flex-col items-center">
+        <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">إضافة محافظة جديدة</h1>
         <div className="w-full grid grid-cols-1 gap-6">
           <div>
             <label

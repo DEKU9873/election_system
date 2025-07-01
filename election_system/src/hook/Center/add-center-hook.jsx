@@ -14,7 +14,9 @@ const AddCenterHook = () => {
   const [loading, setLoading] = useState(false);
   const [submitClicked, setSubmitClicked] = useState(false);
 
-  const onChangeCenter = (e) => setCenter(e.target.value);
+  const onChangeCenter = (e) => {
+    setCenter(e.target.value);
+  };
   const onChangeCode = (e) => setCode(e.target.value);
   const onChangeGovernorateId = (e) => setGovernorateId(Number(e.target.value));
   const onChangeDistrictId = (e) => setDistrictId(Number(e.target.value));

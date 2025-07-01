@@ -132,7 +132,7 @@ const StationPage = () => {
             link="/addStations"
           />
 
-          <UserTableStats data={stations} />
+          <UserTableStats data={stations} title = "اجمالي المحطات" />
         </div>
 
         {/* الجدول */}

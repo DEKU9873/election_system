@@ -173,7 +173,7 @@ const ElectedTablePage = () => {
               link = "/register"
             />
   
-            <UserTableStats data={voter} />
+            <UserTableStats data={voter} title = "اجمالي الناخبين" />
           </div>
   
           {/* الجدول */}

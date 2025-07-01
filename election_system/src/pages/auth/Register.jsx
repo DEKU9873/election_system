@@ -29,11 +29,8 @@ const Register = () => {
     idPhotoPreview,
     electionCardPhoto,
     electionCardPhotoPreview,
-    centers,
     newCenter,
     handleNewCenterChange,
-    handleAddCenter,
-    handleRemoveCenter,
     hasVotingRight,
     handleHasVotingRightChange,
     idUpdated,
@@ -73,10 +70,10 @@ const Register = () => {
             </button>
             <button
               type="button"
-              className={`p-4 rounded-lg text-center ${registrationType === 'pillar' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-              onClick={() => handleRegistrationTypeChange('pillar')}
+              className={`p-4 rounded-lg text-center ${registrationType === 'center_manager' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+              onClick={() => handleRegistrationTypeChange('center_manager')}
             >
-              مرتكز
+              مدير مركز
             </button>
           </div>
 
@@ -282,69 +279,9 @@ const Register = () => {
               </div>
           </div>
 
-          {registrationType === 'pillar' && (
-            <div className="space-y-4">
-              <h3 className="text-xl font-semibold text-gray-700 mb-4">المراكز الانتخابية</h3>
-              
-              <div className="relative mb-4">
-                <MapPin className="absolute right-3 top-3 text-gray-400" size={20} />
-                <input
-                  type="text"
-                  placeholder="اسم المركز الانتخابي"
-                  className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
-                  value={newCenter}
-                  onChange={handleNewCenterChange}
-                />
-              </div>
 
-              <button
-                type="button"
-                className="flex items-center justify-center gap-2 bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition-colors w-48 mx-auto font-semibold shadow-md hover:shadow-lg"
-                onClick={() => {
-                  if (newCenter.trim()) {
-                    setCenters([...centers, newCenter]);
-                    setNewCenter('');
-                  }
-                }}
-              >
-                <PlusCircle size={20} />
-                إضافة مركز
-              </button>
 
-              {centers.length > 0 && (
-                <div className="mt-4 border rounded-lg overflow-hidden">
-                  <table className="w-full">
-                    <thead className="bg-gray-50">
-                      <tr>
-                         <th className="px-4 py-2 text-right">المركز الانتخابي</th>
-                         <th className="px-4 py-2 text-right">العنوان</th>
-                         <th className="px-4 py-2 text-center">الإجراء</th>
-                       </tr>
-                     </thead>
-                     <tbody>
-                       {centers.map((center, index) => (
-                         <tr key={index} className="border-t">
-                           <td className="px-4 py-2">{center}</td>
-                           <td className="px-4 py-2">بغداد - الكرخ</td>
-                           <td className="px-4 py-2 text-center">
-                            <button
-                              type="button"
-                              className="text-red-500 hover:text-red-700"
-                              onClick={() => setCenters(centers.filter((_, i) => i !== index))}
-                            >
-                              حذف
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
-          )}
-
-          {(registrationType === 'voter' || registrationType === 'observer') && (
+          {(registrationType === 'voter' || registrationType === 'observer' || registrationType === 'center_manager') && (
             <div className="space-y-4">
               <h3 className="text-xl font-semibold text-gray-700 mb-4">معلومات المركز الانتخابي</h3>
               <div className="relative">
