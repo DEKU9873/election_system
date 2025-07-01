@@ -15,7 +15,7 @@ import GetStationByCenter from "../../hook/Stations/get-station-by-center";
 import { useParams } from "react-router-dom";
 const StationPage = () => {
   const dispatch = useDispatch();
-  const {id} = useParams();
+  const { id } = useParams();
 
   // const { subdistrictsData } = useUserData();
   const [stations, isLoading] = GetStationByCenter(id);
@@ -122,13 +122,14 @@ const StationPage = () => {
           <UserTableTitle title="المحطات" subtitle="قائمة المحطات" />
 
           <UserTableToolbar
-            title="اضافة ناحية"
+            title="اضافة محطة"
             filterText={filterText}
             setFilterText={setFilterText}
             showColumnMenu={showColumnMenu}
             setShowColumnMenu={setShowColumnMenu}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
+            link="/addStations"
           />
 
           <UserTableStats data={stations} />
@@ -189,7 +190,7 @@ const StationPage = () => {
                         </div>
                       </td>
                     )}
-           
+
                     {visibleColumns.tape_count && (
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-900">
@@ -197,7 +198,7 @@ const StationPage = () => {
                         </div>
                       </td>
                     )}
-                   
+
                     {visibleColumns.actions && (
                       <td className="px-4 py-3">
                         <div className="relative">

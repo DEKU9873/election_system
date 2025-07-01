@@ -9,8 +9,18 @@ import UserTableHeader from "../../Components/auth/UserTableHeader";
 import { ElectoralStripsHeader } from "../../Components/auth/TableHeaderData";
 import { MoreHorizontal, User } from "lucide-react";
 import UserTablePagination from "../../Components/auth/UserTablePagination";
+import GetAllTapesHook from "../../hook/tapes/get-all-tapes-hook";
+import formatDate from "../../hook/UtilsFunctions/FormatDate";
+import { useNavigate } from "react-router-dom";
+import { deleteTape } from "../../redux/electoralStripsSlice";
+import { useDispatch } from "react-redux";
 const ElectoralStrips = () => {
-  const { electoralStripsData } = useUserData();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  // const { electoralStripsData } = useUserData();
+  const [tapes, isLoading] = GetAllTapesHook();
+  console.log("tapes", tapes);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -20,13 +30,12 @@ const ElectoralStrips = () => {
   const [visibleColumns, setVisibleColumns] = useState({
     select: true,
     id: true,
-    name: true,
-    pollingCenter: true,
-    station: true,
-    electionDayDate: true,
-    uploadedBy: true,
-    uploadDate: true,
-    state: true,
+    ElectionCenter: true,
+    Station: true,
+    date: true,
+    added_by: true,
+    createdAt: true,
+    status: true,
     actions: true,
   });
   const [showColumnMenu, setShowColumnMenu] = useState(false);
@@ -36,15 +45,10 @@ const ElectoralStrips = () => {
 
   // تصفية البيانات
   const filteredData = useMemo(() => {
-    return electoralStripsData.filter(
-      (item) =>
-        item.pollingCenter.toLowerCase().includes(filterText.toLowerCase()) ||
-        item.phone.includes(filterText) ||
-        item.birthYear.includes(filterText) ||
-        item.registrationDate.includes(filterText) ||
-        item.registrationMethod.toLowerCase().includes(filterText.toLowerCase())
+    return tapes.filter((item) =>
+      item.date.toLowerCase().includes(filterText.toLowerCase())
     );
-  }, [electoralStripsData, filterText]);
+  }, [tapes, filterText]);
 
   // ترتيب البيانات
   const sortedData = useMemo(() => {
@@ -108,6 +112,18 @@ const ElectoralStrips = () => {
     setShowActionMenu(null);
   };
 
+  const handleDeleteConfirm = async (id) => {
+    if (id) {
+      await dispatch(deleteTape(id));
+    }
+  };
+
+  const handleTapesDetails = (id) => {
+    if (id) {
+      navigate(`/electoralStrips/${id}`);
+    }
+  };
+
   return (
     <div>
       <Sidebar />
@@ -126,9 +142,10 @@ const ElectoralStrips = () => {
             setShowColumnMenu={setShowColumnMenu}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
+            link="/addElectoralStrips"
           />
 
-          <UserTableStats data={electoralStripsData} />
+          <UserTableStats data={tapes} />
         </div>
 
         {/* الجدول */}
@@ -167,44 +184,46 @@ const ElectoralStrips = () => {
                         <div className="text-sm text-gray-900">{row.id}</div>
                       </td>
                     )}
-                    {visibleColumns.pollingCenter && (
+                    {visibleColumns.ElectionCenter && (
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-900">
-                          {row.pollingCenter}
+                          {row.ElectionCenter.name}
                         </div>
                       </td>
                     )}
-                    {visibleColumns.station && (
+                    {visibleColumns.Station && (
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-900">
-                          {row.station}
+                          {row.Station.name}
                         </div>
                       </td>
                     )}
-                    {visibleColumns.electionDayDate && (
+                    {visibleColumns.date && (
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-900">
-                          {row.electionDayDate}
+                          {formatDate(row.date)}
                         </div>
                       </td>
                     )}
-                    {visibleColumns.uploadedBy && (
+                    {visibleColumns.added_by && (
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-900">
-                          {row.uploadedBy}
+                          {row.added_by}
                         </div>
                       </td>
                     )}
-                    {visibleColumns.uploadDate && (
+                    {visibleColumns.createdAt && (
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-900">
-                          {row.uploadDate}
+                          {formatDate(row.createdAt)}
                         </div>
                       </td>
                     )}
-                    {visibleColumns.state && (
+                    {visibleColumns.status && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.state}</div>
+                        <div className="text-sm text-gray-900">
+                          {row.status}
+                        </div>
                       </td>
                     )}
 
@@ -226,7 +245,7 @@ const ElectoralStrips = () => {
                             <div className="absolute left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-999999999">
                               <div className="py-1">
                                 <button
-                                  onClick={() => handleUserAction("view", row)}
+                                  onClick={() => handleTapesDetails(row.id)}
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
                                   عرض التفاصيل
@@ -239,28 +258,11 @@ const ElectoralStrips = () => {
                                 </button>
                                 <button
                                   onClick={() =>
-                                    handleUserAction("delete", row)
+                                    handleDeleteConfirm(row.id)
                                   }
                                   className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
                                 >
                                   حذف
-                                </button>
-                                <button
-                                  onClick={() =>
-                                    handleUserAction("permissions", row)
-                                  }
-                                  className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                                >
-                                  إدارة الصلاحيات
-                                </button>
-                                <hr className="my-1" />
-                                <button
-                                  onClick={() =>
-                                    handleUserAction("delete", row)
-                                  }
-                                  className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
-                                >
-                                  🗑️ حذف المستخدم
                                 </button>
                               </div>
                             </div>

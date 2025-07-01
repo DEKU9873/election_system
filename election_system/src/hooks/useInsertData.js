@@ -24,10 +24,10 @@ const useInsertData = async (url, parmas) => {
 };
 
 const useInsertDataWithToken = async (url, parmas) => {
-  const config = {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
+    const token = Cookies.get("token");
+
+const config = {
+    headers: { Authorization: `Bearer ${token}` },
   };
   const res = await baseUrl.post(url, parmas, config);
 

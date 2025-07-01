@@ -170,6 +170,7 @@ const ElectedTablePage = () => {
               setShowColumnMenu={setShowColumnMenu}
               visibleColumns={visibleColumns}
               setVisibleColumns={setVisibleColumns}
+              link = "/register"
             />
   
             <UserTableStats data={voter} />

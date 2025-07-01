@@ -131,6 +131,7 @@ const SubdistrictPage = () => {
             setShowColumnMenu={setShowColumnMenu}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
+            link="/addSubistrict"
           />
 
           <UserTableStats data={subdistricts} />

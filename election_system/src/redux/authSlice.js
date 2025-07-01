@@ -23,7 +23,6 @@ export const addUser = createAsyncThunk(
   async (userData, thunkAPI) => {
     try {
       const response = await useInsertDataWithImage("/api/users", userData);
-      console.log("Response from addUser:", response);
       return response;
     } catch (error) {
       return thunkAPI.rejectWithValue(

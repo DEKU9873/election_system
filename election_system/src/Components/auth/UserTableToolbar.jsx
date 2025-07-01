@@ -1,5 +1,6 @@
 import React from "react";
 import { Search, User, ChevronDown } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const UserTableToolbar = ({
   title,
@@ -9,7 +10,14 @@ const UserTableToolbar = ({
   setShowColumnMenu,
   visibleColumns,
   setVisibleColumns,
+  link,
 }) => {
+
+  const navigate = useNavigate();
+
+  const handleAddUser = () => {
+    navigate(link);
+  };
   return (
     <div className="flex items-center justify-between gap-4 mb-4">
       <div className="relative flex-1 max-w-md">
@@ -25,7 +33,7 @@ const UserTableToolbar = ({
 
       <div className="flex items-center gap-2">
         {/* زر إضافة مستخدم جديد */}
-        <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500">
+        <button onClick={handleAddUser} className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500">
           <User className="w-4 h-4" />
           {title}
         </button>

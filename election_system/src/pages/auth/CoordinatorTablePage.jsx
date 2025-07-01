@@ -125,6 +125,7 @@ const CoordinatorTablePage = () => {
             setShowColumnMenu={setShowColumnMenu}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
+            link = "/register"
           />
 
           <UserTableStats data={coordinator} />

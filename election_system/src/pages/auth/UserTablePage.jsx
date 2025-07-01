@@ -188,6 +188,7 @@ const UserTablePage = () => {
             setShowColumnMenu={setShowColumnMenu}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
+            link="/register"
           />
 
           <UserTableStats data={allUsers} />

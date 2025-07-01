@@ -3,25 +3,23 @@ import { Toaster } from "react-hot-toast";
 import GetAllGovernorate from "../../hook/Governate/get-all-governorate";
 import { Phone, Lock, LogIn } from "lucide-react";
 import AddDistrictsHook from "../../hook/Districts/add-districts-hook";
-import AddSubDistrictsHook from "../../hook/Subdistricts/add-subdistricts-hook";
-import GetallDistricts from "../../hook/Districts/get-all-districts";
+import AddStationHook from "../../hook/Stations/add-station-hook";
+import GetAllCenter from "../../hook/Center/get-all-center";
 
-const AddSubdistrictsPage = () => {
+const AddStationPage = () => {
   const [
-    subdistrict,
-    districtID,
-    governorateId,
+    code,
+    name,
+    electionCenterId,
     loading,
     submitClicked,
-    onChangeSubdistrict,
-    onChangeDistrict,
-    onChangeGovernorateId,
+    onChangeCode,
+    onChangeName,
+    onChangeElectionCenterId,
     onSubmit,
-  ] = AddSubDistrictsHook();
+  ] = AddStationHook();
 
-  const [governates, isLoading] = GetAllGovernorate();
-    const [districts] = GetallDistricts();
-
+  const [electionCenters, isLoading] = GetAllCenter();
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-purple-100 p-4">
@@ -30,15 +28,33 @@ const AddSubdistrictsPage = () => {
           {/* District Name Input */}
           <div>
             <label className="block text-gray-700 font-medium mb-2 text-right">
-              اسم الناحية
+              رمز المحطة
             </label>
             <div className="relative">
               <input
                 type="text"
-                placeholder="اسم الناحية"
+                placeholder="رمز المحطة"
                 className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
-                value={subdistrict}
-                onChange={onChangeSubdistrict}
+                value={code}
+                onChange={onChangeCode}
+              />
+              <Phone
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-indigo-600"
+                size={20}
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-gray-700 font-medium mb-2 text-right">
+              اسم المحطة
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="اسم المحطة"
+                className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
+                value={name}
+                onChange={onChangeName}
               />
               <Phone
                 className="absolute left-4 top-1/2 transform -translate-y-1/2 text-indigo-600"
@@ -47,45 +63,22 @@ const AddSubdistrictsPage = () => {
             </div>
           </div>
 
+          {/* Governorate Dropdown */}
           <div>
             <label className="block text-gray-700 font-medium mb-2 text-right">
-              القضاء
+              المركز الانتخابي
             </label>
             <div className="relative">
               <select
                 className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right bg-white"
-                value={districtID}
-                onChange={onChangeDistrict}
+                value={electionCenterId}
+                onChange={onChangeElectionCenterId}
               >
-                <option value="">اختر القضاء</option>
+                <option value="">اختر المركز</option>
                 {!isLoading &&
-                  districts?.map((dis) => (
-                    <option key={dis.id} value={dis.id}>
-                      {dis.name}
-                    </option>
-                  ))}
-              </select>
-              <Lock
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-indigo-600"
-                size={20}
-              />
-            </div>
-          </div>
-          <div>
-            <label className="block text-gray-700 font-medium mb-2 text-right">
-              المحافظة
-            </label>
-            <div className="relative">
-              <select
-                className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right bg-white"
-                value={governorateId}
-                onChange={onChangeGovernorateId}
-              >
-                <option value="">اختر المحافظة</option>
-                {!isLoading &&
-                  governates?.map((gov) => (
-                    <option key={gov.id} value={gov.id}>
-                      {gov.name}
+                  electionCenters?.map((cen) => (
+                    <option key={cen.id} value={cen.id}>
+                      {cen.name}
                     </option>
                   ))}
               </select>
@@ -107,7 +100,7 @@ const AddSubdistrictsPage = () => {
           ) : (
             <>
               <LogIn size={20} />
-              إضافة قضاء
+              إضافة محطة
             </>
           )}
         </button>
@@ -117,4 +110,4 @@ const AddSubdistrictsPage = () => {
   );
 };
 
-export default AddSubdistrictsPage;
+export default AddStationPage;

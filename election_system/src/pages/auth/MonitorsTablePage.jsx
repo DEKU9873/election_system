@@ -45,7 +45,7 @@ const MonitorsTablePage = () => {
   const filteredData = useMemo(() => {
     return observer.filter(
       (item) =>
-       item.full_name.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.full_name.toLowerCase().includes(filterText.toLowerCase()) ||
         item.phone_number.includes(filterText) ||
         item.pollingCenter.toLowerCase().includes(filterText.toLowerCase()) ||
         item.role.toLowerCase().includes(filterText.toLowerCase()) ||
@@ -124,14 +124,14 @@ const MonitorsTablePage = () => {
           <UserTableTitle title="المشرفين" subtitle="قائمة المشرفين" />
 
           <UserTableToolbar
-                      title="اضافة مشرف"
-
+            title="اضافة مشرف"
             filterText={filterText}
             setFilterText={setFilterText}
             showColumnMenu={showColumnMenu}
             setShowColumnMenu={setShowColumnMenu}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
+            link="/register"
           />
 
           <UserTableStats data={observer} />
@@ -184,7 +184,9 @@ const MonitorsTablePage = () => {
                     )}
                     {visibleColumns.phone_number && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.phone_number}</div>
+                        <div className="text-sm text-gray-900">
+                          {row.phone_number}
+                        </div>
                       </td>
                     )}
                     {visibleColumns.state && (
@@ -219,13 +221,13 @@ const MonitorsTablePage = () => {
                                   onClick={() => handleUserAction("view", row)}
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
-                                   عرض التفاصيل
+                                  عرض التفاصيل
                                 </button>
                                 <button
                                   onClick={() => handleUserAction("edit", row)}
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
-                                   تعديل
+                                  تعديل
                                 </button>
                                 <button
                                   onClick={() =>
@@ -233,7 +235,7 @@ const MonitorsTablePage = () => {
                                   }
                                   className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
                                 >
-                                   حذف
+                                  حذف
                                 </button>
                                 <button
                                   onClick={() =>
@@ -241,7 +243,7 @@ const MonitorsTablePage = () => {
                                   }
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
-                                   إدارة الصلاحيات
+                                  إدارة الصلاحيات
                                 </button>
                                 <hr className="my-1" />
                                 <button

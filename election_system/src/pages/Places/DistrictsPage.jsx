@@ -129,6 +129,7 @@ const DistrictsPage = () => {
             setShowColumnMenu={setShowColumnMenu}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
+            link="/addDistrict"
           />
 
           <UserTableStats data={districts} />

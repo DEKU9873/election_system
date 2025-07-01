@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { useInsertData } from "../hooks/useInsertData";
-import { useGetData } from "../hooks/useGetData";
+import { useInsertData, useInsertDataWithToken } from "../hooks/useInsertData";
+import { useGetData, useGetDataToken } from "../hooks/useGetData";
 import { useDeleteDataWithToken } from "../hooks/useDeleteData";
 
 // إجراءات المحافظات
@@ -8,7 +8,10 @@ export const addGovernate = createAsyncThunk(
   "place/addGovernate",
   async (governateData, thunkAPI) => {
     try {
-      const response = await useInsertData("/api/governate", governateData);
+      const response = await useInsertDataWithToken(
+        "/api/governate",
+        governateData
+      );
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -61,7 +64,10 @@ export const addSubdistrict = createAsyncThunk(
   "place/addSubdistrict",
   async (subdistrictData, thunkAPI) => {
     try {
-      const response = await useInsertData("/api/subdistrict", subdistrictData);
+      const response = await useInsertDataWithToken(
+        "/api/subdistrict",
+        subdistrictData
+      );
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -116,7 +122,10 @@ export const addDistrict = createAsyncThunk(
   "place/addDistrict",
   async (districtData, thunkAPI) => {
     try {
-      const response = await useInsertData("/api/district", districtData);
+      const response = await useInsertDataWithToken(
+        "/api/district",
+        districtData
+      );
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -171,7 +180,7 @@ export const addElectionCenter = createAsyncThunk(
   "place/addElectionCenter",
   async (electionCenterData, thunkAPI) => {
     try {
-      const response = await useInsertData(
+      const response = await useInsertDataWithToken(
         "/api/electioncenter",
         electionCenterData
       );
@@ -227,8 +236,23 @@ export const addStation = createAsyncThunk(
   "place/addStation",
   async (stationData, thunkAPI) => {
     try {
-      const response = await useInsertData("/api/station/", stationData);
+      const response = await useInsertDataWithToken(
+        "/api/station/",
+        stationData
+      );
       return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const getStations = createAsyncThunk(
+  "place/getStations",
+  async (_, thunkAPI) => {
+    try {
+      const response = await useGetDataToken("/api/station/");
+      return response.data.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -240,7 +264,7 @@ export const getStationsByCenterId = createAsyncThunk(
   "place/getStationsByCenterId",
   async (centerId, thunkAPI) => {
     try {
-      const response = await useGetData(`/api/station/center/${centerId}`);
+      const response = await useGetDataToken(`/api/station/center/${centerId}`);
       return response.data.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -526,6 +550,19 @@ const placeSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+
+      .addCase(getStations.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getStations.fulfilled, (state, action) => {
+        state.loading = false;
+        state.stations = action.payload;
+      })
+      .addCase(getStations.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
       // جلب المحطات باستخدام ID المركز
       .addCase(getStationsByCenterId.pending, (state) => {
         state.loading = true;
@@ -555,7 +592,6 @@ const placeSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       });
-
   },
 });
 

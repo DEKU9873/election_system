@@ -134,6 +134,7 @@ const GovernoratePage = () => {
             setShowColumnMenu={setShowColumnMenu}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
+            link="/addGovernorate"
           />
 
           <UserTableStats data={governates} />

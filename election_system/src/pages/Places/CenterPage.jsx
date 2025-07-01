@@ -130,16 +130,17 @@ const CenterPage = () => {
       <Sidebar />
       <div className="w-full max-w-[1440px] mx-auto p-6 bg-white" dir="rtl">
         <div className="mb-6">
-          <UserTableTitle title="الاقضية" subtitle="قائمة الاقضية" />
+          <UserTableTitle title="المراكز الانتخابية" subtitle="قائمة المراكز الانتخابية" />
 
           <UserTableToolbar
-            title="اضافة قضاء"
+            title="اضافة مركز انتخابي"
             filterText={filterText}
             setFilterText={setFilterText}
             showColumnMenu={showColumnMenu}
             setShowColumnMenu={setShowColumnMenu}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
+            link="/addCenter"
           />
 
           <UserTableStats data={electionCenters} />
