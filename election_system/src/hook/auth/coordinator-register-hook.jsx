@@ -18,7 +18,8 @@ const CoordinatorRegisterHook = () => {
   const [idPhoto, setIdPhoto] = useState(null);
   const [idPhotoPreview, setIdPhotoPreview] = useState(null);
   const [electionCardPhoto, setElectionCardPhoto] = useState(null);
-  const [electionCardPhotoPreview, setElectionCardPhotoPreview] = useState(null);
+  const [electionCardPhotoPreview, setElectionCardPhotoPreview] =
+    useState(null);
 
   const [centers, setCenters] = useState([""]);
 
@@ -31,7 +32,6 @@ const CoordinatorRegisterHook = () => {
       reader.readAsDataURL(file);
     }
   };
-  
 
   const handleCenterChange = (index, value) => {
     const updated = [...centers];
@@ -51,21 +51,26 @@ const CoordinatorRegisterHook = () => {
   const validationValues = () => {
     if (!firstName.trim()) return notify("الاسم الأول مطلوب", "error"), false;
     if (!fatherName.trim()) return notify("اسم الأب مطلوب", "error"), false;
-    if (!grandFatherName.trim()) return notify("اسم الجد مطلوب", "error"), false;
+    if (!grandFatherName.trim())
+      return notify("اسم الجد مطلوب", "error"), false;
     if (!phone.trim()) return notify("رقم الهاتف مطلوب", "error"), false;
-    if (phone.length < 11) return notify("رقم الهاتف يجب أن يكون 11 رقم على الأقل", "error"), false;
+    if (phone.length < 11)
+      return notify("رقم الهاتف يجب أن يكون 11 رقم على الأقل", "error"), false;
     if (!birthYear.trim()) return notify("سنة الميلاد مطلوبة", "error"), false;
     if (!password.trim()) return notify("كلمة المرور مطلوبة", "error"), false;
-    if (password.length < 6) return notify("كلمة المرور يجب أن تكون 6 أحرف على الأقل", "error"), false;
-    if (password !== confirmPassword) return notify("كلمة المرور غير متطابقة", "error"), false;
+    if (password.length < 6)
+      return notify("كلمة المرور يجب أن تكون 6 أحرف على الأقل", "error"), false;
+    if (password !== confirmPassword)
+      return notify("كلمة المرور غير متطابقة", "error"), false;
     if (!personalPhoto) return notify("اختر الصورة الشخصية", "error"), false;
     if (!idPhoto) return notify("اختر صورة الهوية", "error"), false;
-    if (!electionCardPhoto) return notify("اختر صورة بطاقة الانتخاب", "error"), false;
-    if (centers.some(center => !center.trim())) return notify("يجب إدخال جميع أسماء المراكز", "error"), false;
+    if (!electionCardPhoto)
+      return notify("اختر صورة بطاقة الانتخاب", "error"), false;
+    if (centers.some((center) => !center.trim()))
+      return notify("يجب إدخال جميع أسماء المراكز", "error"), false;
 
     return true;
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -86,7 +91,8 @@ const CoordinatorRegisterHook = () => {
 
     if (personalPhoto) formData.append("profile_image", personalPhoto);
     if (idPhoto) formData.append("identity_image", idPhoto);
-    if (electionCardPhoto) formData.append("voting_card_image", electionCardPhoto);
+    if (electionCardPhoto)
+      formData.append("voting_card_image", electionCardPhoto);
 
     try {
       const result = await dispatch(addUser(formData)).unwrap();
