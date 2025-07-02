@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { User, Lock, Phone, IdCard, MapPin, Camera } from 'lucide-react';
 import { Toaster } from 'react-hot-toast';
-import logo from "../../assets/urlogo.png";
-import CoordinatorRegisterHook from '../../hook/auth/coordinator-register-hook';
+import logo from "../assets/urlogo.png";
+import DistrictManagerRegisterHook from '../hook/auth/district-manager-register-hook';
 import { Link } from 'react-router-dom';
 import Select from 'react-select';
-import GetAllCenter from '../../hook/Center/get-all-center';
 
-const CoordinatorRegister = () => {
+const DistrictManagerRegister = () => {
   const [
     firstName,
     handleFirstNameChange,
@@ -30,8 +29,8 @@ const CoordinatorRegister = () => {
     idPhotoPreview,
     electionCardPhoto,
     electionCardPhotoPreview,
-    selectedCenters,
-    handleSelectedCentersChange,
+    selectedDistricts,
+    handleSelectedDistrictsChange,
     handleSubmit,
     setPersonalPhoto,
     setPersonalPhotoPreview,
@@ -39,17 +38,13 @@ const CoordinatorRegister = () => {
     setIdPhotoPreview,
     setElectionCardPhoto,
     setElectionCardPhotoPreview
-  ] = CoordinatorRegisterHook();
+  ] = DistrictManagerRegisterHook();
 
-    const [electionCenters, isLoading] = GetAllCenter();
-    console.log(electionCenters)
-
-
-  const centers = [
-    { value: '1', label: 'مركز 1' },
-    { value: '2', label: 'مركز 2' },
-    { value: '3', label: 'مركز 3' },
-    // يمكن إضافة المزيد من المراكز هنا
+  const districts = [
+    { value: '1', label: 'منطقة 1' },
+    { value: '2', label: 'منطقة 2' },
+    { value: '3', label: 'منطقة 3' },
+    // يمكن إضافة المزيد من المناطق هنا
   ];
 
   return (
@@ -58,7 +53,7 @@ const CoordinatorRegister = () => {
         <div className="flex justify-center mb-8">
           <img src={logo} alt="شعار النظام الانتخابي" className="w-32 h-32" />
         </div>
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">تسجيل مرتكز جديد</h2>
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">تسجيل مدير منطقة جديد</h2>
         
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
@@ -257,20 +252,16 @@ const CoordinatorRegister = () => {
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-xl font-semibold text-gray-700 mb-4">المراكز الانتخابية</h3>
+            <h3 className="text-xl font-semibold text-gray-700 mb-4">المناطق</h3>
             <div className="relative">
               <MapPin className="absolute right-3 top-3 text-gray-400" size={20} />
               <Select
                 isMulti
-                options={electionCenters?.map(center => ({
-                  value: center.id,
-                  label: center.name
-                }))}
-                value={selectedCenters}
-                onChange={handleSelectedCentersChange}
-                placeholder="اختر المراكز الانتخابية"
+                options={districts}
+                value={selectedDistricts}
+                onChange={handleSelectedDistrictsChange}
+                placeholder="اختر المناطق"
                 className="text-right"
-                isLoading={isLoading}
                 styles={{
                   control: (base) => ({
                     ...base,
@@ -309,4 +300,4 @@ const CoordinatorRegister = () => {
   );
 };
 
-export default CoordinatorRegister;
+export default DistrictManagerRegister;

@@ -23,6 +23,8 @@ import AddCenterPage from "./pages/Places/AddCenterPage";
 import ElectoralStripsDetails from "./pages/Electoral Strips/ElectoralStripsDetails";
 import AddStationPage from "./pages/Places/AddStationPage";
 import AddElectoralStripsPage from "./pages/Electoral Strips/AddElectoralStripsPage";
+import CoordinatorRegister from "./pages/auth/CoordinatorRegisterPage";
+import DistrictManagerRegister from "./pages/DistrictManagerRegisterPage";
 
 const App = () => {
   return (
@@ -32,6 +34,8 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/selfRegister" element={<SelfRegister />} />
+          <Route path="/coordinatorRegister" element={<CoordinatorRegister />} />
+          <Route path="/districtManagerRegister" element={<DistrictManagerRegister />} />
           <Route path="/elected" element={<ElectedTablePage />} />
           <Route path="/monitors" element={<MonitorsTablePage />} />
           <Route path="/coordinators" element={<CoordinatorTablePage />} />

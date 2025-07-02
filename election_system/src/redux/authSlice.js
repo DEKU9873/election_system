@@ -17,6 +17,21 @@ export const registerUser = createAsyncThunk(
   }
 );
 
+// Add Coordinator
+export const addCoordinator = createAsyncThunk(
+  "auth/addCoordinator",
+  async (formData, thunkAPI) => {
+    try {
+      const response = await useInsertDataWithImage("/api/coordinator/", formData);
+      return response;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "فشل في إضافة المنسق"
+      );
+    }
+  }
+);
+
 // Add User
 export const addUser = createAsyncThunk(
   "auth/addUser",
@@ -109,7 +124,6 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-
       // Register
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
@@ -120,6 +134,21 @@ const authSlice = createSlice({
         state.user = action.payload;
       })
       .addCase(registerUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Add Coordinator
+      .addCase(addCoordinator.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addCoordinator.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+        state.error = null;
+      })
+      .addCase(addCoordinator.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

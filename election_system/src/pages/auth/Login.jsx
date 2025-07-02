@@ -96,6 +96,12 @@ const Login = () => {
           <Link to="/register" className="text-gray-600 font-medium block">
             ليس لديك حساب؟ تسجيل حساب جديد
           </Link>
+          <Link to="/coordinatorRegister" className="text-gray-600 font-medium block">
+            تسجيل حساب مرتكز جديد
+          </Link>
+          <Link to="/districtManagerRegister" className="text-gray-600 font-medium block">
+            تسجيل حساب مدير منطقة جديد
+          </Link>
         </div>
       </div>
       <Toaster />

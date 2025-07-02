@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { addCoordinator } from "../../redux/authSlice";
 import notify from "../useNotification";
 
-const CoordinatorRegisterHook = () => {
+const DistrictManagerRegisterHook = () => {
   const dispatch = useDispatch();
   const [firstName, setFirstName] = useState("");
   const [fatherName, setFatherName] = useState("");
@@ -18,7 +18,7 @@ const CoordinatorRegisterHook = () => {
   const [idPhotoPreview, setIdPhotoPreview] = useState(null);
   const [electionCardPhoto, setElectionCardPhoto] = useState(null);
   const [electionCardPhotoPreview, setElectionCardPhotoPreview] = useState(null);
-  const [selectedCenters, setSelectedCenters] = useState([]);
+  const [selectedDistricts, setSelectedDistricts] = useState([]);
 
   const handleFirstNameChange = (e) => setFirstName(e.target.value);
   const handleFatherNameChange = (e) => setFatherName(e.target.value);
@@ -27,7 +27,7 @@ const CoordinatorRegisterHook = () => {
   const handleBirthYearChange = (e) => setBirthYear(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
   const handleConfirmPasswordChange = (e) => setConfirmPassword(e.target.value);
-  const handleSelectedCentersChange = (centers) => setSelectedCenters(centers);
+  const handleSelectedDistrictsChange = (districts) => setSelectedDistricts(districts);
 
   const handleFileChange = (e, setFile, setPreview) => {
     const file = e.target.files[0];
@@ -52,8 +52,8 @@ const CoordinatorRegisterHook = () => {
       return;
     }
 
-    if (selectedCenters.length === 0) {
-      notify("يرجى اختيار مركز انتخابي واحد على الأقل", "error");
+    if (selectedDistricts.length === 0) {
+      notify("يرجى اختيار منطقة واحدة على الأقل", "error");
       return;
     }
 
@@ -64,12 +64,12 @@ const CoordinatorRegisterHook = () => {
     formData.append("phone_number", phone);
     formData.append("birth_year", birthYear);
     formData.append("password", password);
-    formData.append("role", "coordinator");
+    formData.append("role", "district_manager");
     formData.append("profile_image", personalPhoto);
     formData.append("identity_image", idPhoto);
     formData.append("voting_card_image", electionCardPhoto);
-    selectedCenters.forEach(center => {
-      formData.append("election_centers_id[]", center.value);
+    selectedDistricts.forEach(district => {
+      formData.append("districts_id[]", district.value);
     });
 
     try {
@@ -102,8 +102,8 @@ const CoordinatorRegisterHook = () => {
     idPhotoPreview,
     electionCardPhoto,
     electionCardPhotoPreview,
-    selectedCenters,
-    handleSelectedCentersChange,
+    selectedDistricts,
+    handleSelectedDistrictsChange,
     handleSubmit,
     setPersonalPhoto,
     setPersonalPhotoPreview,
@@ -114,4 +114,4 @@ const CoordinatorRegisterHook = () => {
   ];
 };
 
-export default CoordinatorRegisterHook;
+export default DistrictManagerRegisterHook;
