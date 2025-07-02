@@ -1,11 +1,19 @@
 import React from "react";
 import { Toaster } from "react-hot-toast";
-import { Phone, Lock, LogIn, CalendarDays, FileText, ImagePlus, Layers } from "lucide-react";
+import {
+  Phone,
+  Lock,
+  LogIn,
+  CalendarDays,
+  FileText,
+  ImagePlus,
+  Layers,
+} from "lucide-react";
 import GetAllCenter from "../../hook/Center/get-all-center";
 import AddTapesHook from "../../hook/tapes/add-tapse-hooks";
 import GetAllSubdistricts from "../../hook/Subdistricts/get-all-subdistricts";
 import GetAllStation from "../../hook/Stations/get-all-station";
-import Select from 'react-select';
+import Select from "react-select";
 
 const AddElectoralStripsPage = () => {
   const [
@@ -29,14 +37,14 @@ const AddElectoralStripsPage = () => {
   const [centers] = GetAllCenter();
   const [stations] = GetAllStation();
 
-  const centerOptions = centers?.map(center => ({
+  const centerOptions = centers?.map((center) => ({
     value: center.id,
-    label: center.name
+    label: center.name,
   }));
 
-  const stationOptions = stations?.map(station => ({
+  const stationOptions = stations?.map((station) => ({
     value: station.id,
-    label: station.name
+    label: station.name,
   }));
 
   const handleCenterChange = (selectedOption) => {
@@ -50,27 +58,29 @@ const AddElectoralStripsPage = () => {
   const selectStyles = {
     control: (base) => ({
       ...base,
-      paddingRight: '10px',
-      borderRadius: '0.5rem',
-      borderColor: '#E5E7EB',
-      '&:hover': {
-        borderColor: '#E5E7EB'
-      }
+      paddingRight: "10px",
+      borderRadius: "0.5rem",
+      borderColor: "#E5E7EB",
+      "&:hover": {
+        borderColor: "#E5E7EB",
+      },
     }),
     placeholder: (base) => ({
       ...base,
-      textAlign: 'right'
+      textAlign: "right",
     }),
     input: (base) => ({
       ...base,
-      textAlign: 'right'
-    })
+      textAlign: "right",
+    }),
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-purple-100 p-4">
       <div className="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-full max-w-lg flex flex-col items-center">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">إضافة شريط انتخابي جديد</h1>
+        <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+          إضافة شريط انتخابي جديد
+        </h1>
         <div className="w-full grid grid-cols-1 gap-6">
           <div>
             <label className="block text-gray-700 font-medium mb-2 text-right">
@@ -79,7 +89,9 @@ const AddElectoralStripsPage = () => {
             <div className="relative">
               <Select
                 options={centerOptions}
-                value={centerOptions?.find(option => option.value === electionCenterId)}
+                value={centerOptions?.find(
+                  (option) => option.value === electionCenterId
+                )}
                 onChange={handleCenterChange}
                 placeholder="اختر المركز"
                 isSearchable={true}
@@ -100,7 +112,9 @@ const AddElectoralStripsPage = () => {
             <div className="relative">
               <Select
                 options={stationOptions}
-                value={stationOptions?.find(option => option.value === stationId)}
+                value={stationOptions?.find(
+                  (option) => option.value === stationId
+                )}
                 onChange={handleStationChange}
                 placeholder="اختر المحطة"
                 isSearchable={true}
@@ -125,8 +139,8 @@ const AddElectoralStripsPage = () => {
                 value={date}
                 onChange={onChangeDate}
                 style={{
-                  direction: 'rtl',
-                  colorScheme: 'light'
+                  direction: "rtl",
+                  colorScheme: "light",
                 }}
               />
               <CalendarDays
@@ -189,9 +203,11 @@ const AddElectoralStripsPage = () => {
                 dir="rtl"
               >
                 <option value="">اختر الحالة</option>
-                <option value="تم التدقيق">تم التدقيق</option>
-                <option value="لم يتم التدقيق">لم يتم التدقيق</option>
+                <option value="مقبول">مقبول</option>
+                <option value="مرفوض">مرفوض</option>
+                <option value="قيد المراجعة">قيد المراجعة</option>
               </select>
+
               <Layers
                 className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-600"
                 size={20}
