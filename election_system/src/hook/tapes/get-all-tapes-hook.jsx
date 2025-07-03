@@ -9,7 +9,6 @@ const GetAllTapesHook = () => {
     dispatch(getAllTapes());
   }, []);
   const { tapes, isLoading } = useSelector((state) => state.tape);
-  console.log('hook', tapes)
 
   return [tapes, isLoading];
 };

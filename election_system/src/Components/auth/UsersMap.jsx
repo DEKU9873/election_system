@@ -46,6 +46,11 @@ const UsersMap = ({ data, selectedRows, handleSelectRow, mapCenter, mapZoom }) =
     return () => document.head.removeChild(style);
   }, []);
 
+  // فلترة البيانات لإزالة أي عنصر بدون إحداثيات صحيحة
+  const validData = Array.isArray(data)
+    ? data.filter(user => user.location && user.location.lat && user.location.lng)
+    : [];
+
   return (
     <div className="mb-6">
       <MapContainer
@@ -58,30 +63,44 @@ const UsersMap = ({ data, selectedRows, handleSelectRow, mapCenter, mapZoom }) =
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
-        {data.map((user) => (
-          <Marker
-            key={user.id}
-            position={user.location}
-            eventHandlers={{
-              click: () => handleSelectRow(user.id)
-            }}
-            icon={L.divIcon({
-              className: 'custom-div-icon',
-              html: `<div class="marker-pin" data-marker-id="${user.id}"></div>`,
-              iconSize: [30, 42],
-              iconAnchor: [15, 42]
-            })}
-          >
-            <Popup>
-              <div className="text-right">
-                <h3 className="font-bold">{user.name}</h3>
-                <p>رقم الهاتف: {user.phone}</p>
-                <p>طريقة التسجيل: {user.registrationMethod}</p>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
+
+        {/* إضافة العلامات فقط إذا كانت هناك بيانات صحيحة */}
+        {validData.length > 0 ? (
+          validData.map((user) => (
+            <Marker
+              key={user.id}
+              position={user.location}
+              eventHandlers={{
+                click: () => handleSelectRow(user.id)
+              }}
+              icon={L.divIcon({
+                className: 'custom-div-icon',
+                html: `<div class="marker-pin" data-marker-id="${user.id}"></div>`,
+                iconSize: [30, 42],
+                iconAnchor: [15, 42]
+              })}
+            >
+              <Popup>
+                <div className="text-right">
+                  <h3 className="font-bold">{user.name}</h3>
+                  <p>رقم الهاتف: {user.phone}</p>
+                  <p>طريقة التسجيل: {user.registrationMethod}</p>
+                </div>
+              </Popup>
+            </Marker>
+          ))
+        ) : (
+          // رسالة تظهر في حال عدم وجود بيانات
+          <></>
+        )}
       </MapContainer>
+
+      {/* عرض رسالة أسفل الخريطة إذا لم توجد بيانات */}
+      {validData.length === 0 && (
+        <div className="text-center text-gray-500 mt-2">
+          لا توجد بيانات لعرضها على الخريطة
+        </div>
+      )}
     </div>
   );
 };

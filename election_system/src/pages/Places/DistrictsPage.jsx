@@ -15,7 +15,6 @@ const DistrictsPage = () => {
   const dispatch = useDispatch();
 
   const [districts, isLoading] = GetallDistricts();
-  console.log(districts);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -104,7 +103,6 @@ const DistrictsPage = () => {
 
   // إجراءات المستخدمين
   const handleUserAction = (action, user) => {
-    console.log(`${action} للمستخدم:`, user);
     setShowActionMenu(null);
   };
 

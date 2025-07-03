@@ -83,7 +83,7 @@ export const MonitorsTableHeaders = [
     icon: null,
   },
   {
-    id: "addBy",
+    id: "added_by",
     label: "اضيف بواسطة",
     sortable: true,
     icon: null,

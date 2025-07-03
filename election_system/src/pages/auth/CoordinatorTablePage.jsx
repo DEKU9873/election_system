@@ -9,18 +9,10 @@ import UserTablePagination from "../../Components/auth/UserTablePagination";
 import UserTableHeader from "../../Components/auth/UserTableHeader";
 import UserTableStats from "../../Components/auth/UserTableStats";
 import AllUserHook from "../../hook/auth/all-user-hook";
+import AllCoordinatorHook from "../../hook/auth/all-coordinator-hook";
 
 const CoordinatorTablePage = () => {
-  const [
-    allUsers,
-    Loading,
-    system_admin,
-    coordinator,
-    observer,
-    center_manager,
-    district_manager,
-    finance_auditor,
-  ] = AllUserHook();
+  const [allUsers, Loading] = AllCoordinatorHook();
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
@@ -41,12 +33,14 @@ const CoordinatorTablePage = () => {
 
   // تصفية البيانات
   const filteredData = useMemo(() => {
-    return coordinator.filter(
+    return allUsers.filter(
       (item) =>
-        item.full_name.toLowerCase().includes(filterText.toLowerCase()) ||
-        item.phone_number.includes(filterText)
+        item?.User?.full_name
+          .toLowerCase()
+          .includes(filterText.toLowerCase()) ||
+        item?.User?.phone_number.includes(filterText)
     );
-  }, [coordinator, filterText]);
+  }, [allUsers, filterText]);
 
   // ترتيب البيانات
   const sortedData = useMemo(() => {
@@ -106,7 +100,6 @@ const CoordinatorTablePage = () => {
 
   // إجراءات المستخدمين
   const handleUserAction = (action, user) => {
-    console.log(`${action} للمستخدم:`, user);
     setShowActionMenu(null);
   };
 
@@ -125,10 +118,10 @@ const CoordinatorTablePage = () => {
             setShowColumnMenu={setShowColumnMenu}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
-            link = "/register"
+            link="/coordinatorRegister"
           />
 
-          <UserTableStats data={coordinator} title = "اجمالي المرتكزين" />
+          <UserTableStats data={allUsers} title="اجمالي المرتكزين" />
         </div>
 
         {/* الجدول */}
@@ -171,20 +164,22 @@ const CoordinatorTablePage = () => {
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
                           <div className="font-medium text-gray-900">
-                            {row.full_name}
+                            {row?.User?.full_name}
                           </div>
                         </div>
                       </td>
                     )}
                     {visibleColumns.phone_number && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.phone_number}</div>
+                        <div className="text-sm text-gray-900">
+                          {row?.User?.phone_number}
+                        </div>
                       </td>
                     )}
                     {visibleColumns.numberOfCenters && (
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-900">
-                          {row.numberOfCenters}
+                          {row?.ElectionCenters?.length || 0}
                         </div>
                       </td>
                     )}

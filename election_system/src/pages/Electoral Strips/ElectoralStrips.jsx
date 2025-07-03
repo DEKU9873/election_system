@@ -20,7 +20,6 @@ const ElectoralStrips = () => {
 
   // const { electoralStripsData } = useUserData();
   const [tapes, isLoading] = GetAllTapesHook();
-  console.log("tapes", tapes);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -108,7 +107,6 @@ const ElectoralStrips = () => {
 
   // إجراءات المستخدمين
   const handleUserAction = (action, user) => {
-    console.log(`${action} للمستخدم:`, user);
     setShowActionMenu(null);
   };
 

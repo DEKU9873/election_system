@@ -6,7 +6,6 @@ import OneUserHook from "../../hook/auth/one-user-hook";
 const UserDetailsPage = () => {
   const { id } = useParams();
   const [singleUser, isLoading] = OneUserHook(id);
-  console.log(singleUser);
 
   if (isLoading || !singleUser) {
     return <div>جاري تحميل البيانات...</div>;

@@ -22,11 +22,44 @@ export const addCoordinator = createAsyncThunk(
   "auth/addCoordinator",
   async (formData, thunkAPI) => {
     try {
-      const response = await useInsertDataWithImage("/api/coordinator/", formData);
+      const response = await useInsertDataWithImage(
+        "/api/coordinator/",
+        formData
+      );
       return response;
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data || "فشل في إضافة المنسق"
+      );
+    }
+  }
+);
+
+// Get All Coordinators
+export const getAllCoordinators = createAsyncThunk(
+  "auth/getAllCoordinators",
+  async (_, thunkAPI) => {
+    try {
+      const response = await useGetDataToken("api/coordinator/");
+      return response.data.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "حدث خطأ غير متوقع"
+      );
+    }
+  }
+);
+
+// Get One Coordinator
+export const getCoordinator = createAsyncThunk(
+  "auth/getCoordinator",
+  async (userId, thunkAPI) => {
+    try {
+      const response = await useGetDataToken(`/api/coordinator/${userId}/`);
+      return response.data.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "فشل في جلب بيانات المنسق"
       );
     }
   }
@@ -230,6 +263,36 @@ const authSlice = createSlice({
       .addCase(addUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+
+      // Get All Coordinators
+      .addCase(getAllCoordinators.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAllCoordinators.fulfilled, (state, action) => {
+        state.loading = false;
+        state.allUsers = action.payload; // يمكنك تغيير الاسم إلى state.allCoordinators إذا رغبت بذلك
+      })
+      .addCase(getAllCoordinators.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Get One Coordinator
+      .addCase(getCoordinator.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.singleUser = null; // أو state.singleCoordinator
+      })
+      .addCase(getCoordinator.fulfilled, (state, action) => {
+        state.loading = false;
+        state.singleUser = action.payload; // أو state.singleCoordinator
+      })
+      .addCase(getCoordinator.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.singleUser = null; // أو state.singleCoordinator
       });
   },
 });

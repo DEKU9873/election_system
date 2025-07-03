@@ -16,7 +16,6 @@ import { useNavigate } from "react-router-dom";
 const UserTablePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const { allUsers } = useUserData();
   const [
     allUsers,
     Loading,
@@ -136,7 +135,6 @@ const UserTablePage = () => {
 
   // إجراءات المستخدمين
   const handleUserAction = (action, user) => {
-    console.log(`${action} للمستخدم:`, user);
     setShowActionMenu(null);
   };
 

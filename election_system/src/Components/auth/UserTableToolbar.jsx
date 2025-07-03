@@ -34,7 +34,7 @@ const UserTableToolbar = ({
       <div className="flex items-center gap-2">
         {/* زر إضافة مستخدم جديد */}
         <button onClick={handleAddUser} className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500">
-          <User className="w-4 h-4" />
+          {/* <User className="w-4 h-4" /> */}
           {title}
         </button>
 
@@ -89,8 +89,8 @@ const UserTableToolbar = ({
                             ? "طريقة التسجيل"
                             : key === "state"
                             ? "الحالة"
-                            : key === "addBy"
-                            ? "تمت إضافة بواسطة"
+                            : key === "added_by"
+                            ? "اضيف بواسطة"
                             : key === "numberOfCenters"
                             ? "عدد المراكز"
                             : key === "election_centers_count"

@@ -34,8 +34,14 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/selfRegister" element={<SelfRegister />} />
-          <Route path="/coordinatorRegister" element={<CoordinatorRegister />} />
-          <Route path="/districtManagerRegister" element={<DistrictManagerRegister />} />
+          <Route
+            path="/coordinatorRegister"
+            element={<CoordinatorRegister />}
+          />
+          <Route
+            path="/districtManagerRegister"
+            element={<DistrictManagerRegister />}
+          />
           <Route path="/elected" element={<ElectedTablePage />} />
           <Route path="/monitors" element={<MonitorsTablePage />} />
           <Route path="/coordinators" element={<CoordinatorTablePage />} />
@@ -58,7 +64,10 @@ const App = () => {
           <Route path="/addCenter/" element={<AddCenterPage />} />
           <Route path="/stations/:id/" element={<StationPage />} />
           <Route path="/addStations/" element={<AddStationPage />} />
-          <Route path="/addElectoralStrips/" element={<AddElectoralStripsPage />} />
+          <Route
+            path="/addElectoralStrips/"
+            element={<AddElectoralStripsPage />}
+          />
         </Routes>
       </BrowserRouter>
     </div>

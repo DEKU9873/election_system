@@ -15,7 +15,6 @@ import { deleteGovernate } from "../../redux/placeSlice";
 const GovernoratePage = () => {
   const dispatch = useDispatch();
   const [governates, isLoading] = GetAllGovernorate();
-  console.log(governates);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -108,7 +107,6 @@ const GovernoratePage = () => {
 
   // إجراءات المستخدمين
   const handleUserAction = (action, user) => {
-    console.log(`${action} للمستخدم:`, user);
     setShowActionMenu(null);
   };
 

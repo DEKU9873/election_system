@@ -42,15 +42,9 @@ const CoordinatorRegister = () => {
   ] = CoordinatorRegisterHook();
 
     const [electionCenters, isLoading] = GetAllCenter();
-    console.log(electionCenters)
 
 
-  const centers = [
-    { value: '1', label: 'مركز 1' },
-    { value: '2', label: 'مركز 2' },
-    { value: '3', label: 'مركز 3' },
-    // يمكن إضافة المزيد من المراكز هنا
-  ];
+
 
   return (
     <div dir="rtl" className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-purple-100 p-4 md:p-8">

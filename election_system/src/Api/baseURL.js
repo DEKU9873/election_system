@@ -7,7 +7,7 @@ const baseURL = axios.create({
   // baseURL: "http://192.168.100.18:8000/",
   // baseURL: "http://localhost:8000",
   // baseURL: "http://192.168.100.201:5000/",
-  baseURL: " http://localhost:5000/",
+  baseURL: "http://localhost:5000/",
 
 
   

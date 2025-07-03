@@ -14,7 +14,6 @@ import formatDate from "../../hook/UtilsFunctions/FormatDate";
 const ElectoralStripsDetails = () => {
   const { id } = useParams();
   const [currentTape, isLoading] = GetOneTapesHook(id);
-  console.log(currentTape);
 
   // Loading state
   if (isLoading) {

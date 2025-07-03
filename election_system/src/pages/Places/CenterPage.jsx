@@ -19,7 +19,6 @@ const CenterPage = () => {
 
 
   const [electionCenters, isLoading] = GetAllCenter();
-  console.log(electionCenters);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -109,7 +108,6 @@ const CenterPage = () => {
 
   // إجراءات المستخدمين
   const handleUserAction = (action, user) => {
-    console.log(`${action} للمستخدم:`, user);
     setShowActionMenu(null);
   };
 

@@ -1,8 +1,6 @@
 import React, { useMemo, useState } from "react";
-import { useUserData } from "../../Components/auth/UserData";
 import Sidebar from "../../Components/Uitily/Sidebar";
 import UserTableTitle from "../../Components/auth/UserTableTitle";
-import UsersMap from "../../Components/auth/UsersMap";
 import UserTableToolbar from "../../Components/auth/UserTableToolbar";
 import UserTableStats from "../../Components/auth/UserTableStats";
 import UserTableHeader from "../../Components/auth/UserTableHeader";
@@ -10,7 +8,12 @@ import { MonitorsTableHeaders } from "../../Components/auth/TableHeaderData";
 import { MoreHorizontal, User } from "lucide-react";
 import UserTablePagination from "../../Components/auth/UserTablePagination";
 import AllUserHook from "../../hook/auth/all-user-hook";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { deleteUser } from "../../redux/authSlice";
 const MonitorsTablePage = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [
     allUsers,
     Loading,
@@ -33,7 +36,7 @@ const MonitorsTablePage = () => {
     full_name: true,
     phone_number: true,
     state: true,
-    addBy: true,
+    added_by: true,
     actions: true,
   });
   const [showColumnMenu, setShowColumnMenu] = useState(false);
@@ -46,11 +49,9 @@ const MonitorsTablePage = () => {
     return observer.filter(
       (item) =>
         item.full_name.toLowerCase().includes(filterText.toLowerCase()) ||
-        item.phone_number.includes(filterText) ||
-        item.pollingCenter.toLowerCase().includes(filterText.toLowerCase()) ||
-        item.role.toLowerCase().includes(filterText.toLowerCase()) ||
-        item.addBy.toLowerCase().includes(filterText.toLowerCase()) ||
-        item.createdAt.includes(filterText)
+        item.phone_number.includes(filterText)
+        //  ||
+        // item.added_by.toLowerCase().includes(filterText.toLowerCase())
     );
   }, [observer, filterText]);
 
@@ -112,8 +113,19 @@ const MonitorsTablePage = () => {
 
   // إجراءات المستخدمين
   const handleUserAction = (action, user) => {
-    console.log(`${action} للمستخدم:`, user);
     setShowActionMenu(null);
+  };
+
+  const handleDeleteConfirm = async (id) => {
+    if (id) {
+      await dispatch(deleteUser(id));
+    }
+  };
+
+  const handleDetailsUserAction = async (id) => {
+    if (id) {
+      navigate(`/userDetails/${id}`);
+    }
   };
 
   return (
@@ -134,7 +146,7 @@ const MonitorsTablePage = () => {
             link="/register"
           />
 
-          <UserTableStats data={observer} title = "اجمالي المشرفين" />
+          <UserTableStats data={observer} title="اجمالي المشرفين" />
         </div>
 
         {/* الجدول */}
@@ -151,7 +163,7 @@ const MonitorsTablePage = () => {
 
             <tbody className="divide-y divide-gray-200">
               {paginatedData.length > 0 ? (
-                paginatedData.map((row) => (
+                paginatedData.map((row, index) => (
                   <tr
                     key={row.id}
                     className={`hover:bg-gray-50 transition-colors ${
@@ -170,7 +182,7 @@ const MonitorsTablePage = () => {
                     )}
                     {visibleColumns.id && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.id}</div>
+                        <div className="text-sm text-gray-900">{index+1}</div>
                       </td>
                     )}
                     {visibleColumns.full_name && (
@@ -194,9 +206,11 @@ const MonitorsTablePage = () => {
                         <div className="text-sm text-gray-900">{row.state}</div>
                       </td>
                     )}
-                    {visibleColumns.addBy && (
+                    {visibleColumns.added_by && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.addBy}</div>
+                        <div className="text-sm text-gray-900">
+                          {row.added_by}
+                        </div>
                       </td>
                     )}
 
@@ -218,7 +232,9 @@ const MonitorsTablePage = () => {
                             <div className="absolute left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-999999999">
                               <div className="py-1">
                                 <button
-                                  onClick={() => handleUserAction("view", row)}
+                                  onClick={() =>
+                                    handleDetailsUserAction(row.id)
+                                  }
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
                                   عرض التفاصيل
@@ -230,9 +246,7 @@ const MonitorsTablePage = () => {
                                   تعديل
                                 </button>
                                 <button
-                                  onClick={() =>
-                                    handleUserAction("delete", row)
-                                  }
+                                  onClick={() => handleDeleteConfirm(row.id)}
                                   className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
                                 >
                                   حذف
@@ -246,14 +260,6 @@ const MonitorsTablePage = () => {
                                   إدارة الصلاحيات
                                 </button>
                                 <hr className="my-1" />
-                                <button
-                                  onClick={() =>
-                                    handleUserAction("delete", row)
-                                  }
-                                  className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
-                                >
-                                  🗑️ حذف المستخدم
-                                </button>
                               </div>
                             </div>
                           )}

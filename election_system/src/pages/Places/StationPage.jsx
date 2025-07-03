@@ -19,7 +19,6 @@ const StationPage = () => {
 
   // const { subdistrictsData } = useUserData();
   const [stations, isLoading] = GetStationByCenter(id);
-  console.log(stations);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -104,7 +103,6 @@ const StationPage = () => {
 
   // إجراءات المستخدمين
   const handleUserAction = (action, user) => {
-    console.log(`${action} للمستخدم:`, user);
     setShowActionMenu(null);
   };
 

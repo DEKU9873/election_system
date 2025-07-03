@@ -57,11 +57,13 @@ const LoginHook = () => {
 
       setLoginClicked(true);
       setLoading(true);
-      
-      await dispatch(loginUser({ 
-        phone_number: phone.trim(), 
-        password: password 
-      }));
+
+      await dispatch(
+        loginUser({
+          phone_number: phone.trim(),
+          password: password,
+        })
+      );
     } catch (error) {
       notify("حدث خطأ أثناء تسجيل الدخول", "error");
       console.error("Login error:", error);
@@ -73,39 +75,38 @@ const LoginHook = () => {
   const { user } = useSelector((state) => state.auth);
   const { error } = useSelector((state) => state.auth);
 
-  // Remove console.logs in production
-    console.log('user', user);
-    console.log('error', error);
-  
+  // console.log('user', user);
+  // console.log('error', error);
 
   useEffect(() => {
     if (!loading && loginClicked) {
       if (user?.data) {
         try {
-          Cookies.set("user", user.data, { 
+          Cookies.set("user", user.data, {
             expires: 7,
             secure: true,
-            sameSite: 'strict'
+            sameSite: "strict",
           });
-          Cookies.set("token", user.token, { 
+          Cookies.set("token", user.token, {
             expires: 7,
             secure: true,
-            sameSite: 'strict'
+            sameSite: "strict",
           });
-          
+
           notify("تم تسجيل الدخول بنجاح", "success");
           navigate("/users");
         } catch (error) {
           notify("حدث خطأ أثناء حفظ بيانات المستخدم", "error");
         }
       } else if (error) {
-        const errorMessage = error?.response?.data?.message || "فشل تسجيل الدخول. تأكد من البيانات";
+        const errorMessage =
+          error?.response?.data?.message ||
+          "فشل تسجيل الدخول. تأكد من البيانات";
         notify(errorMessage, "error");
       }
       setLoginClicked(false);
     }
   }, [loading, loginClicked, user, error, navigate]);
-
 
   return [phone, password, loading, onChangePhone, onChangePassword, onSubmit];
 };

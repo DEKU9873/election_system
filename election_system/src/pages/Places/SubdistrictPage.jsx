@@ -16,7 +16,6 @@ const SubdistrictPage = () => {
 
   // const { subdistrictsData } = useUserData();
   const [subdistricts, isLoading] = GetAllSubdistricts();
-  console.log(subdistricts);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -106,7 +105,6 @@ const SubdistrictPage = () => {
 
   // إجراءات المستخدمين
   const handleUserAction = (action, user) => {
-    console.log(`${action} للمستخدم:`, user);
     setShowActionMenu(null);
   };
 
