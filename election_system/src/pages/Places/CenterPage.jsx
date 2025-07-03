@@ -13,12 +13,13 @@ import { useDispatch } from "react-redux";
 import { deleteDistrict, deleteElectionCenter } from "../../redux/placeSlice";
 import GetAllCenter from "../../hook/Center/get-all-center";
 import { useNavigate } from "react-router-dom";
+import AddCenterModal from "./Place Modal/AddCenterModal";
 const CenterPage = () => {
   const dispatch = useDispatch();
-    const navigate = useNavigate();
-
+  const navigate = useNavigate();
 
   const [electionCenters, isLoading] = GetAllCenter();
+  const [showModal, setShowModal] = useState(false);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -46,7 +47,7 @@ const CenterPage = () => {
   // تصفية البيانات
   const filteredData = useMemo(() => {
     return electionCenters.filter((item) =>
-      item.name.toLowerCase().includes(filterText.toLowerCase())
+      item?.name?.toLowerCase().includes(filterText.toLowerCase())
     );
   }, [electionCenters, filterText]);
 
@@ -117,10 +118,17 @@ const CenterPage = () => {
     }
   };
 
-    const handleCenterStations = (id) => {
+  const handleCenterStations = (id) => {
     if (id) {
       navigate(`/stations/${id}`);
     }
+  };
+
+  const handleOpenModal = () => {
+    setShowModal(true);
+  };
+  const handleCloseModal = () => {
+    setShowModal(false);
   };
 
   return (
@@ -128,7 +136,10 @@ const CenterPage = () => {
       <Sidebar />
       <div className="w-full max-w-[1440px] mx-auto p-6 bg-white" dir="rtl">
         <div className="mb-6">
-          <UserTableTitle title="المراكز الانتخابية" subtitle="قائمة المراكز الانتخابية" />
+          <UserTableTitle
+            title="المراكز الانتخابية"
+            subtitle="قائمة المراكز الانتخابية"
+          />
 
           <UserTableToolbar
             title="اضافة مركز انتخابي"
@@ -138,10 +149,10 @@ const CenterPage = () => {
             setShowColumnMenu={setShowColumnMenu}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
-            link="/addCenter"
+            onOpen={handleOpenModal}
           />
 
-          <UserTableStats data={electionCenters} title = "اجمالي المراكز"/>
+          <UserTableStats data={electionCenters} title="اجمالي المراكز" />
         </div>
 
         {/* الجدول */}
@@ -192,9 +203,7 @@ const CenterPage = () => {
                     )}
                     {visibleColumns.name && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">
-                          {row.name}
-                        </div>
+                        <div className="text-sm text-gray-900">{row.name}</div>
                       </td>
                     )}
                     {visibleColumns.governorate_name && (
@@ -336,6 +345,7 @@ const CenterPage = () => {
           />
         )}
       </div>
+     {showModal && <AddCenterModal  onClose={handleCloseModal} />}
     </div>
   );
 };

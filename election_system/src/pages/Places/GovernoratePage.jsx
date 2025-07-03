@@ -12,9 +12,11 @@ import UserTablePagination from "../../Components/auth/UserTablePagination";
 import GetAllGovernorate from "../../hook/Governate/get-all-governorate";
 import { useDispatch } from "react-redux";
 import { deleteGovernate } from "../../redux/placeSlice";
+import AddGovernorateModal from "./Place Modal/AddGovernorateModal";
 const GovernoratePage = () => {
   const dispatch = useDispatch();
   const [governates, isLoading] = GetAllGovernorate();
+  const [showModal, setShowModal] = useState(false);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -41,7 +43,7 @@ const GovernoratePage = () => {
   // تصفية البيانات
   const filteredData = useMemo(() => {
     return governates.filter(
-      (item) => item.name.toLowerCase().includes(filterText.toLowerCase())
+      (item) => item?.name?.toLowerCase().includes(filterText.toLowerCase())
       // item.phone.includes(filterText) ||
       // item.birthYear.includes(filterText) ||
       // item.registrationDate.includes(filterText) ||
@@ -110,19 +112,25 @@ const GovernoratePage = () => {
     setShowActionMenu(null);
   };
 
+  const handleDeleteConfirm = async (id) => {
+    if (id) {
+      await dispatch(deleteGovernate(id));
+    }
+  };
 
-    const handleDeleteConfirm = async (id) => {
-      if (id) {
-        await dispatch(deleteGovernate(id));
-      }
-    };
+  const handleOpenModal = () => {
+    setShowModal(true);
+  };
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
 
   return (
     <div>
       <Sidebar />
       <div className="w-full max-w-[1440px] mx-auto p-6 bg-white" dir="rtl">
         <div className="mb-6">
-          <UserTableTitle title="المحافظات" subtitle="قائمة المحافظات" />
+          <UserTableTitle title="المحافظات" subtitle="قائمة المحافظات" />
 
           <UserTableToolbar
             title="اضافة محافظة"
@@ -132,10 +140,10 @@ const GovernoratePage = () => {
             setShowColumnMenu={setShowColumnMenu}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
-            link="/addGovernorate"
+            onOpen = {handleOpenModal}
           />
 
-          <UserTableStats data={governates} title = "اجمالي المحافظات" />
+          <UserTableStats data={governates} title="اجمالي المحافظات" />
         </div>
 
         {/* الجدول */}
@@ -241,12 +249,6 @@ const GovernoratePage = () => {
                           {showActionMenu === row.id && (
                             <div className="absolute left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-999999999">
                               <div className="py-1">
-                                {/* <button
-                                  onClick={() => handleUserAction("view", row)}
-                                  className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                                >
-                                  عرض التفاصيل
-                                </button> */}
                                 <button
                                   onClick={() => handleUserAction("edit", row)}
                                   className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
@@ -259,23 +261,6 @@ const GovernoratePage = () => {
                                 >
                                   حذف
                                 </button>
-                                {/* <button
-                                  onClick={() =>
-                                    handleUserAction("permissions", row)
-                                  }
-                                  className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                                >
-                                  إدارة الصلاحيات
-                                </button> */}
-                                {/* <hr className="my-1" />
-                                <button
-                                  onClick={() =>
-                                    handleUserAction("delete", row)
-                                  }
-                                  className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
-                                >
-                                   حذف المستخدم
-                                </button> */}
                               </div>
                             </div>
                           )}
@@ -319,6 +304,7 @@ const GovernoratePage = () => {
           />
         )}
       </div>
+      {showModal && <AddGovernorateModal onClose= {handleCloseModal} />}
     </div>
   );
 };

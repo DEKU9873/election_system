@@ -11,11 +11,14 @@ import UserTablePagination from "../../Components/auth/UserTablePagination";
 import GetAllSubdistricts from "../../hook/Subdistricts/get-all-subdistricts";
 import { useDispatch } from "react-redux";
 import { deleteSubdistrict } from "../../redux/placeSlice";
+import AddSubdistrictsModal from "./Place Modal/AddSubdistrictsModal";
 const SubdistrictPage = () => {
   const dispatch = useDispatch();
 
   // const { subdistrictsData } = useUserData();
   const [subdistricts, isLoading] = GetAllSubdistricts();
+    const [showModal, setShowModal] = useState(false);
+
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -43,7 +46,7 @@ const SubdistrictPage = () => {
   // تصفية البيانات
   const filteredData = useMemo(() => {
     return subdistricts.filter((item) =>
-      item.name.toLowerCase().includes(filterText.toLowerCase())
+      item?.name?.toLowerCase().includes(filterText.toLowerCase())
     );
   }, [subdistricts, filterText]);
 
@@ -114,6 +117,13 @@ const SubdistrictPage = () => {
     }
   };
 
+  const handleOpenModal = () => {
+    setShowModal(true);
+  };
+  const handleCloseModal = () =>{
+    setShowModal(false);
+  }
+
   return (
     <div>
       <Sidebar />
@@ -129,7 +139,8 @@ const SubdistrictPage = () => {
             setShowColumnMenu={setShowColumnMenu}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
-            link="/addSubistrict"
+            onOpen={handleOpenModal}
+           
           />
 
           <UserTableStats data={subdistricts} title = "اجمالي النواحي" />
@@ -320,6 +331,9 @@ const SubdistrictPage = () => {
           />
         )}
       </div>
+      {showModal && (
+        <AddSubdistrictsModal onClose={handleCloseModal} />
+      )}
     </div>
   );
 };

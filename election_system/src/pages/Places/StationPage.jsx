@@ -13,12 +13,15 @@ import { useDispatch } from "react-redux";
 import { deleteStation, deleteSubdistrict } from "../../redux/placeSlice";
 import GetStationByCenter from "../../hook/Stations/get-station-by-center";
 import { useParams } from "react-router-dom";
+import AddStationModal from "./Place Modal/AddStationModal";
 const StationPage = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
 
   // const { subdistrictsData } = useUserData();
   const [stations, isLoading] = GetStationByCenter(id);
+    const [showModal, setShowModal] = useState(false);
+
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -41,7 +44,7 @@ const StationPage = () => {
   // تصفية البيانات
   const filteredData = useMemo(() => {
     return stations.filter((item) =>
-      item.name.toLowerCase().includes(filterText.toLowerCase())
+      item?.name?.toLowerCase().includes(filterText.toLowerCase())
     );
   }, [stations, filterText]);
 
@@ -112,6 +115,13 @@ const StationPage = () => {
     }
   };
 
+  const handleOpenModal = () => {
+    setShowModal(true);
+  };
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   return (
     <div>
       <Sidebar />
@@ -127,7 +137,8 @@ const StationPage = () => {
             setShowColumnMenu={setShowColumnMenu}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
-            link="/addStations"
+                        onOpen = {handleOpenModal}
+
           />
 
           <UserTableStats data={stations} title = "اجمالي المحطات" />
@@ -292,6 +303,11 @@ const StationPage = () => {
           />
         )}
       </div>
+      {showModal && (
+        <AddStationModal
+          onClose={handleCloseModal}
+        />
+      )}
     </div>
   );
 };

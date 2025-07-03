@@ -11,10 +11,12 @@ import UserTablePagination from "../../Components/auth/UserTablePagination";
 import GetallDistricts from "../../hook/Districts/get-all-districts";
 import { useDispatch } from "react-redux";
 import { deleteDistrict } from "../../redux/placeSlice";
+import AddDistrictsModal from "./Place Modal/AddDistrictsModal";
 const DistrictsPage = () => {
   const dispatch = useDispatch();
 
   const [districts, isLoading] = GetallDistricts();
+  const [showModal, setShowModal] = useState(false);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -41,7 +43,7 @@ const DistrictsPage = () => {
   // تصفية البيانات
   const filteredData = useMemo(() => {
     return districts.filter((item) =>
-      item.name.toLowerCase().includes(filterText.toLowerCase())
+      item?.name?.toLowerCase().includes(filterText.toLowerCase())
     );
   }, [districts, filterText]);
 
@@ -112,6 +114,13 @@ const DistrictsPage = () => {
     }
   };
 
+  const handleOpenModal = () => {
+    setShowModal(true);
+  };
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   return (
     <div>
       <Sidebar />
@@ -127,10 +136,10 @@ const DistrictsPage = () => {
             setShowColumnMenu={setShowColumnMenu}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
-            link="/addDistrict"
+            onOpen={handleOpenModal}
           />
 
-          <UserTableStats data={districts} title = "اجمالي الاقضية" />
+          <UserTableStats data={districts} title="اجمالي الاقضية" />
         </div>
 
         {/* الجدول */}
@@ -318,6 +327,7 @@ const DistrictsPage = () => {
           />
         )}
       </div>
+     {showModal && <AddDistrictsModal onClose= {handleCloseModal} />}
     </div>
   );
 };

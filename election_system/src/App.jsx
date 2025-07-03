@@ -14,15 +14,9 @@ import DistrictsManagers from "./pages/auth/DistrictsManagers";
 import ElectoralStrips from "./pages/Electoral Strips/ElectoralStrips";
 import UserDetailsPage from "./pages/auth/UserDetailsPage";
 import SelfRegister from "./pages/auth/SelfRegister";
-import AddGovernoratePage from "./pages/Places/AddGovernoratePage";
-import AddDistrictsPage from "./pages/Places/AddDistrictsPage";
-import AddSubdistrictsPage from "./pages/Places/AddSubdistrictsPage";
 import CenterPage from "./pages/Places/CenterPage";
 import StationPage from "./pages/Places/StationPage";
-import AddCenterPage from "./pages/Places/AddCenterPage";
 import ElectoralStripsDetails from "./pages/Electoral Strips/ElectoralStripsDetails";
-import AddStationPage from "./pages/Places/AddStationPage";
-import AddElectoralStripsPage from "./pages/Electoral Strips/AddElectoralStripsPage";
 import CoordinatorRegister from "./pages/auth/CoordinatorRegisterPage";
 import DistrictManagerRegister from "./pages/DistrictManagerRegisterPage";
 
@@ -57,17 +51,8 @@ const App = () => {
             element={<ElectoralStripsDetails />}
           />
           <Route path="/userDetails/:id" element={<UserDetailsPage />} />
-          <Route path="/addGovernorate/" element={<AddGovernoratePage />} />
-          <Route path="/addDistrict/" element={<AddDistrictsPage />} />
-          <Route path="/addSubistrict/" element={<AddSubdistrictsPage />} />
           <Route path="/centers/" element={<CenterPage />} />
-          <Route path="/addCenter/" element={<AddCenterPage />} />
           <Route path="/stations/:id/" element={<StationPage />} />
-          <Route path="/addStations/" element={<AddStationPage />} />
-          <Route
-            path="/addElectoralStrips/"
-            element={<AddElectoralStripsPage />}
-          />
         </Routes>
       </BrowserRouter>
     </div>
