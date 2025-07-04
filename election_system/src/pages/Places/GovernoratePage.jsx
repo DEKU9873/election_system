@@ -11,12 +11,15 @@ import { MoreHorizontal, User } from "lucide-react";
 import UserTablePagination from "../../Components/auth/UserTablePagination";
 import GetAllGovernorate from "../../hook/Governate/get-all-governorate";
 import { useDispatch } from "react-redux";
-import { deleteGovernate } from "../../redux/placeSlice";
+import { deleteGovernate, getGovernates } from "../../redux/placeSlice";
 import AddGovernorateModal from "./Place Modal/AddGovernorateModal";
+import DeleteModal from "../../Components/Uitily/DeleteModal";
 const GovernoratePage = () => {
   const dispatch = useDispatch();
   const [governates, isLoading] = GetAllGovernorate();
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [governateIdToDelete, setGovernateIdToDelete] = useState(null);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -112,11 +115,31 @@ const GovernoratePage = () => {
     setShowActionMenu(null);
   };
 
-  const handleDeleteConfirm = async (id) => {
-    if (id) {
-      await dispatch(deleteGovernate(id));
-    }
+  const handleDeleteConfirm = (id) => {
+    setGovernateIdToDelete(id);
+    setShowDeleteModal(true);
+    setShowActionMenu(null);
   };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setGovernateIdToDelete(null);
+  };
+
+const handleDeleteConfirmation = async () => {
+  if (governateIdToDelete) {
+    try {
+      await dispatch(deleteGovernate(governateIdToDelete));
+      await dispatch(getGovernates());
+    } catch (error) {
+      console.error("حدث خطأ أثناء الحذف:", error);
+    } finally {
+      setShowDeleteModal(false); // 👈 يغلق المودال دائمًا
+      setGovernateIdToDelete(null);
+    }
+  }
+};
+
 
   const handleOpenModal = () => {
     setShowModal(true);
@@ -305,6 +328,11 @@ const GovernoratePage = () => {
         )}
       </div>
       {showModal && <AddGovernorateModal onClose= {handleCloseModal} />}
+      <DeleteModal 
+        isOpen={showDeleteModal}
+        onCancel={handleDeleteCancel}
+        onConfirm={handleDeleteConfirmation}
+      />
     </div>
   );
 };

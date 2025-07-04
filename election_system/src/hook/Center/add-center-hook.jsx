@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import notify from "../useNotification";
-import { addElectionCenter } from "../../redux/placeSlice"; // تأكد من أن الأكشن موجود هنا
+import { addElectionCenter, getElectionCenters } from "../../redux/placeSlice"; // تأكد من أن الأكشن موجود هنا
 
 const AddCenterHook = () => {
   const dispatch = useDispatch();
@@ -45,6 +45,8 @@ const AddCenterHook = () => {
       );
 
       if (res.type === "place/addElectionCenter/fulfilled") {
+        await dispatch(getElectionCenters());
+
         notify("تمت إضافة المركز الانتخابي بنجاح", "success");
         setCenter("");
         setCode("");

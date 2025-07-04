@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { User, Lock, Phone, IdCard, MapPin, Camera } from 'lucide-react';
+import { User, Lock, Phone, IdCard, MapPin, Camera, X } from 'lucide-react';
 import { Toaster } from 'react-hot-toast';
-import logo from "../assets/urlogo.png";
-import DistrictManagerRegisterHook from '../hook/auth/district-manager-register-hook';
+import logo from "../../../assets/urlogo.png";
+import DistrictManagerRegisterHook from '../../../hook/auth/district-manager-register-hook';
 import { Link } from 'react-router-dom';
 import Select from 'react-select';
 
-const DistrictManagerRegister = () => {
+const DistrictManagerRegisterModal = ({ onClose }) => {
   const [
     firstName,
     handleFirstNameChange,
@@ -48,17 +48,31 @@ const DistrictManagerRegister = () => {
   ];
 
   return (
-    <div dir="rtl" className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-purple-100 p-4 md:p-8">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-7xl mx-auto p-4 md:p-8">
-        <div className="flex justify-center mb-8">
-          <img src={logo} alt="شعار النظام الانتخابي" className="w-32 h-32" />
+    <div
+      dir="rtl"
+      className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 min-h-screen flex items-center justify-center p-4 scrollbar-right"
+      onClick={onClose}
+    >
+      <div className="absolute inset-0" />
+      <div
+        className="bg-white backdrop-blur-sm p-6 rounded-2xl shadow-2xl w-full max-w-5xl flex flex-col items-center relative max-h-[90vh] overflow-y-auto my-8"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="absolute left-4 top-4 text-gray-500 hover:text-gray-700 transition-colors"
+        >
+          <X size={24} />
+        </button>
+        <div className="flex flex-col items-center mb-6">
+          <img src={logo} alt="شعار النظام الانتخابي" className="w-24 h-24 mb-2" />
+          <h2 className="text-3xl font-bold text-center text-gray-800">تسجيل مدير منطقة جديد</h2>
         </div>
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">تسجيل مدير منطقة جديد</h2>
         
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-4">
-            <h3 className="text-xl font-semibold text-gray-700 mb-4">المعلومات الأساسية</h3>
-            <div className="grid md:grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="space-y-6 w-full">
+          <div className="space-y-4 w-full">
+            <h3 className="text-xl font-semibold text-gray-700 mb-4 text-right">المعلومات الأساسية</h3>
+            <div className="grid md:grid-cols-2 gap-6 w-full">
               <div className="relative">
                 <User className="absolute right-3 top-3 text-gray-400" size={20} />
                 <input
@@ -138,9 +152,9 @@ const DistrictManagerRegister = () => {
             </div>
           </div>
 
-          <div className="space-y-4">
-            <h3 className="text-xl font-semibold text-gray-700 mb-4">الوثائق والصور</h3>
-            <div className="grid md:grid-cols-3 gap-4">
+          <div className="space-y-4 w-full">
+            <h3 className="text-xl font-semibold text-gray-700 mb-4 text-right">الوثائق والصور</h3>
+            <div className="grid md:grid-cols-3 gap-6 w-full">
               <div className="relative border-2 border-dashed rounded-lg p-4 text-center h-48 flex flex-col items-center justify-center overflow-hidden">
                 {personalPhotoPreview ? (
                   <div className="w-full h-full relative group">
@@ -251,8 +265,8 @@ const DistrictManagerRegister = () => {
             </div>
           </div>
 
-          <div className="space-y-4">
-            <h3 className="text-xl font-semibold text-gray-700 mb-4">المناطق</h3>
+          <div className="space-y-4 w-full">
+            <h3 className="text-xl font-semibold text-gray-700 mb-4 text-right">المناطق</h3>
             <div className="relative">
               <MapPin className="absolute right-3 top-3 text-gray-400" size={20} />
               <Select
@@ -278,20 +292,21 @@ const DistrictManagerRegister = () => {
             </div>
           </div>
 
-          <div className="flex flex-col space-y-4 w-full max-w-6xl mx-auto">
+         <div className="flex flex-col space-x-4 space-x-reverse justify-end w-full mt-6">
             <button
               type="submit"
-              className="bg-blue-500 text-white py-3 px-6 rounded-lg hover:bg-blue-600 transition-colors w-full"
+              className="w-full mt-8 bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg font-medium text-base transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               تسجيل
             </button>
 
-            <Link
-              to="/login"
-              className="text-center text-blue-500 hover:text-blue-600 transition-colors"
+            <button
+              type="button"
+              onClick={onClose}
+              className="w-full mt-4 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-6 rounded-lg font-medium text-base transition-colors duration-200"
             >
-              لديك حساب بالفعل؟ تسجيل الدخول
-            </Link>
+              إلغاء
+            </button>
           </div>
         </form>
       </div>
@@ -300,4 +315,4 @@ const DistrictManagerRegister = () => {
   );
 };
 
-export default DistrictManagerRegister;
+export default DistrictManagerRegisterModal;

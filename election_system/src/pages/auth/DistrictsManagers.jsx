@@ -10,8 +10,17 @@ import { DistrictsManagersHeader } from "../../Components/auth/TableHeaderData";
 import { MoreHorizontal, User } from "lucide-react";
 import UserTablePagination from "../../Components/auth/UserTablePagination";
 import AllUserHook from "../../hook/auth/all-user-hook";
+import DistrictManagerRegisterModal from "./Auth Modal/DistrictManagerRegisterModal";
+import DeleteModal from "../../Components/Uitily/DeleteModal";
+import { useDispatch } from "react-redux";
+import { deleteUser, getAllUsers } from "../../redux/authSlice";
 const DistrictsManagers = () => {
-const [
+  const dispatch = useDispatch();
+  const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [userIdToDelete, setUserIdToDelete] = useState(null);
+
+  const [
     allUsers,
     Loading,
     system_admin,
@@ -21,6 +30,8 @@ const [
     district_manager,
     finance_auditor,
   ] = AllUserHook();
+
+  console.log("district_manager", district_manager);
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
@@ -44,7 +55,7 @@ const [
   const filteredData = useMemo(() => {
     return district_manager.filter(
       (item) =>
-       item.full_name.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.full_name.toLowerCase().includes(filterText.toLowerCase()) ||
         item.phone_number.includes(filterText) ||
         item.pollingCenter.toLowerCase().includes(filterText.toLowerCase()) ||
         item.role.toLowerCase().includes(filterText.toLowerCase()) ||
@@ -112,6 +123,36 @@ const [
   // إجراءات المستخدمين
   const handleUserAction = (action, user) => {
     setShowActionMenu(null);
+    if (action === "delete") {
+      handleDeleteConfirm(user.id);
+    }
+  };
+
+  const handleDeleteConfirm = (id) => {
+    setUserIdToDelete(id);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setUserIdToDelete(null);
+  };
+
+  const handleDeleteConfirmation = async () => {
+    if (userIdToDelete) {
+      await dispatch(deleteUser(userIdToDelete));
+      await dispatch(getAllUsers());
+
+      setShowDeleteModal(false);
+      setUserIdToDelete(null);
+    }
+  };
+
+  const handleOpenModal = () => {
+    setShowModal(true);
+  };
+  const handleCloseModal = () => {
+    setShowModal(false);
   };
 
   return (
@@ -132,9 +173,13 @@ const [
             setShowColumnMenu={setShowColumnMenu}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
+            onOpen={handleOpenModal}
           />
 
-          <UserTableStats data={district_manager} title = "اجمالي مدراء الاقضية" />
+          <UserTableStats
+            data={district_manager}
+            title="اجمالي مدراء الاقضية"
+          />
         </div>
 
         {/* الجدول */}
@@ -184,7 +229,9 @@ const [
                     )}
                     {visibleColumns.phone_number && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.phone_number}</div>
+                        <div className="text-sm text-gray-900">
+                          {row.phone_number}
+                        </div>
                       </td>
                     )}
 
@@ -300,6 +347,13 @@ const [
           />
         )}
       </div>
+
+      {showModal && <DistrictManagerRegisterModal onClose={handleCloseModal} />}
+      <DeleteModal
+        isOpen={showDeleteModal}
+        onCancel={handleDeleteCancel}
+        onConfirm={handleDeleteConfirmation}
+      />
     </div>
   );
 };

@@ -12,8 +12,10 @@ import UsersMap from "../../Components/auth/UsersMap";
 import AllUserHook from "../../hook/auth/all-user-hook";
 import formatDate from "../../hook/UtilsFunctions/FormatDate";
 import { useNavigate } from "react-router-dom";
-import { deleteUser } from "../../redux/authSlice";
+import { deleteUser, getAllUsers } from "../../redux/authSlice";
 import { useDispatch } from "react-redux";
+import RegisterModal from "./Auth Modal/RegisterModal";
+import DeleteModal from "../../Components/Uitily/DeleteModal";
 
 const ElectedTablePage = () => {
   const dispatch = useDispatch();
@@ -30,6 +32,10 @@ const ElectedTablePage = () => {
     finance_auditor,
     voter,
   ] = AllUserHook();
+
+  const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [userIdToDelete, setUserIdToDelete] = useState(null);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -72,10 +78,10 @@ const ElectedTablePage = () => {
   const filteredData = useMemo(() => {
     return voter.filter(
       (item) =>
-        item.full_name.toLowerCase().includes(filterText.toLowerCase()) ||
-        item.phone_number.includes(filterText) ||
-        item.birth_year.toString().includes(filterText) ||
-        item.createdAt.toLowerCase().includes(filterText.toLowerCase())
+        item?.full_name?.toLowerCase().includes(filterText.toLowerCase()) ||
+        item?.phone_number?.includes(filterText) ||
+        item?.birth_year?.toString().includes(filterText) ||
+        item?.createdAt?.toLowerCase().includes(filterText.toLowerCase())
     );
   }, [voter, filterText]);
 
@@ -140,9 +146,22 @@ const ElectedTablePage = () => {
     setShowActionMenu(null);
   };
 
-  const handleDeleteConfirm = async (id) => {
-    if (id) {
-      await dispatch(deleteUser(id));
+  const handleDeleteConfirm =  (id) => {
+    setUserIdToDelete(id);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setUserIdToDelete(null);
+  };
+
+  const handleDeleteConfirmation = async () => {
+    if (userIdToDelete) {
+      await dispatch(deleteUser(userIdToDelete));
+      await dispatch(getAllUsers());
+      setShowDeleteModal(false);
+      setUserIdToDelete(null);
     }
   };
 
@@ -151,6 +170,14 @@ const ElectedTablePage = () => {
       navigate(`/userDetails/${id}`);
     }
   };
+
+  const handleOpenModal = () => {
+    setShowModal(true);
+  };
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
 
   return (
     <div>
@@ -186,7 +213,7 @@ const ElectedTablePage = () => {
             setShowColumnMenu={setShowColumnMenu}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
-            link="/register"
+            onOpen={handleOpenModal}
           />
 
           <UserTableStats data={voter} title="اجمالي الناخبين" />
@@ -225,7 +252,7 @@ const ElectedTablePage = () => {
                     )}
                     {visibleColumns.id && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{index+1}</div>
+                        <div className="text-sm text-gray-900">{index + 1}</div>
                       </td>
                     )}
                     {visibleColumns.full_name && (
@@ -366,6 +393,8 @@ const ElectedTablePage = () => {
           />
         )}
       </div>
+      {showModal && <RegisterModal onClose={handleCloseModal} />}
+      <DeleteModal isOpen={showDeleteModal} onCancel={handleDeleteCancel} onConfirm={handleDeleteConfirmation} />
     </div>
   );
 };

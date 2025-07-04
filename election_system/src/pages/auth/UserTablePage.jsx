@@ -13,6 +13,7 @@ import formatDate from "../../hook/UtilsFunctions/FormatDate";
 import { deleteUser, getAllUsers } from "../../redux/authSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import DeleteModal from "../../Components/Uitily/DeleteModal";
 const UserTablePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -31,6 +32,8 @@ const UserTablePage = () => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [filterText, setFilterText] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [userIdToDelete, setUserIdToDelete] = useState(null);
   const [visibleColumns, setVisibleColumns] = useState({
     select: true,
     id: true,
@@ -68,12 +71,12 @@ const UserTablePage = () => {
   const filteredData = useMemo(() => {
     return allUsers.filter(
       (item) =>
-        item.full_name.toLowerCase().includes(filterText.toLowerCase()) ||
-        item.phone_number.includes(filterText) ||
-        item.pollingCenter.toLowerCase().includes(filterText.toLowerCase()) ||
-        item.role.toLowerCase().includes(filterText.toLowerCase()) ||
-        item.addBy.toLowerCase().includes(filterText.toLowerCase()) ||
-        item.createdAt.includes(filterText)
+        item?.full_name?.toLowerCase().includes(filterText.toLowerCase()) ||
+        item?.phone_number?.includes(filterText) ||
+        item?.pollingCenter?.toLowerCase().includes(filterText.toLowerCase()) ||
+        item?.role?.toLowerCase().includes(filterText.toLowerCase()) ||
+        // item.addBy.toLowerCase().includes(filterText.toLowerCase()) ||
+        item?.createdAt?.includes(filterText)
     );
   }, [allUsers, filterText]);
 
@@ -139,9 +142,21 @@ const UserTablePage = () => {
   };
 
 
-  const handleDeleteConfirm = async (id) => {
-    if (id) {
-      await dispatch(deleteUser(id));
+  const handleDeleteConfirm = (id) => {
+    setUserIdToDelete(id);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setUserIdToDelete(null);
+  };
+
+  const handleDeleteConfirmation = async () => {
+    if (userIdToDelete) {
+      await dispatch(deleteUser(userIdToDelete));
+      setShowDeleteModal(false);
+      setUserIdToDelete(null);
     }
   };
 
@@ -374,6 +389,13 @@ const UserTablePage = () => {
             }}
           />
         )}
+
+        {/* نافذة تأكيد الحذف */}
+        <DeleteModal 
+          isOpen={showDeleteModal} 
+          onCancel={handleDeleteCancel} 
+          onConfirm={handleDeleteConfirmation} 
+        />
       </div>
     </div>
   );

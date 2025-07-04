@@ -104,8 +104,16 @@ const AddCenterModal = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 min-h-screen flex items-center justify-center p-4" onClick={onClose}>
-      <div className="bg-white backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-full max-w-lg flex flex-col items-center relative">
+    <div
+      className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 min-h-screen flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+            <div className="absolute inset-0" />
+
+      <div
+        className="bg-white backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-full max-w-lg flex flex-col items-center relative "
+        onClick={(e) => e.stopPropagation()}
+      >
         <button
           onClick={onClose}
           className="absolute left-4 top-4 text-gray-500 hover:text-gray-700 transition-colors"

@@ -48,11 +48,10 @@ export const deleteGovernate = createAsyncThunk(
   async (id, thunkAPI) => {
     try {
       const response = await useDeleteDataWithToken(
-        `/api/governate/${id}`,
-        {},
-        "DELETE"
+        `/api/governate/${id}`
       );
-      return response.data;
+      // إرجاع المعرف مع البيانات لاستخدامه في reducer
+      return { id, ...response };
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -106,11 +105,10 @@ export const deleteSubdistrict = createAsyncThunk(
   async (id, thunkAPI) => {
     try {
       const response = await useDeleteDataWithToken(
-        `/api/subdistrict/${id}`,
-        {},
-        "DELETE"
+        `/api/subdistrict/${id}`
       );
-      return response.data;
+      // إرجاع المعرف مع البيانات لاستخدامه في reducer
+      return { id, ...response };
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -164,11 +162,10 @@ export const deleteDistrict = createAsyncThunk(
   async (id, thunkAPI) => {
     try {
       const response = await useDeleteDataWithToken(
-        `/api/district/${id}`,
-        {},
-        "DELETE"
+        `/api/district/${id}`
       );
-      return response.data;
+      // إرجاع المعرف مع البيانات لاستخدامه في reducer
+      return { id, ...response };
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -220,11 +217,10 @@ export const deleteElectionCenter = createAsyncThunk(
   async (id, thunkAPI) => {
     try {
       const response = await useDeleteDataWithToken(
-        `/api/electioncenter/${id}`,
-        {},
-        "DELETE"
+        `/api/electioncenter/${id}`
       );
-      return response.data;
+      // إرجاع المعرف مع البيانات لاستخدامه في reducer
+      return { id, ...response };
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -278,11 +274,10 @@ export const deleteStation = createAsyncThunk(
   async (id, thunkAPI) => {
     try {
       const response = await useDeleteDataWithToken(
-        `/api/station/${id}`,
-        {},
-        "DELETE"
+        `/api/station/${id}`
       );
-      return response.data;
+      // إرجاع المعرف مع البيانات لاستخدامه في reducer
+      return { id, ...response };
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }

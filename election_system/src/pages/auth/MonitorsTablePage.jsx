@@ -10,7 +10,9 @@ import UserTablePagination from "../../Components/auth/UserTablePagination";
 import AllUserHook from "../../hook/auth/all-user-hook";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { deleteUser } from "../../redux/authSlice";
+import { deleteUser, getAllUsers } from "../../redux/authSlice";
+import RegisterModal from "./Auth Modal/RegisterModal";
+import DeleteModal from "../../Components/Uitily/DeleteModal";
 const MonitorsTablePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -24,6 +26,10 @@ const MonitorsTablePage = () => {
     district_manager,
     finance_auditor,
   ] = AllUserHook();
+
+  const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [userIdToDelete, setUserIdToDelete] = useState(null);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -50,8 +56,8 @@ const MonitorsTablePage = () => {
       (item) =>
         item.full_name.toLowerCase().includes(filterText.toLowerCase()) ||
         item.phone_number.includes(filterText)
-        //  ||
-        // item.added_by.toLowerCase().includes(filterText.toLowerCase())
+      //  ||
+      // item.added_by.toLowerCase().includes(filterText.toLowerCase())
     );
   }, [observer, filterText]);
 
@@ -116,9 +122,23 @@ const MonitorsTablePage = () => {
     setShowActionMenu(null);
   };
 
-  const handleDeleteConfirm = async (id) => {
-    if (id) {
-      await dispatch(deleteUser(id));
+  const handleDeleteConfirm = (id) => {
+    setUserIdToDelete(id);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setUserIdToDelete(null);
+  };
+
+  const handleDeleteConfirmation = async () => {
+    if (userIdToDelete) {
+      await dispatch(deleteUser(userIdToDelete));
+      await dispatch(getAllUsers());
+
+      setShowDeleteModal(false);
+      setUserIdToDelete(null);
     }
   };
 
@@ -127,7 +147,12 @@ const MonitorsTablePage = () => {
       navigate(`/userDetails/${id}`);
     }
   };
-
+  const handleOpenModal = () => {
+    setShowModal(true);
+  };
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
   return (
     <div>
       <Sidebar />
@@ -143,7 +168,7 @@ const MonitorsTablePage = () => {
             setShowColumnMenu={setShowColumnMenu}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
-            link="/register"
+            onOpen={handleOpenModal}
           />
 
           <UserTableStats data={observer} title="اجمالي المشرفين" />
@@ -182,7 +207,7 @@ const MonitorsTablePage = () => {
                     )}
                     {visibleColumns.id && (
                       <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{index+1}</div>
+                        <div className="text-sm text-gray-900">{index + 1}</div>
                       </td>
                     )}
                     {visibleColumns.full_name && (
@@ -303,6 +328,12 @@ const MonitorsTablePage = () => {
           />
         )}
       </div>
+      {showModal && <RegisterModal onClose={handleCloseModal} />}
+      <DeleteModal
+        isOpen={showDeleteModal}
+        onCancel={handleDeleteCancel}
+        onConfirm={handleDeleteConfirmation}
+      />
     </div>
   );
 };

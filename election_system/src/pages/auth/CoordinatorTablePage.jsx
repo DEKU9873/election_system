@@ -10,8 +10,17 @@ import UserTableHeader from "../../Components/auth/UserTableHeader";
 import UserTableStats from "../../Components/auth/UserTableStats";
 import AllUserHook from "../../hook/auth/all-user-hook";
 import AllCoordinatorHook from "../../hook/auth/all-coordinator-hook";
+import CoordinatorRegisterModal from "./Auth Modal/CoordinatorRegisterModal";
+import DeleteModal from "../../Components/Uitily/DeleteModal";
+import { useDispatch } from "react-redux";
+import { deleteUser, getAllUsers } from "../../redux/authSlice";
 
 const CoordinatorTablePage = () => {
+  const dispatch = useDispatch();
+  const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [userIdToDelete, setUserIdToDelete] = useState(null);
+
   const [allUsers, Loading] = AllCoordinatorHook();
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -101,6 +110,36 @@ const CoordinatorTablePage = () => {
   // إجراءات المستخدمين
   const handleUserAction = (action, user) => {
     setShowActionMenu(null);
+    if (action === "delete") {
+      handleDeleteConfirm(user.User.id);
+    }
+  };
+
+  const handleDeleteConfirm = (id) => {
+    setUserIdToDelete(id);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setUserIdToDelete(null);
+  };
+
+  const handleDeleteConfirmation = async () => {
+    if (userIdToDelete) {
+      await dispatch(deleteUser(userIdToDelete));
+      await dispatch(getAllUsers());
+
+      setShowDeleteModal(false);
+      setUserIdToDelete(null);
+    }
+  };
+
+  const handleOpenModal = () => {
+    setShowModal(true);
+  };
+  const handleCloseModal = () => {
+    setShowModal(false);
   };
 
   return (
@@ -118,7 +157,7 @@ const CoordinatorTablePage = () => {
             setShowColumnMenu={setShowColumnMenu}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
-            link="/coordinatorRegister"
+            onOpen={handleOpenModal}
           />
 
           <UserTableStats data={allUsers} title="اجمالي المرتكزين" />
@@ -281,6 +320,12 @@ const CoordinatorTablePage = () => {
           />
         )}
       </div>
+      {showModal && <CoordinatorRegisterModal onClose={handleCloseModal} />}
+      <DeleteModal
+        isOpen={showDeleteModal}
+        onCancel={handleDeleteCancel}
+        onConfirm={handleDeleteConfirmation}
+      />
     </div>
   );
 };

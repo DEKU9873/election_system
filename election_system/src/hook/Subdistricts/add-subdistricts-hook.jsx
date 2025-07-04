@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import notify from "../useNotification";
-import { addSubdistrict } from "../../redux/placeSlice";
+import { addSubdistrict, getSubdistricts } from "../../redux/placeSlice";
 
 const AddSubDistrictsHook = () => {
   const dispatch = useDispatch();
@@ -45,6 +45,7 @@ const AddSubDistrictsHook = () => {
       );
 
       if (res.type === "place/addSubdistrict/fulfilled") {
+        await dispatch(getSubdistricts());
         notify("تمت إضافة الناحية بنجاح", "success");
         setSubdistrict("");
         setDistrictID("");

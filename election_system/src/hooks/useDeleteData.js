@@ -12,7 +12,9 @@ const useDeleteDataWithToken = async (url, parmas) => {
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
-  const res = await baseURL.delete(url, config, parmas);
+  // تصحيح ترتيب المعاملات في دالة delete
+  // في axios، المعامل الثاني هو config وليس البيانات
+  const res = await baseURL.delete(url, config);
   return res.data;
 };
 

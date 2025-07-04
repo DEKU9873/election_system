@@ -10,18 +10,20 @@ import { MoreHorizontal, User } from "lucide-react";
 import UserTablePagination from "../../Components/auth/UserTablePagination";
 import GetAllSubdistricts from "../../hook/Subdistricts/get-all-subdistricts";
 import { useDispatch } from "react-redux";
-import { deleteStation, deleteSubdistrict } from "../../redux/placeSlice";
+import { deleteStation, deleteSubdistrict, getStations, getStationsByCenterId } from "../../redux/placeSlice";
 import GetStationByCenter from "../../hook/Stations/get-station-by-center";
 import { useParams } from "react-router-dom";
 import AddStationModal from "./Place Modal/AddStationModal";
+import DeleteModal from "../../Components/Uitily/DeleteModal";
 const StationPage = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
 
   // const { subdistrictsData } = useUserData();
   const [stations, isLoading] = GetStationByCenter(id);
-    const [showModal, setShowModal] = useState(false);
-
+  const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [stationIdToDelete, setStationIdToDelete] = useState(null);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -109,9 +111,24 @@ const StationPage = () => {
     setShowActionMenu(null);
   };
 
-  const handleDeleteConfirm = async (id) => {
-    if (id) {
-      await dispatch(deleteStation(id));
+  const handleDeleteConfirm = (id) => {
+    setStationIdToDelete(id);
+    setShowDeleteModal(true);
+    setShowActionMenu(null);
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setStationIdToDelete(null);
+  };
+
+  const handleDeleteConfirmation = async () => {
+    if (stationIdToDelete) {
+     await dispatch(deleteStation(stationIdToDelete));
+     await dispatch(getStationsByCenterId(id));
+  
+      setShowDeleteModal(false);
+      setStationIdToDelete(null);
     }
   };
 
@@ -137,11 +154,10 @@ const StationPage = () => {
             setShowColumnMenu={setShowColumnMenu}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
-                        onOpen = {handleOpenModal}
-
+            onOpen={handleOpenModal}
           />
 
-          <UserTableStats data={stations} title = "اجمالي المحطات" />
+          <UserTableStats data={stations} title="اجمالي المحطات" />
         </div>
 
         {/* الجدول */}
@@ -303,11 +319,13 @@ const StationPage = () => {
           />
         )}
       </div>
-      {showModal && (
-        <AddStationModal
-          onClose={handleCloseModal}
-        />
-      )}
+      {showModal && <AddStationModal onClose={handleCloseModal} />}
+
+      <DeleteModal
+        isOpen={showDeleteModal}
+        onCancel={handleDeleteCancel}
+        onConfirm={handleDeleteConfirmation}
+      />
     </div>
   );
 };

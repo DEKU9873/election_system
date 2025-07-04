@@ -10,13 +10,16 @@ import { MoreHorizontal, User } from "lucide-react";
 import UserTablePagination from "../../Components/auth/UserTablePagination";
 import GetallDistricts from "../../hook/Districts/get-all-districts";
 import { useDispatch } from "react-redux";
-import { deleteDistrict } from "../../redux/placeSlice";
+import { deleteDistrict, getDistricts } from "../../redux/placeSlice";
 import AddDistrictsModal from "./Place Modal/AddDistrictsModal";
+import DeleteModal from "../../Components/Uitily/DeleteModal";
 const DistrictsPage = () => {
   const dispatch = useDispatch();
 
   const [districts, isLoading] = GetallDistricts();
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [districtIdToDelete, setDistrictIdToDelete] = useState(null);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -108,9 +111,23 @@ const DistrictsPage = () => {
     setShowActionMenu(null);
   };
 
-  const handleDeleteConfirm = async (id) => {
-    if (id) {
-      await dispatch(deleteDistrict(id));
+  const handleDeleteConfirm = (id) => {
+    setDistrictIdToDelete(id);
+    setShowDeleteModal(true);
+    setShowActionMenu(null);
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setDistrictIdToDelete(null);
+  };
+
+  const handleDeleteConfirmation = async () => {
+    if (districtIdToDelete) {
+      await dispatch(deleteDistrict(districtIdToDelete));
+      await dispatch(getDistricts());
+      setShowDeleteModal(false);
+      setDistrictIdToDelete(null);
     }
   };
 
@@ -328,6 +345,11 @@ const DistrictsPage = () => {
         )}
       </div>
      {showModal && <AddDistrictsModal onClose= {handleCloseModal} />}
+     <DeleteModal 
+       isOpen={showDeleteModal}
+       onCancel={handleDeleteCancel}
+       onConfirm={handleDeleteConfirmation}
+     />
     </div>
   );
 };

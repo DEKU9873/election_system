@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./pages/auth/Login";
-import Register from "./pages/auth/Register";
 import UserTablePage from "./pages/auth/UserTablePage";
 import CoordinatorTablePage from "./pages/auth/CoordinatorTablePage";
 import MonitorsTablePage from "./pages/auth/MonitorsTablePage";
@@ -17,8 +16,6 @@ import SelfRegister from "./pages/auth/SelfRegister";
 import CenterPage from "./pages/Places/CenterPage";
 import StationPage from "./pages/Places/StationPage";
 import ElectoralStripsDetails from "./pages/Electoral Strips/ElectoralStripsDetails";
-import CoordinatorRegister from "./pages/auth/CoordinatorRegisterPage";
-import DistrictManagerRegister from "./pages/DistrictManagerRegisterPage";
 
 const App = () => {
   return (
@@ -26,16 +23,7 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
           <Route path="/selfRegister" element={<SelfRegister />} />
-          <Route
-            path="/coordinatorRegister"
-            element={<CoordinatorRegister />}
-          />
-          <Route
-            path="/districtManagerRegister"
-            element={<DistrictManagerRegister />}
-          />
           <Route path="/elected" element={<ElectedTablePage />} />
           <Route path="/monitors" element={<MonitorsTablePage />} />
           <Route path="/coordinators" element={<CoordinatorTablePage />} />

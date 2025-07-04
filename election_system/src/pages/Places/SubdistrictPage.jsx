@@ -10,14 +10,17 @@ import { MoreHorizontal, User } from "lucide-react";
 import UserTablePagination from "../../Components/auth/UserTablePagination";
 import GetAllSubdistricts from "../../hook/Subdistricts/get-all-subdistricts";
 import { useDispatch } from "react-redux";
-import { deleteSubdistrict } from "../../redux/placeSlice";
+import { deleteSubdistrict, getSubdistricts } from "../../redux/placeSlice";
 import AddSubdistrictsModal from "./Place Modal/AddSubdistrictsModal";
+import DeleteModal from "../../Components/Uitily/DeleteModal";
 const SubdistrictPage = () => {
   const dispatch = useDispatch();
 
   // const { subdistrictsData } = useUserData();
   const [subdistricts, isLoading] = GetAllSubdistricts();
-    const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [subdistrictIdToDelete, setSubdistrictIdToDelete] = useState(null);
 
 
   // حالات التطبيق
@@ -111,9 +114,23 @@ const SubdistrictPage = () => {
     setShowActionMenu(null);
   };
 
-  const handleDeleteConfirm = async (id) => {
-    if (id) {
-      await dispatch(deleteSubdistrict(id));
+  const handleDeleteConfirm = (id) => {
+    setSubdistrictIdToDelete(id);
+    setShowDeleteModal(true);
+    setShowActionMenu(null);
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setSubdistrictIdToDelete(null);
+  };
+
+  const handleDeleteConfirmation = async () => {
+    if (subdistrictIdToDelete) {
+      await dispatch(deleteSubdistrict(subdistrictIdToDelete));
+      await dispatch(getSubdistricts());
+      setShowDeleteModal(false);
+      setSubdistrictIdToDelete(null);
     }
   };
 
@@ -334,6 +351,11 @@ const SubdistrictPage = () => {
       {showModal && (
         <AddSubdistrictsModal onClose={handleCloseModal} />
       )}
+      <DeleteModal 
+        isOpen={showDeleteModal}
+        onCancel={handleDeleteCancel}
+        onConfirm={handleDeleteConfirmation}
+      />
     </div>
   );
 };

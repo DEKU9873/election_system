@@ -14,12 +14,14 @@ import formatDate from "../../hook/UtilsFunctions/FormatDate";
 import { useNavigate } from "react-router-dom";
 import { deleteTape } from "../../redux/electoralStripsSlice";
 import { useDispatch } from "react-redux";
+import AddElectoralStripsModal from "./Electoral Strips Modal/AddElectoralStripsModal";
 const ElectoralStrips = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // const { electoralStripsData } = useUserData();
   const [tapes, isLoading] = GetAllTapesHook();
+  const [showModal, setShowModal] = useState(false);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -45,7 +47,7 @@ const ElectoralStrips = () => {
   // تصفية البيانات
   const filteredData = useMemo(() => {
     return tapes.filter((item) =>
-      item.date.toLowerCase().includes(filterText.toLowerCase())
+      item?.date?.toLowerCase().includes(filterText.toLowerCase())
     );
   }, [tapes, filterText]);
 
@@ -121,7 +123,12 @@ const ElectoralStrips = () => {
       navigate(`/electoralStrips/${id}`);
     }
   };
-
+  const handleOpenModal = () => {
+    setShowModal(true);
+  };
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
   return (
     <div>
       <Sidebar />
@@ -140,10 +147,10 @@ const ElectoralStrips = () => {
             setShowColumnMenu={setShowColumnMenu}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
-            link="/addElectoralStrips"
+            onOpen={handleOpenModal}
           />
 
-          <UserTableStats data={tapes} title = "اجمالي الاشرطة"/>
+          <UserTableStats data={tapes} title="اجمالي الاشرطة" />
         </div>
 
         {/* الجدول */}
@@ -255,9 +262,7 @@ const ElectoralStrips = () => {
                                   تعديل
                                 </button>
                                 <button
-                                  onClick={() =>
-                                    handleDeleteConfirm(row.id)
-                                  }
+                                  onClick={() => handleDeleteConfirm(row.id)}
                                   className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
                                 >
                                   حذف
@@ -305,6 +310,8 @@ const ElectoralStrips = () => {
           />
         )}
       </div>
+           {showModal && <AddElectoralStripsModal onClose= {handleCloseModal} />}
+
     </div>
   );
 };

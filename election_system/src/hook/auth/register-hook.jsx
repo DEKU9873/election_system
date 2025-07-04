@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addUser } from "../../redux/authSlice";
+import { addUser, getAllUsers } from "../../redux/authSlice";
 import notify from "../useNotification";
 
 const RegisterHook = () => {
@@ -185,6 +185,7 @@ const RegisterHook = () => {
       const result = await dispatch(addUser(formData)).unwrap();
 
       if (result && result.data) {
+        await dispatch(getAllUsers());
         notify("تم التسجيل بنجاح", "success");
         // Reset form
         setFirstName("");

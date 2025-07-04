@@ -10,7 +10,11 @@ import { CenterManagersHeader } from "../../Components/auth/TableHeaderData";
 import { MoreHorizontal, User } from "lucide-react";
 import UserTablePagination from "../../Components/auth/UserTablePagination";
 import AllUserHook from "../../hook/auth/all-user-hook";
+import DeleteModal from "../../Components/Uitily/DeleteModal";
+import { useDispatch } from "react-redux";
+import { deleteUser, getAllUsers } from "../../redux/authSlice";
 const CenterManagers = () => {
+  const dispatch = useDispatch();
   const [
     allUsers,
     Loading,
@@ -26,6 +30,8 @@ const CenterManagers = () => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [filterText, setFilterText] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [userIdToDelete, setUserIdToDelete] = useState(null);
   const [visibleColumns, setVisibleColumns] = useState({
     select: true,
     id: true,
@@ -113,6 +119,29 @@ const CenterManagers = () => {
   // إجراءات المستخدمين
   const handleUserAction = (action, user) => {
     setShowActionMenu(null);
+    if (action === "delete") {
+      handleDeleteConfirm(user.id);
+    }
+  };
+
+  const handleDeleteConfirm = (id) => {
+    setUserIdToDelete(id);
+    setShowDeleteModal(true);
+    setShowActionMenu(null);
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setUserIdToDelete(null);
+  };
+
+  const handleDeleteConfirmation = async () => {
+    if (userIdToDelete) {
+      await dispatch(deleteUser(userIdToDelete));
+      await dispatch(getAllUsers());
+      setShowDeleteModal(false);
+      setUserIdToDelete(null);
+    }
   };
 
   return (
@@ -135,7 +164,7 @@ const CenterManagers = () => {
             setVisibleColumns={setVisibleColumns}
           />
 
-          <UserTableStats data={center_manager} title = "اجمالي مدراء المراكز" />
+          <UserTableStats data={center_manager} title="اجمالي مدراء المراكز" />
         </div>
 
         {/* الجدول */}
@@ -308,6 +337,13 @@ const CenterManagers = () => {
             }}
           />
         )}
+
+        {/* نافذة تأكيد الحذف */}
+        <DeleteModal
+          isOpen={showDeleteModal}
+          onCancel={handleDeleteCancel}
+          onConfirm={handleDeleteConfirmation}
+        />
       </div>
     </div>
   );

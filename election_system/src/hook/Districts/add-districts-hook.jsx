@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import notify from "../useNotification";
-import { addDistrict } from "../../redux/placeSlice"; 
+import { addDistrict, getDistricts } from "../../redux/placeSlice";
 
 const AddDistrictsHook = () => {
   const dispatch = useDispatch();
@@ -36,6 +36,8 @@ const AddDistrictsHook = () => {
       );
 
       if (res.type === "place/addDistrict/fulfilled") {
+        await dispatch(getDistricts());
+
         notify("تمت إضافة القضاء بنجاح", "success");
         setDistrict("");
         setGovernorateId("");

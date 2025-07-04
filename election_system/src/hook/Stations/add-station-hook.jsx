@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import notify from "../useNotification";
-import { addStation } from "../../redux/placeSlice"; // تأكد من أن هذا هو المسار الصحيح
+import { addStation, getStationsByCenterId } from "../../redux/placeSlice"; // تأكد من أن هذا هو المسار الصحيح
 
 const AddStationHook = () => {
   const dispatch = useDispatch();
@@ -37,6 +37,8 @@ const AddStationHook = () => {
       );
 
       if (res.type === "place/addStation/fulfilled") {
+             await dispatch(getStationsByCenterId(electionCenterId));
+
         notify("تمت إضافة المحطة بنجاح", "success");
         setCode("");
         setName("");

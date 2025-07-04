@@ -10,16 +10,23 @@ import { MoreHorizontal, User } from "lucide-react";
 import UserTablePagination from "../../Components/auth/UserTablePagination";
 import GetallDistricts from "../../hook/Districts/get-all-districts";
 import { useDispatch } from "react-redux";
-import { deleteDistrict, deleteElectionCenter } from "../../redux/placeSlice";
+import {
+  deleteDistrict,
+  deleteElectionCenter,
+  getElectionCenters,
+} from "../../redux/placeSlice";
 import GetAllCenter from "../../hook/Center/get-all-center";
 import { useNavigate } from "react-router-dom";
 import AddCenterModal from "./Place Modal/AddCenterModal";
+import DeleteModal from "../../Components/Uitily/DeleteModal";
 const CenterPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [electionCenters, isLoading] = GetAllCenter();
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [centerIdToDelete, setCenterIdToDelete] = useState(null);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -112,9 +119,23 @@ const CenterPage = () => {
     setShowActionMenu(null);
   };
 
-  const handleDeleteConfirm = async (id) => {
-    if (id) {
-      await dispatch(deleteElectionCenter(id));
+  const handleDeleteConfirm = (id) => {
+    setCenterIdToDelete(id);
+    setShowDeleteModal(true);
+    setShowActionMenu(null);
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setCenterIdToDelete(null);
+  };
+
+  const handleDeleteConfirmation = async () => {
+    if (centerIdToDelete) {
+      await dispatch(deleteElectionCenter(centerIdToDelete));
+      await dispatch(getElectionCenters());
+      setShowDeleteModal(false);
+      setCenterIdToDelete(null);
     }
   };
 
@@ -345,7 +366,12 @@ const CenterPage = () => {
           />
         )}
       </div>
-     {showModal && <AddCenterModal  onClose={handleCloseModal} />}
+      {showModal && <AddCenterModal onClose={handleCloseModal} />}
+      <DeleteModal
+        isOpen={showDeleteModal}
+        onCancel={handleDeleteCancel}
+        onConfirm={handleDeleteConfirmation}
+      />
     </div>
   );
 };

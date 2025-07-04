@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import notify from "../useNotification";
-import { addGovernate } from '../../redux/placeSlice';
+import { addGovernate, getGovernates } from "../../redux/placeSlice";
 
 const AddDistrictsHook = () => {
   const dispatch = useDispatch();
@@ -36,6 +36,8 @@ const AddDistrictsHook = () => {
       );
 
       if (res.type === "place/addGovernate/fulfilled") {
+        await dispatch(getGovernates());
+
         notify("تمت إضافة المحافظة بنجاح", "success");
         setGovernorate("");
         setCode("");
