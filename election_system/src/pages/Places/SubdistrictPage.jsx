@@ -12,15 +12,19 @@ import GetAllSubdistricts from "../../hook/Subdistricts/get-all-subdistricts";
 import { useDispatch } from "react-redux";
 import { deleteSubdistrict, getSubdistricts } from "../../redux/placeSlice";
 import AddSubdistrictsModal from "./Place Modal/AddSubdistrictsModal";
+import EditSubdistrictsModal from "./Place Modal/EditSubdistrictsModal";
 import DeleteModal from "../../Components/Uitily/DeleteModal";
+import Loader from "../../Components/Uitily/Loader";
 const SubdistrictPage = () => {
   const dispatch = useDispatch();
 
   // const { subdistrictsData } = useUserData();
-  const [subdistricts, isLoading] = GetAllSubdistricts();
+  const [subdistricts, loading] = GetAllSubdistricts();
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [subdistrictIdToDelete, setSubdistrictIdToDelete] = useState(null);
+  const [selectedSubdistrict, setSelectedSubdistrict] = useState(null);
 
 
   // حالات التطبيق
@@ -110,8 +114,12 @@ const SubdistrictPage = () => {
   };
 
   // إجراءات المستخدمين
-  const handleUserAction = (action, user) => {
+  const handleUserAction = (action, subdistrict) => {
     setShowActionMenu(null);
+    if (action === "edit") {
+      setSelectedSubdistrict(subdistrict);
+      setShowEditModal(true);
+    }
   };
 
   const handleDeleteConfirm = (id) => {
@@ -139,6 +147,11 @@ const SubdistrictPage = () => {
   };
   const handleCloseModal = () =>{
     setShowModal(false);
+  };
+  
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
+    setSelectedSubdistrict(null);
   }
 
   return (
@@ -175,7 +188,16 @@ const SubdistrictPage = () => {
               handleSort={handleSort}
             />
 
-            <tbody className="divide-y divide-gray-200">
+            {loading ? (
+              <tr>
+                <td colSpan="12" className="px-4 py-12 text-center">
+                  <div className="flex justify-center items-center h-40">
+                    <Loader />
+                  </div>
+                </td>
+              </tr>
+            ) : (
+              <tbody className="divide-y divide-gray-200">
               {paginatedData.length > 0 ? (
                 paginatedData.map((row) => (
                   <tr
@@ -325,7 +347,8 @@ const SubdistrictPage = () => {
                   </td>
                 </tr>
               )}
-            </tbody>
+              </tbody>
+            )}
           </table>
         </div>
 
@@ -350,6 +373,9 @@ const SubdistrictPage = () => {
       </div>
       {showModal && (
         <AddSubdistrictsModal onClose={handleCloseModal} />
+      )}
+      {showEditModal && (
+        <EditSubdistrictsModal onClose={handleCloseEditModal} subdistrictData={selectedSubdistrict} />
       )}
       <DeleteModal 
         isOpen={showDeleteModal}

@@ -8,9 +8,9 @@ const dispatch = useDispatch();
     useEffect(() => {
       dispatch(getDistricts());
     }, []);
-    const { districts, isLoading } = useSelector((state) => state.place);
+    const { districts, loading } = useSelector((state) => state.place);
   
-    return [districts, isLoading];
+    return [districts, loading];
 }
 
 export default GetallDistricts

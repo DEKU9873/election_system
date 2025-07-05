@@ -21,7 +21,7 @@ const ElectoralStrips = () => {
 
   // const { electoralStripsData } = useUserData();
   const [tapes, isLoading] = GetAllTapesHook();
-  const [showModal, setShowModal] = useState(false);
+ const [showModal, setShowModal] = useState(false);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -192,14 +192,14 @@ const ElectoralStrips = () => {
                     {visibleColumns.ElectionCenter && (
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-900">
-                          {row.ElectionCenter.name}
+                          {row.ElectionCenter?.name || 'غير متوفر'}
                         </div>
                       </td>
                     )}
                     {visibleColumns.Station && (
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-900">
-                          {row.Station.name}
+                          {row.Station?.name || 'غير متوفر'}
                         </div>
                       </td>
                     )}

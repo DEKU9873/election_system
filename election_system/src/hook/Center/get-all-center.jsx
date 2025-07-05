@@ -8,9 +8,9 @@ const GetAllCenter = () => {
     useEffect(() => {
       dispatch(getElectionCenters());
     }, []);
-    const { electionCenters, isLoading } = useSelector((state) => state.place);
+    const { electionCenters, loading } = useSelector((state) => state.place);
   
-    return [electionCenters, isLoading];
+    return [electionCenters, loading];
 }
 
 export default GetAllCenter

@@ -13,12 +13,13 @@ import { useNavigate } from "react-router-dom";
 import { deleteUser, getAllUsers } from "../../redux/authSlice";
 import RegisterModal from "./Auth Modal/RegisterModal";
 import DeleteModal from "../../Components/Uitily/DeleteModal";
+import Loader from "../../Components/Uitily/Loader";
 const MonitorsTablePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [
     allUsers,
-    Loading,
+    loading,
     system_admin,
     coordinator,
     observer,
@@ -186,7 +187,16 @@ const MonitorsTablePage = () => {
               handleSort={handleSort}
             />
 
-            <tbody className="divide-y divide-gray-200">
+            {loading ? (
+              <tr>
+                <td colSpan="12" className="px-4 py-12 text-center">
+                  <div className="flex justify-center items-center h-40">
+                    <Loader />
+                  </div>
+                </td>
+              </tr>
+            ) : (
+              <tbody className="divide-y divide-gray-200">
               {paginatedData.length > 0 ? (
                 paginatedData.map((row, index) => (
                   <tr
@@ -305,7 +315,8 @@ const MonitorsTablePage = () => {
                   </td>
                 </tr>
               )}
-            </tbody>
+              </tbody>
+            )}
           </table>
         </div>
 

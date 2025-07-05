@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { useInsertData, useInsertDataWithToken } from "../hooks/useInsertData";
 import { useGetData, useGetDataToken } from "../hooks/useGetData";
 import { useDeleteDataWithToken } from "../hooks/useDeleteData";
+import { useUpdateDataWithToken } from "../hooks/useUpdateData";
 
 // إجراءات المحافظات
 export const addGovernate = createAsyncThunk(
@@ -52,6 +53,23 @@ export const deleteGovernate = createAsyncThunk(
       );
       // إرجاع المعرف مع البيانات لاستخدامه في reducer
       return { id, ...response };
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// تعديل محافظة
+export const updateGovernate = createAsyncThunk(
+  "place/updateGovernate",
+  async (governateData, thunkAPI) => {
+    try {
+      const response = await useUpdateDataWithToken(
+        `/api/governate/${governateData.id}`,
+        governateData,
+        "PUT"
+      );
+      return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -115,6 +133,23 @@ export const deleteSubdistrict = createAsyncThunk(
   }
 );
 
+// تعديل منطقة فرعية
+export const updateSubdistrict = createAsyncThunk(
+  "place/updateSubdistrict",
+  async (subdistrictData, thunkAPI) => {
+    try {
+      const response = await useUpdateDataWithToken(
+        `/api/subdistrict/${subdistrictData.id}`,
+        subdistrictData,
+        "PUT"
+      );
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
 // إجراءات المناطق
 export const addDistrict = createAsyncThunk(
   "place/addDistrict",
@@ -166,6 +201,23 @@ export const deleteDistrict = createAsyncThunk(
       );
       // إرجاع المعرف مع البيانات لاستخدامه في reducer
       return { id, ...response };
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// تعديل منطقة
+export const updateDistrict = createAsyncThunk(
+  "place/updateDistrict",
+  async (districtData, thunkAPI) => {
+    try {
+      const response = await useUpdateDataWithToken(
+        `/api/district/${districtData.id}`,
+        districtData,
+        "PUT"
+      );
+      return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -227,6 +279,23 @@ export const deleteElectionCenter = createAsyncThunk(
   }
 );
 
+// تعديل مركز انتخابات
+export const updateElectionCenter = createAsyncThunk(
+  "place/updateElectionCenter",
+  async (electionCenterData, thunkAPI) => {
+    try {
+      const response = await useUpdateDataWithToken(
+        `/api/electioncenter/${electionCenterData.id}`,
+        electionCenterData,
+        "PUT"
+      );
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
 // إضافة محطة
 export const addStation = createAsyncThunk(
   "place/addStation",
@@ -278,6 +347,23 @@ export const deleteStation = createAsyncThunk(
       );
       // إرجاع المعرف مع البيانات لاستخدامه في reducer
       return { id, ...response };
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// تعديل محطة
+export const updateStation = createAsyncThunk(
+  "place/updateStation",
+  async (stationData, thunkAPI) => {
+    try {
+      const response = await useInsertDataWithToken(
+        `/api/station/${stationData.id}`,
+        stationData,
+        "PUT"
+      );
+      return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -367,6 +453,22 @@ const placeSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+      // تعديل محافظة
+      .addCase(updateGovernate.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateGovernate.fulfilled, (state, action) => {
+        state.loading = false;
+        state.governates = state.governates.map((gov) =>
+          gov.id === action.payload.id ? action.payload : gov
+        );
+        state.success = true;
+      })
+      .addCase(updateGovernate.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
       // معالجات المناطق الفرعية
       .addCase(addSubdistrict.pending, (state) => {
         state.loading = true;
@@ -420,6 +522,22 @@ const placeSlice = createSlice({
         state.success = true;
       })
       .addCase(deleteSubdistrict.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // تعديل منطقة فرعية
+      .addCase(updateSubdistrict.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateSubdistrict.fulfilled, (state, action) => {
+        state.loading = false;
+        state.subdistricts = state.subdistricts.map((sub) =>
+          sub.id === action.payload.id ? action.payload : sub
+        );
+        state.success = true;
+      })
+      .addCase(updateSubdistrict.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
@@ -479,6 +597,22 @@ const placeSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+      // تعديل منطقة
+      .addCase(updateDistrict.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateDistrict.fulfilled, (state, action) => {
+        state.loading = false;
+        state.districts = state.districts.map((dist) =>
+          dist.id === action.payload.id ? action.payload : dist
+        );
+        state.success = true;
+      })
+      .addCase(updateDistrict.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
       // معالجات مراكز الانتخابات
       .addCase(addElectionCenter.pending, (state) => {
         state.loading = true;
@@ -530,6 +664,26 @@ const placeSlice = createSlice({
           (center) => center.id !== action.payload.id
         );
         state.success = true;
+      })
+      .addCase(deleteElectionCenter.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // تعديل مركز انتخابات
+      .addCase(updateElectionCenter.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateElectionCenter.fulfilled, (state, action) => {
+        state.loading = false;
+        state.electionCenters = state.electionCenters.map((center) =>
+          center.id === action.payload.id ? action.payload : center
+        );
+        state.success = true;
+      })
+      .addCase(updateElectionCenter.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       })
       // معالجات المحطات
       .addCase(addStation.pending, (state) => {
@@ -584,6 +738,22 @@ const placeSlice = createSlice({
         state.success = true;
       })
       .addCase(deleteStation.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // تعديل محطة
+      .addCase(updateStation.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateStation.fulfilled, (state, action) => {
+        state.loading = false;
+        state.stations = state.stations.map((station) =>
+          station.id === action.payload.id ? action.payload : station
+        );
+        state.success = true;
+      })
+      .addCase(updateStation.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

@@ -9,6 +9,7 @@ import UserTableHeader from "../../Components/auth/UserTableHeader";
 import { CenterManagersHeader } from "../../Components/auth/TableHeaderData";
 import { MoreHorizontal, User } from "lucide-react";
 import UserTablePagination from "../../Components/auth/UserTablePagination";
+import Loader from "../../Components/Uitily/Loader";
 import AllUserHook from "../../hook/auth/all-user-hook";
 import DeleteModal from "../../Components/Uitily/DeleteModal";
 import { useDispatch } from "react-redux";
@@ -17,7 +18,7 @@ const CenterManagers = () => {
   const dispatch = useDispatch();
   const [
     allUsers,
-    Loading,
+    loading,
     system_admin,
     coordinator,
     observer,
@@ -25,6 +26,7 @@ const CenterManagers = () => {
     district_manager,
     finance_auditor,
   ] = AllUserHook();
+
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
@@ -179,7 +181,16 @@ const CenterManagers = () => {
               handleSort={handleSort}
             />
 
-            <tbody className="divide-y divide-gray-200">
+            {loading ? (
+              <tr>
+                <td colSpan="12" className="px-4 py-12 text-center">
+                  <div className="flex justify-center items-center h-40">
+                    <Loader />
+                  </div>
+                </td>
+              </tr>
+            ) : (
+              <tbody className="divide-y divide-gray-200">
               {paginatedData.length > 0 ? (
                 paginatedData.map((row) => (
                   <tr
@@ -315,7 +326,8 @@ const CenterManagers = () => {
                   </td>
                 </tr>
               )}
-            </tbody>
+              </tbody>
+            )}
           </table>
         </div>
 

@@ -77,7 +77,7 @@ const RegisterHook = () => {
   };
 
   const handleNewCenterChange = (e) => {
-    setNewCenter(e.target.value);
+    setNewCenter(Number(e.target.value));
   };
 
 
@@ -174,7 +174,7 @@ const RegisterHook = () => {
     formData.append("can_vote", hasVotingRight);
     formData.append("has_updated_card", idUpdated);
 
-    formData.append("election_center", newCenter);
+    formData.append("election_center_id", newCenter);
 
     if (personalPhoto) formData.append("profile_image", personalPhoto);
     if (idPhoto) formData.append("identity_image", idPhoto);
@@ -186,6 +186,7 @@ const RegisterHook = () => {
 
       if (result && result.data) {
         await dispatch(getAllUsers());
+        console.log(formData)
         notify("تم التسجيل بنجاح", "success");
         // Reset form
         setFirstName("");

@@ -1,34 +1,43 @@
 import React from "react";
 import { Toaster } from "react-hot-toast";
 import GetAllGovernorate from "../../../hook/Governate/get-all-governorate";
-import { Hash, Building2, LogIn, X } from "lucide-react";
-import AddDistrictsHook from "../../../hook/Districts/add-districts-hook";
-import AddStationHook from "../../../hook/Stations/add-station-hook";
-import GetAllCenter from "../../../hook/Center/get-all-center";
-import Select from "react-select";
+import { Landmark, MapPin, Map, Save, X } from "lucide-react";
+import EditSubdistrictsHook from "../../../hook/Subdistricts/edit-subdistricts-hook";
+import GetallDistricts from "../../../hook/Districts/get-all-districts";
+import Select from 'react-select';
 
-const AddStationModal = ({ onClose }) => {
+const EditSubdistrictsModal = ({ onClose, subdistrictData }) => {
   const [
-    code,
-    name,
-    electionCenterId,
+    subdistrict,
+    districtID,
+    governorateId,
     loading,
     submitClicked,
-    onChangeCode,
-    onChangeName,
-    onChangeElectionCenterId,
+    onChangeSubdistrict,
+    onChangeDistrict,
+    onChangeGovernorateId,
     onSubmit,
-  ] = AddStationHook();
+  ] = EditSubdistrictsHook(subdistrictData);
 
-  const [electionCenters, isLoading] = GetAllCenter();
+  const [governates, isLoading] = GetAllGovernorate();
+  const [districts] = GetallDistricts();
 
-  const centerOptions = electionCenters?.map(center => ({
-    value: center.id,
-    label: center.name
+  const governorateOptions = governates?.map(governorate => ({
+    value: governorate.id,
+    label: governorate.name
   }));
 
-  const handleCenterChange = (selectedOption) => {
-    onChangeElectionCenterId({ target: { value: selectedOption.value } });
+  const districtOptions = districts?.map(district => ({
+    value: district.id,
+    label: district.name
+  }));
+
+  const handleGovernorateChange = (selectedOption) => {
+    onChangeGovernorateId({ target: { value: selectedOption.value } });
+  };
+
+  const handleDistrictChange = (selectedOption) => {
+    onChangeDistrict({ target: { value: selectedOption.value } });
   };
 
   const selectStyles = {
@@ -74,44 +83,25 @@ const AddStationModal = ({ onClose }) => {
 
         <button
           onClick={onClose}
-          className="absolute left-4 top-4 text-gray-500 hover:text-gray-700 transition-colors"
+          className="absolute left-4 top-4 text-gray-500 hover:text-gray-700"
         >
           <X size={24} />
         </button>
-        <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">إضافة محطة جديدة</h1>
+        <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">تعديل الناحية</h1>
         <div dir="rtl" className="w-full grid grid-cols-1 gap-6">
           <div>
             <label className="block text-gray-700 font-medium mb-2 text-right">
-              رمز المحطة
+              اسم الناحية
             </label>
             <div className="relative">
               <input
                 type="text"
-                placeholder="رمز المحطة"
                 className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
-                value={code}
-                onChange={onChangeCode}
+                value={subdistrict}
+                onChange={onChangeSubdistrict}
               />
-              <Hash
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-indigo-600"
-                size={20}
-              />
-            </div>
-          </div>
-          <div>
-            <label className="block text-gray-700 font-medium mb-2 text-right">
-              اسم المحطة
-            </label>
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="اسم المحطة"
-                className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
-                value={name}
-                onChange={onChangeName}
-              />
-              <Building2
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-indigo-600"
+              <Landmark
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-600"
                 size={20}
               />
             </div>
@@ -119,21 +109,41 @@ const AddStationModal = ({ onClose }) => {
 
           <div>
             <label className="block text-gray-700 font-medium mb-2 text-right">
-              المركز الانتخابي
+              المحافظة
             </label>
             <div className="relative">
               <Select
-                options={centerOptions}
-                value={centerOptions?.find(option => option.value === electionCenterId)}
-                onChange={handleCenterChange}
-                placeholder="اختر المركز"
+                options={governorateOptions}
+                value={governorateOptions?.find(option => option.value === governorateId)}
+                onChange={handleGovernorateChange}
+                placeholder="اختر المحافظة"
                 isSearchable={true}
                 className="text-right"
                 styles={selectStyles}
-                isLoading={isLoading}
               />
-              <Building2
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-indigo-600"
+              <MapPin
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-600"
+                size={20}
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-gray-700 font-medium mb-2 text-right">
+              القضاء
+            </label>
+            <div className="relative">
+              <Select
+                options={districtOptions}
+                value={districtOptions?.find(option => option.value === districtID)}
+                onChange={handleDistrictChange}
+                placeholder="اختر القضاء"
+                isSearchable={true}
+                className="text-right"
+                styles={selectStyles}
+              />
+              <Map
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-600"
                 size={20}
               />
             </div>
@@ -148,12 +158,12 @@ const AddStationModal = ({ onClose }) => {
             {loading ? (
               <>
                 <div className="w-5 h-5 border-3 border-white border-t-transparent rounded-full animate-spin mr-2 inline-block"></div>
-                جاري الإضافة...
+                جاري التعديل...
               </>
             ) : (
               <>
-                إضافة
-                <LogIn size={18} className="ml-1 inline" />
+                حفظ التعديلات
+                <Save size={18} className="ml-1 inline" />
               </>
             )}
         </button>
@@ -169,4 +179,4 @@ const AddStationModal = ({ onClose }) => {
   );
 };
 
-export default AddStationModal;
+export default EditSubdistrictsModal;

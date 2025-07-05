@@ -9,6 +9,7 @@ import UserTableHeader from "../../Components/auth/UserTableHeader";
 import { DistrictsManagersHeader } from "../../Components/auth/TableHeaderData";
 import { MoreHorizontal, User } from "lucide-react";
 import UserTablePagination from "../../Components/auth/UserTablePagination";
+import Loader from "../../Components/Uitily/Loader";
 import AllUserHook from "../../hook/auth/all-user-hook";
 import DistrictManagerRegisterModal from "./Auth Modal/DistrictManagerRegisterModal";
 import DeleteModal from "../../Components/Uitily/DeleteModal";
@@ -22,7 +23,7 @@ const DistrictsManagers = () => {
 
   const [
     allUsers,
-    Loading,
+    loading,
     system_admin,
     coordinator,
     observer,
@@ -31,7 +32,6 @@ const DistrictsManagers = () => {
     finance_auditor,
   ] = AllUserHook();
 
-  console.log("district_manager", district_manager);
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
@@ -194,7 +194,16 @@ const DistrictsManagers = () => {
               handleSort={handleSort}
             />
 
-            <tbody className="divide-y divide-gray-200">
+            {loading ? (
+              <tr>
+                <td colSpan="12" className="px-4 py-12 text-center">
+                  <div className="flex justify-center items-center h-40">
+                    <Loader />
+                  </div>
+                </td>
+              </tr>
+            ) : (
+              <tbody className="divide-y divide-gray-200">
               {paginatedData.length > 0 ? (
                 paginatedData.map((row) => (
                   <tr
@@ -302,7 +311,7 @@ const DistrictsManagers = () => {
                                   }
                                   className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
                                 >
-                                  🗑️ حذف المستخدم
+                                   حذف المستخدم
                                 </button>
                               </div>
                             </div>
@@ -324,7 +333,8 @@ const DistrictsManagers = () => {
                   </td>
                 </tr>
               )}
-            </tbody>
+              </tbody>
+            )}
           </table>
         </div>
 

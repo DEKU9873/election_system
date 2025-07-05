@@ -13,6 +13,8 @@ import logo from "../../../assets/urlogo.png";
 import RegisterHook from "../../../hook/auth/register-hook";
 import { Toaster } from "react-hot-toast";
 import { useState } from "react";
+import GetAllCenter from "../../../hook/Center/get-all-center";
+import Select from "react-select";
 
 const RegisterModal = ({ onClose }) => {
   const [
@@ -53,6 +55,9 @@ const RegisterModal = ({ onClose }) => {
     setElectionCardPhoto,
     setElectionCardPhotoPreview,
   ] = RegisterHook();
+
+    const [electionCenters, loading] = GetAllCenter();
+
 
   return (
     <div
@@ -393,16 +398,54 @@ const RegisterModal = ({ onClose }) => {
               </h3>
               <div className="relative">
                 <MapPin
-                  className="absolute right-3 top-3 text-gray-400"
+                  className="absolute right-3 top-3 text-gray-400 z-10"
                   size={20}
                 />
-                <input
-                  type="text"
-                  placeholder="اسم المركز الانتخابي"
-                  className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
-                  value={newCenter}
-                  onChange={handleNewCenterChange}
-                />
+                {loading ? (
+                  <div className="w-full pr-10 py-2 border rounded-lg text-right">
+                    جاري تحميل المراكز...
+                  </div>
+                ) : (
+                  <Select
+                    placeholder="اختر المركز الانتخابي"
+                    value={electionCenters?.find(option => option.id === newCenter) ? 
+                      { value: newCenter, label: electionCenters.find(option => option.id === newCenter).name } : null}
+                    onChange={(selectedOption) => handleNewCenterChange({ target: { value: selectedOption.value } })}
+                    options={electionCenters?.map(center => ({ value: center.id, label: center.name }))}
+                    className="w-full text-right"
+                    classNamePrefix="select"
+                    isRtl={true}
+                    styles={{
+                      control: (baseStyles) => ({
+                        ...baseStyles,
+                        paddingRight: '2.5rem',
+                        borderRadius: '0.5rem',
+                        borderColor: '#e2e8f0',
+                        '&:hover': {
+                          borderColor: '#cbd5e0'
+                        }
+                      }),
+                      placeholder: (baseStyles) => ({
+                        ...baseStyles,
+                        textAlign: 'right'
+                      }),
+                      option: (baseStyles, state) => ({
+                        ...baseStyles,
+                        textAlign: 'right',
+                        backgroundColor: state.isSelected ? '#3b82f6' : state.isFocused ? '#eff6ff' : 'white',
+                        color: state.isSelected ? 'white' : '#1f2937',
+                        '&:hover': {
+                          backgroundColor: state.isSelected ? '#3b82f6' : '#eff6ff',
+                        }
+                      }),
+                      menu: (baseStyles) => ({
+                        ...baseStyles,
+                        zIndex: 50
+                      })
+                    }}
+                    noOptionsMessage={() => "لا توجد مراكز متاحة"}
+                  />
+                )}
               </div>
             </div>
           )}

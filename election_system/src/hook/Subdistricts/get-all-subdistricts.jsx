@@ -8,9 +8,9 @@ const GetAllSubdistricts = () => {
     useEffect(() => {
       dispatch(getSubdistricts());
     }, []);
-    const { subdistricts, isLoading } = useSelector((state) => state.place);
+    const { subdistricts, loading } = useSelector((state) => state.place);
   
-    return [subdistricts, isLoading];
+    return [subdistricts, loading];
 }
 
 export default GetAllSubdistricts

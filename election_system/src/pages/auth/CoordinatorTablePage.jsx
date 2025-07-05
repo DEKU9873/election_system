@@ -8,6 +8,7 @@ import { MoreHorizontal, User } from "lucide-react";
 import UserTablePagination from "../../Components/auth/UserTablePagination";
 import UserTableHeader from "../../Components/auth/UserTableHeader";
 import UserTableStats from "../../Components/auth/UserTableStats";
+import Loader from "../../Components/Uitily/Loader";
 import AllUserHook from "../../hook/auth/all-user-hook";
 import AllCoordinatorHook from "../../hook/auth/all-coordinator-hook";
 import CoordinatorRegisterModal from "./Auth Modal/CoordinatorRegisterModal";
@@ -21,7 +22,7 @@ const CoordinatorTablePage = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [userIdToDelete, setUserIdToDelete] = useState(null);
 
-  const [allUsers, Loading] = AllCoordinatorHook();
+  const [allUsers, loading] = AllCoordinatorHook();
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
@@ -175,7 +176,16 @@ const CoordinatorTablePage = () => {
               handleSort={handleSort}
             />
 
-            <tbody className="divide-y divide-gray-200">
+            {loading ? (
+              <tr>
+                <td colSpan="12" className="px-4 py-12 text-center">
+                  <div className="flex justify-center items-center h-40">
+                    <Loader />
+                  </div>
+                </td>
+              </tr>
+            ) : (
+              <tbody className="divide-y divide-gray-200">
               {paginatedData.length > 0 ? (
                 paginatedData.map((row) => (
                   <tr
@@ -297,7 +307,8 @@ const CoordinatorTablePage = () => {
                   </td>
                 </tr>
               )}
-            </tbody>
+              </tbody>
+            )}
           </table>
         </div>
 

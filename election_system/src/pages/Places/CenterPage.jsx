@@ -18,15 +18,19 @@ import {
 import GetAllCenter from "../../hook/Center/get-all-center";
 import { useNavigate } from "react-router-dom";
 import AddCenterModal from "./Place Modal/AddCenterModal";
+import EditCenterModal from "./Place Modal/EditCenterModal";
 import DeleteModal from "../../Components/Uitily/DeleteModal";
+import Loader from "../../Components/Uitily/Loader";
 const CenterPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [electionCenters, isLoading] = GetAllCenter();
+  const [electionCenters, loading] = GetAllCenter();
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [centerIdToDelete, setCenterIdToDelete] = useState(null);
+  const [selectedCenter, setSelectedCenter] = useState(null);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -115,8 +119,13 @@ const CenterPage = () => {
   };
 
   // إجراءات المستخدمين
-  const handleUserAction = (action, user) => {
+  const handleUserAction = (action, center) => {
     setShowActionMenu(null);
+
+    if (action === "edit") {
+      setSelectedCenter(center);
+      setShowEditModal(true);
+    }
   };
 
   const handleDeleteConfirm = (id) => {
@@ -151,6 +160,13 @@ const CenterPage = () => {
   const handleCloseModal = () => {
     setShowModal(false);
   };
+
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
+    setSelectedCenter(null);
+  };
+
+  console.log(loading);
 
   return (
     <div>
@@ -188,162 +204,159 @@ const CenterPage = () => {
               handleSort={handleSort}
             />
 
-            <tbody className="divide-y divide-gray-200">
-              {paginatedData.length > 0 ? (
-                paginatedData.map((row) => (
-                  <tr
-                    key={row.id}
-                    className={`hover:bg-gray-50 transition-colors ${
-                      selectedRows.has(row.id) ? "bg-blue-50" : ""
-                    }`}
-                  >
-                    {visibleColumns.select && (
-                      <td className="px-4 py-3">
-                        <input
-                          type="checkbox"
-                          checked={selectedRows.has(row.id)}
-                          onChange={() => handleSelectRow(row.id)}
-                          className="rounded text-blue-600"
-                        />
-                      </td>
-                    )}
-                    {visibleColumns.id && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.id}</div>
-                      </td>
-                    )}
+            {loading ? (
+              <tr>
+                <td colSpan="12" className="px-4 py-12 text-center">
+                  <div className="flex justify-center items-center h-40">
+                    <Loader />
+                  </div>
+                </td>
+              </tr>
+            ) : (
+              <tbody className="divide-y divide-gray-200">
+                {paginatedData.length > 0 ? (
+                  paginatedData.map((row) => (
+                    <tr
+                      key={row.id}
+                      className={`hover:bg-gray-50 transition-colors ${
+                        selectedRows.has(row.id) ? "bg-blue-50" : ""
+                      }`}
+                    >
+                      {visibleColumns.select && (
+                        <td className="px-4 py-3">
+                          <input
+                            type="checkbox"
+                            checked={selectedRows.has(row.id)}
+                            onChange={() => handleSelectRow(row.id)}
+                            className="rounded text-blue-600"
+                          />
+                        </td>
+                      )}
+                      {visibleColumns.id && (
+                        <td className="px-4 py-3">
+                          <div className="text-sm text-gray-900">{row.id}</div>
+                        </td>
+                      )}
 
-                    {visibleColumns.code && (
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2">
-                          <div className="font-medium text-gray-900">
-                            {row.code}
-                          </div>
-                        </div>
-                      </td>
-                    )}
-                    {visibleColumns.name && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.name}</div>
-                      </td>
-                    )}
-                    {visibleColumns.governorate_name && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">
-                          {row.governorate_name}
-                        </div>
-                      </td>
-                    )}
-
-                    {visibleColumns.district_name && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">
-                          {row.district_name}
-                        </div>
-                      </td>
-                    )}
-                    {visibleColumns.subdistrict_name && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">
-                          {row.subdistrict_name}
-                        </div>
-                      </td>
-                    )}
-                    {visibleColumns.stations_count && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">
-                          {row.stations_count}
-                        </div>
-                      </td>
-                    )}
-                    {visibleColumns.users_count && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">
-                          {row.users_count}
-                        </div>
-                      </td>
-                    )}
-                    {visibleColumns.percentageOfVoters && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">
-                          {row.percentageOfVoters}
-                        </div>
-                      </td>
-                    )}
-
-                    {visibleColumns.actions && (
-                      <td className="px-4 py-3">
-                        <div className="relative">
-                          <button
-                            onClick={() =>
-                              setShowActionMenu(
-                                showActionMenu === row.id ? null : row.id
-                              )
-                            }
-                            className="p-1 hover:bg-gray-100 rounded transition-colors"
-                          >
-                            <MoreHorizontal className="w-4 h-4" />
-                          </button>
-
-                          {showActionMenu === row.id && (
-                            <div className="absolute left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-999999999">
-                              <div className="py-1">
-                                <button
-                                  onClick={() => handleCenterStations(row.id)}
-                                  className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                                >
-                                  عرض المحطات
-                                </button>
-                                <button
-                                  onClick={() => handleUserAction("edit", row)}
-                                  className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                                >
-                                  تعديل
-                                </button>
-                                <button
-                                  onClick={() => handleDeleteConfirm(row.id)}
-                                  className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
-                                >
-                                  حذف
-                                </button>
-                                {/* <button
-                                  onClick={() =>
-                                    handleUserAction("permissions", row)
-                                  }
-                                  className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                                >
-                                  إدارة الصلاحيات
-                                </button> */}
-                                {/* <hr className="my-1" />
-                                <button
-                                  onClick={() =>
-                                    handleUserAction("delete", row)
-                                  }
-                                  className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
-                                >
-                                   حذف المستخدم
-                                </button> */}
-                              </div>
+                      {visibleColumns.code && (
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-2">
+                            <div className="font-medium text-gray-900">
+                              {row.code}
                             </div>
-                          )}
-                        </div>
-                      </td>
-                    )}
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.name && (
+                        <td className="px-4 py-3">
+                          <div className="text-sm text-gray-900">
+                            {row.name}
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.governorate_name && (
+                        <td className="px-4 py-3">
+                          <div className="text-sm text-gray-900">
+                            {row.governorate_name}
+                          </div>
+                        </td>
+                      )}
+
+                      {visibleColumns.district_name && (
+                        <td className="px-4 py-3">
+                          <div className="text-sm text-gray-900">
+                            {row.district_name}
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.subdistrict_name && (
+                        <td className="px-4 py-3">
+                          <div className="text-sm text-gray-900">
+                            {row.subdistrict_name}
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.stations_count && (
+                        <td className="px-4 py-3">
+                          <div className="text-sm text-gray-900">
+                            {row.stations_count}
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.users_count && (
+                        <td className="px-4 py-3">
+                          <div className="text-sm text-gray-900">
+                            {row.users_count}
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.percentageOfVoters && (
+                        <td className="px-4 py-3">
+                          <div className="text-sm text-gray-900">
+                            {row.percentageOfVoters}
+                          </div>
+                        </td>
+                      )}
+
+                      {visibleColumns.actions && (
+                        <td className="px-4 py-3">
+                          <div className="relative">
+                            <button
+                              onClick={() =>
+                                setShowActionMenu(
+                                  showActionMenu === row.id ? null : row.id
+                                )
+                              }
+                              className="p-1 hover:bg-gray-100 rounded transition-colors"
+                            >
+                              <MoreHorizontal className="w-4 h-4" />
+                            </button>
+
+                            {showActionMenu === row.id && (
+                              <div className="absolute left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-999999999">
+                                <div className="py-1">
+                                  <button
+                                    onClick={() => handleCenterStations(row.id)}
+                                    className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                  >
+                                    عرض المحطات
+                                  </button>
+                                  <button
+                                    onClick={() =>
+                                      handleUserAction("edit", row)
+                                    }
+                                    className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                  >
+                                    تعديل
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteConfirm(row.id)}
+                                    className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
+                                  >
+                                    حذف
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                      )}
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="6"
+                      className="px-4 py-12 text-center text-gray-500"
+                    >
+                      <User className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                      <p className="text-lg font-medium">لا توجد نتائج</p>
+                      <p className="text-sm">جرب تغيير مصطلحات البحث</p>
+                    </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td
-                    colSpan="6"
-                    className="px-4 py-12 text-center text-gray-500"
-                  >
-                    <User className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                    <p className="text-lg font-medium">لا توجد نتائج</p>
-                    <p className="text-sm">جرب تغيير مصطلحات البحث</p>
-                  </td>
-                </tr>
-              )}
-            </tbody>
+                )}
+              </tbody>
+            )}
           </table>
         </div>
 
@@ -367,6 +380,12 @@ const CenterPage = () => {
         )}
       </div>
       {showModal && <AddCenterModal onClose={handleCloseModal} />}
+      {showEditModal && (
+        <EditCenterModal
+          onClose={handleCloseEditModal}
+          centerData={selectedCenter}
+        />
+      )}
       <DeleteModal
         isOpen={showDeleteModal}
         onCancel={handleDeleteCancel}

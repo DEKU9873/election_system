@@ -1,13 +1,13 @@
 import React from "react";
 import { Toaster } from "react-hot-toast";
 import GetAllGovernorate from "../../../hook/Governate/get-all-governorate";
-import { Building2, Hash, MapPin, Map, Landmark, LogIn, X } from "lucide-react";
+import { Building2, Hash, MapPin, Map, Landmark, Save, X } from "lucide-react";
 import GetallDistricts from "../../../hook/Districts/get-all-districts";
 import GetAllSubdistricts from "../../../hook/Subdistricts/get-all-subdistricts";
-import AddCenterHook from "../../../hook/Center/add-center-hook";
+import EditCenterHook from "../../../hook/Center/edit-center-hook";
 import Select from "react-select";
 
-const AddCenterModal = ({ onClose }) => {
+const EditCenterModal = ({ onClose, centerData }) => {
   const [
     center,
     code,
@@ -22,7 +22,7 @@ const AddCenterModal = ({ onClose }) => {
     onChangeDistrictId,
     onChangeSubdistrictId,
     onSubmit,
-  ] = AddCenterHook();
+  ] = EditCenterHook(centerData);
 
   const [governates, isLoading] = GetAllGovernorate();
   const [districts] = GetallDistricts();
@@ -108,7 +108,7 @@ const AddCenterModal = ({ onClose }) => {
       className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 min-h-screen flex items-center justify-center p-4"
       onClick={onClose}
     >
-            <div className="absolute inset-0" />
+      <div className="absolute inset-0" />
 
       <div
         className="bg-white backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-full max-w-lg flex flex-col items-center relative "
@@ -121,7 +121,7 @@ const AddCenterModal = ({ onClose }) => {
           <X size={24} />
         </button>
         <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-          إضافة مركز جديد
+          تعديل المركز
         </h1>
         <div dir="rtl" className="w-full grid grid-cols-1 gap-6">
           <div>
@@ -242,12 +242,12 @@ const AddCenterModal = ({ onClose }) => {
           {loading ? (
             <>
               <div className="w-5 h-5 border-3 border-white border-t-transparent rounded-full animate-spin mr-2 inline-block"></div>
-              جاري الإضافة...
+              جاري التعديل...
             </>
           ) : (
             <>
-              إضافة
-              <LogIn size={18} className="ml-1 inline" />
+              حفظ التعديلات
+              <Save size={18} className="ml-1 inline" />
             </>
           )}
         </button>
@@ -263,4 +263,4 @@ const AddCenterModal = ({ onClose }) => {
   );
 };
 
-export default AddCenterModal;
+export default EditCenterModal;

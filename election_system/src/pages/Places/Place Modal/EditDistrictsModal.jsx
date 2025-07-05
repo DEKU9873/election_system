@@ -1,11 +1,11 @@
 import React from "react";
 import { Toaster } from "react-hot-toast";
 import GetAllGovernorate from "../../../hook/Governate/get-all-governorate";
-import { Map, MapPin, LogIn, X } from "lucide-react";
-import AddDistrictsHook from "../../../hook/Districts/add-districts-hook";
+import { Map, MapPin, Save, X } from "lucide-react";
+import EditDistrictsHook from "../../../hook/Districts/edit-districts-hook";
 import Select from "react-select";
 
-const AddDistrictsModal = ({ onClose }) => {
+const EditDistrictsModal = ({ onClose, districtData }) => {
   const [
     district,
     governorateId,
@@ -14,7 +14,7 @@ const AddDistrictsModal = ({ onClose }) => {
     onChangeDistrict,
     onChangeGovernorateId,
     onSubmit,
-  ] = AddDistrictsHook();
+  ] = EditDistrictsHook(districtData);
 
   const [governates, isLoading] = GetAllGovernorate();
 
@@ -80,7 +80,7 @@ const AddDistrictsModal = ({ onClose }) => {
           <X size={24} />
         </button>
         <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-          إضافة قضاء جديد
+          تعديل القضاء
         </h1>
         <div dir="rtl" className="w-full grid grid-cols-1 gap-6">
           <div>
@@ -134,12 +134,12 @@ const AddDistrictsModal = ({ onClose }) => {
           {loading ? (
             <>
               <div className="w-5 h-5 border-3 border-white border-t-transparent rounded-full animate-spin mr-2 inline-block"></div>
-              جاري الإضافة...
+              جاري التعديل...
             </>
           ) : (
             <>
-              إضافة
-              <LogIn size={18} className="ml-1 inline" />
+              حفظ التعديلات
+              <Save size={18} className="ml-1 inline" />
             </>
           )}
         </button>
@@ -155,4 +155,4 @@ const AddDistrictsModal = ({ onClose }) => {
   );
 };
 
-export default AddDistrictsModal;
+export default EditDistrictsModal;

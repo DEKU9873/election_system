@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import logo from "../../assets/urlogo.png";
+import useNotificationsHook from "../../hook/notifications/use-notifications-hook";
 
 import {
   Menu,
@@ -12,6 +13,8 @@ import {
   Vote,
   Bell,
   LogIn,
+  DollarSign,
+  BarChart,
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -19,6 +22,7 @@ const Sidebar = () => {
   const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
   const [activeItem, setActiveItem] = useState("");
+  const { unreadCount } = useNotificationsHook();
 
   React.useEffect(() => {
     const currentPath = location.pathname;
@@ -75,6 +79,19 @@ const Sidebar = () => {
       label: "الاشرطة الانتخابية",
       icon: Vote,
       href: "/electoralStrips",
+    },
+    {
+      id: "statistics",
+      label: "الإحصائيات",
+      icon: BarChart,
+      submenu: [
+        {
+          id: "financial-statistics",
+          label: "الإحصائيات المالية",
+          href: "/financial-statistics",
+        },
+        // يمكن إضافة المزيد من أنواع الإحصائيات هنا في المستقبل
+      ],
     },
     { id: "users", label: "الموظفين", icon: Users, href: "/users" },
   ];
@@ -137,13 +154,18 @@ const Sidebar = () => {
           </div>
           <div className="flex items-center space-x-4 rtl:space-x-reverse">
             <div className="flex items-center gap-4">
-              <button
+              <Link
+                to="/notifications"
                 className="p-2 hover:bg-gray-100 rounded-full relative transition-colors duration-200"
                 title="الإشعارات"
               >
                 <Bell size={20} className="text-gray-600" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-              </button>
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
+              </Link>
               <Link
                 to="/login"
                 className="p-2.5 hover:bg-gray-100 rounded-full transition-colors duration-200"

@@ -89,7 +89,7 @@ const AddSubdistrictsModal = ({ onClose }) => {
           <X size={24} />
         </button>
         <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">إضافة ناحية جديدة</h1>
-        <div className="w-full grid grid-cols-1 gap-6">
+        <div dir="rtl" className="w-full grid grid-cols-1 gap-6">
           <div>
             <label className="block text-gray-700 font-medium mb-2 text-right">
               اسم الناحية

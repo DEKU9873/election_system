@@ -12,14 +12,18 @@ import GetallDistricts from "../../hook/Districts/get-all-districts";
 import { useDispatch } from "react-redux";
 import { deleteDistrict, getDistricts } from "../../redux/placeSlice";
 import AddDistrictsModal from "./Place Modal/AddDistrictsModal";
+import EditDistrictsModal from "./Place Modal/EditDistrictsModal";
 import DeleteModal from "../../Components/Uitily/DeleteModal";
+import Loader from "../../Components/Uitily/Loader";
 const DistrictsPage = () => {
   const dispatch = useDispatch();
 
-  const [districts, isLoading] = GetallDistricts();
+  const [districts, loading] = GetallDistricts();
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [districtIdToDelete, setDistrictIdToDelete] = useState(null);
+  const [selectedDistrict, setSelectedDistrict] = useState(null);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -107,8 +111,13 @@ const DistrictsPage = () => {
   };
 
   // إجراءات المستخدمين
-  const handleUserAction = (action, user) => {
+  const handleUserAction = (action, district) => {
     setShowActionMenu(null);
+    
+    if (action === "edit") {
+      setSelectedDistrict(district);
+      setShowEditModal(true);
+    }
   };
 
   const handleDeleteConfirm = (id) => {
@@ -136,6 +145,11 @@ const DistrictsPage = () => {
   };
   const handleCloseModal = () => {
     setShowModal(false);
+  };
+
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
+    setSelectedDistrict(null);
   };
 
   return (
@@ -171,7 +185,16 @@ const DistrictsPage = () => {
               handleSort={handleSort}
             />
 
-            <tbody className="divide-y divide-gray-200">
+            {loading ? (
+              <tr>
+                <td colSpan="12" className="px-4 py-12 text-center">
+                  <div className="flex justify-center items-center h-40">
+                    <Loader />
+                  </div>
+                </td>
+              </tr>
+            ) : (
+              <tbody className="divide-y divide-gray-200">
               {paginatedData.length > 0 ? (
                 paginatedData.map((row) => (
                   <tr
@@ -321,7 +344,8 @@ const DistrictsPage = () => {
                   </td>
                 </tr>
               )}
-            </tbody>
+              </tbody>
+            )}
           </table>
         </div>
 
@@ -344,7 +368,8 @@ const DistrictsPage = () => {
           />
         )}
       </div>
-     {showModal && <AddDistrictsModal onClose= {handleCloseModal} />}
+     {showModal && <AddDistrictsModal onClose={handleCloseModal} />}
+     {showEditModal && <EditDistrictsModal onClose={handleCloseEditModal} districtData={selectedDistrict} />}
      <DeleteModal 
        isOpen={showDeleteModal}
        onCancel={handleDeleteCancel}

@@ -4,7 +4,7 @@ import { getAllUsers } from "../../redux/authSlice";
 
 const AllUserHook = () => {
   const dispatch = useDispatch();
-  const { allUsers, Loading } = useSelector((state) => state.auth);
+  const { allUsers, loading } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(getAllUsers());
@@ -47,7 +47,7 @@ const AllUserHook = () => {
 
   return [
     allUsers,
-    Loading,
+    loading,
     system_admin,
     coordinator,
     observer,

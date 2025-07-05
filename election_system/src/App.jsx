@@ -1,5 +1,7 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import NotificationToast from "./Components/Notifications/NotificationToast";
+import NotificationButton from "./Components/Notifications/NotificationButton";
 import Login from "./pages/auth/Login";
 import UserTablePage from "./pages/auth/UserTablePage";
 import CoordinatorTablePage from "./pages/auth/CoordinatorTablePage";
@@ -16,10 +18,14 @@ import SelfRegister from "./pages/auth/SelfRegister";
 import CenterPage from "./pages/Places/CenterPage";
 import StationPage from "./pages/Places/StationPage";
 import ElectoralStripsDetails from "./pages/Electoral Strips/ElectoralStripsDetails";
+import FinancialStatistics from "./pages/Statistics/FinancialStatistics";
+import NotificationsPage from "./pages/Notifications/NotificationsPage";
 
 const App = () => {
   return (
-    <div>
+    <div className="font-cairo">
+      <NotificationToast />
+      <NotificationButton />
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -41,6 +47,8 @@ const App = () => {
           <Route path="/userDetails/:id" element={<UserDetailsPage />} />
           <Route path="/centers/" element={<CenterPage />} />
           <Route path="/stations/:id/" element={<StationPage />} />
+          <Route path="/financial-statistics" element={<FinancialStatistics />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
         </Routes>
       </BrowserRouter>
     </div>

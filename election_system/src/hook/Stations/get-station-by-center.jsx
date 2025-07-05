@@ -8,9 +8,9 @@ const GetStationByCenter = (id) => {
     useEffect(() => {
       dispatch(getStationsByCenterId(id));
     }, []);
-    const { stations, isLoading } = useSelector((state) => state.place);
+    const { stations, loading } = useSelector((state) => state.place);
   
-    return [stations, isLoading];
+    return [stations, loading];
 }
 
 export default GetStationByCenter

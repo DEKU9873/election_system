@@ -8,9 +8,9 @@ const dispatch = useDispatch();
     useEffect(() => {
       dispatch(getGovernates());
     }, []);
-    const { governates, isLoading } = useSelector((state) => state.place);
+    const { governates, loading } = useSelector((state) => state.place);
   
-    return [governates, isLoading];
+    return [governates, loading];
 }
 
 export default GetAllGovernorate

@@ -8,6 +8,7 @@ import UserTableHeader from "../../Components/auth/UserTableHeader";
 import { StationHeader } from "../../Components/auth/TableHeaderData";
 import { MoreHorizontal, User } from "lucide-react";
 import UserTablePagination from "../../Components/auth/UserTablePagination";
+import Loader from "../../Components/Uitily/Loader";
 import GetAllSubdistricts from "../../hook/Subdistricts/get-all-subdistricts";
 import { useDispatch } from "react-redux";
 import { deleteStation, deleteSubdistrict, getStations, getStationsByCenterId } from "../../redux/placeSlice";
@@ -20,7 +21,7 @@ const StationPage = () => {
   const { id } = useParams();
 
   // const { subdistrictsData } = useUserData();
-  const [stations, isLoading] = GetStationByCenter(id);
+  const [stations, loading] = GetStationByCenter(id);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [stationIdToDelete, setStationIdToDelete] = useState(null);
@@ -172,7 +173,16 @@ const StationPage = () => {
               handleSort={handleSort}
             />
 
-            <tbody className="divide-y divide-gray-200">
+            {loading ? (
+              <tr>
+                <td colSpan="12" className="px-4 py-12 text-center">
+                  <div className="flex justify-center items-center h-40">
+                    <Loader />
+                  </div>
+                </td>
+              </tr>
+            ) : (
+              <tbody className="divide-y divide-gray-200">
               {paginatedData.length > 0 ? (
                 paginatedData.map((row) => (
                   <tr
@@ -259,23 +269,7 @@ const StationPage = () => {
                                 >
                                   حذف
                                 </button>
-                                {/* <button
-                                  onClick={() =>
-                                    handleUserAction("permissions", row)
-                                  }
-                                  className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                                >
-                                  إدارة الصلاحيات
-                                </button> */}
-                                {/* <hr className="my-1" />
-                                <button
-                                  onClick={() =>
-                                    handleUserAction("delete", row)
-                                  }
-                                  className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
-                                >
-                                   حذف المستخدم
-                                </button> */}
+       
                               </div>
                             </div>
                           )}
@@ -296,7 +290,8 @@ const StationPage = () => {
                   </td>
                 </tr>
               )}
-            </tbody>
+              </tbody>
+            )}
           </table>
         </div>
 

@@ -13,13 +13,17 @@ import GetAllGovernorate from "../../hook/Governate/get-all-governorate";
 import { useDispatch } from "react-redux";
 import { deleteGovernate, getGovernates } from "../../redux/placeSlice";
 import AddGovernorateModal from "./Place Modal/AddGovernorateModal";
+import EditGovernorateModal from "./Place Modal/EditGovernorateModal";
 import DeleteModal from "../../Components/Uitily/DeleteModal";
+import Loader from "../../Components/Uitily/Loader";
 const GovernoratePage = () => {
   const dispatch = useDispatch();
-  const [governates, isLoading] = GetAllGovernorate();
+  const [governates, loading] = GetAllGovernorate();
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [governateIdToDelete, setGovernateIdToDelete] = useState(null);
+  const [selectedGovernate, setSelectedGovernate] = useState(null);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -111,7 +115,11 @@ const GovernoratePage = () => {
   };
 
   // إجراءات المستخدمين
-  const handleUserAction = (action, user) => {
+  const handleUserAction = (action, governate) => {
+    if (action === "edit") {
+      setSelectedGovernate(governate);
+      setShowEditModal(true);
+    }
     setShowActionMenu(null);
   };
 
@@ -148,6 +156,11 @@ const handleDeleteConfirmation = async () => {
     setShowModal(false);
   };
 
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
+    setSelectedGovernate(null);
+  };
+
   return (
     <div>
       <Sidebar />
@@ -181,7 +194,16 @@ const handleDeleteConfirmation = async () => {
               handleSort={handleSort}
             />
 
-            <tbody className="divide-y divide-gray-200">
+            {loading ? (
+              <tr>
+                <td colSpan="12" className="px-4 py-12 text-center">
+                  <div className="flex justify-center items-center h-40">
+                    <Loader />
+                  </div>
+                </td>
+              </tr>
+            ) : (
+              <tbody className="divide-y divide-gray-200">
               {paginatedData.length > 0 ? (
                 paginatedData.map((row) => (
                   <tr
@@ -304,7 +326,8 @@ const handleDeleteConfirmation = async () => {
                   </td>
                 </tr>
               )}
-            </tbody>
+              </tbody>
+            )}
           </table>
         </div>
 
@@ -327,7 +350,8 @@ const handleDeleteConfirmation = async () => {
           />
         )}
       </div>
-      {showModal && <AddGovernorateModal onClose= {handleCloseModal} />}
+      {showModal && <AddGovernorateModal onClose={handleCloseModal} />}
+      {showEditModal && <EditGovernorateModal onClose={handleCloseEditModal} governate={selectedGovernate} />}
       <DeleteModal 
         isOpen={showDeleteModal}
         onCancel={handleDeleteCancel}
