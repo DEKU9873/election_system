@@ -10,7 +10,7 @@ const useDeleteDataWithToken = async (url, parmas) => {
   const token = Cookies.get("token");
 
   const config = {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { Authorization: token ? `Bearer ${token}` : undefined },
   };
   // تصحيح ترتيب المعاملات في دالة delete
   // في axios، المعامل الثاني هو config وليس البيانات

@@ -9,7 +9,7 @@ const useGetData = async (url, parmas) => {
 const useGetDataToken = async (url, parmas) => {
   const token = Cookies.get("token"); 
   const config = {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { Authorization: token ? `Bearer ${token}` : undefined },
   };
   const res = await baseUrl.get(url, config);
   return res;

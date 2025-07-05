@@ -82,7 +82,7 @@ const LoginHook = () => {
     if (!loading && loginClicked) {
       if (user?.data) {
         try {
-          Cookies.set("user", user.data, {
+          Cookies.set("user", JSON.stringify(user.data), {
             expires: 7,
             secure: true,
             sameSite: "strict",
@@ -94,7 +94,7 @@ const LoginHook = () => {
           });
 
           notify("تم تسجيل الدخول بنجاح", "success");
-          navigate("/users");
+          navigate("/dashboard");
         } catch (error) {
           notify("حدث خطأ أثناء حفظ بيانات المستخدم", "error");
         }

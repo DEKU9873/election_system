@@ -2,10 +2,11 @@ import baseUrl from "../Api/baseURL";
 import Cookies from "js-cookie";
 
 const useInUpdateDataWithImage = async (url, parmas) => {
+  const token = Cookies.get("token");
   const config = {
     headers: {
       "Content-Type": "multipart/form-data",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      Authorization: token ? `Bearer ${token}` : undefined,
     },
   };
   const res = await baseUrl.put(url, parmas, config);
@@ -20,7 +21,7 @@ const useUpdateDataWithToken = async (url, parmas) => {
   const token = Cookies.get("token");
 
   const config = {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { Authorization: token ? `Bearer ${token}` : undefined },
   };
   const res = await baseUrl.put(url, parmas, config);
   return res;

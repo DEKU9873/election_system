@@ -20,6 +20,8 @@ import StationPage from "./pages/Places/StationPage";
 import ElectoralStripsDetails from "./pages/Electoral Strips/ElectoralStripsDetails";
 import FinancialStatistics from "./pages/Statistics/FinancialStatistics";
 import NotificationsPage from "./pages/Notifications/NotificationsPage";
+import DashboardPage from "./pages/Dashboard/DashboardPage";
+import PrivateRoute from "./Components/PrivateRoute";
 
 const App = () => {
   return (
@@ -30,25 +32,32 @@ const App = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/selfRegister" element={<SelfRegister />} />
-          <Route path="/elected" element={<ElectedTablePage />} />
-          <Route path="/monitors" element={<MonitorsTablePage />} />
-          <Route path="/coordinators" element={<CoordinatorTablePage />} />
-          <Route path="/users" element={<UserTablePage />} />
-          <Route path="/governorate" element={<GovernoratePage />} />
-          <Route path="/districts" element={<DistrictsPage />} />
-          <Route path="/subdistricts" element={<SubdistrictPage />} />
-          <Route path="/centerManagers" element={<CenterManagers />} />
-          <Route path="/districtsManagers" element={<DistrictsManagers />} />
-          <Route path="/electoralStrips" element={<ElectoralStrips />} />
-          <Route
-            path="/electoralStrips/:id"
-            element={<ElectoralStripsDetails />}
-          />
-          <Route path="/userDetails/:id" element={<UserDetailsPage />} />
-          <Route path="/centers/" element={<CenterPage />} />
-          <Route path="/stations/:id/" element={<StationPage />} />
-          <Route path="/financial-statistics" element={<FinancialStatistics />} />
-          <Route path="/notifications" element={<NotificationsPage />} />
+          <Route element={<PrivateRoute allowedRoles={["system_admin"]} />}>
+            <Route path="/elected" element={<ElectedTablePage />} />
+            <Route path="/monitors" element={<MonitorsTablePage />} />
+            <Route path="/coordinators" element={<CoordinatorTablePage />} />
+            <Route path="/users" element={<UserTablePage />} />
+            <Route path="/governorate" element={<GovernoratePage />} />
+            <Route path="/districts" element={<DistrictsPage />} />
+            <Route path="/subdistricts" element={<SubdistrictPage />} />
+            <Route path="/centerManagers" element={<CenterManagers />} />
+            <Route path="/districtsManagers" element={<DistrictsManagers />} />
+            <Route path="/electoralStrips" element={<ElectoralStrips />} />
+            <Route
+              path="/electoralStrips/:id"
+              element={<ElectoralStripsDetails />}
+            />
+            <Route path="/userDetails/:id" element={<UserDetailsPage />} />
+            <Route path="/centers/" element={<CenterPage />} />
+            <Route path="/stations/:id/" element={<StationPage />} />
+            <Route
+              path="/financial-statistics"
+              element={<FinancialStatistics />}
+            />
+            <Route path="/notifications" element={<NotificationsPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/" element={<DashboardPage />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </div>

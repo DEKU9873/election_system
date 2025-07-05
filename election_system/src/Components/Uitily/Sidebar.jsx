@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/urlogo.png";
 import useNotificationsHook from "../../hook/notifications/use-notifications-hook";
+import Cookies from "js-cookie";
 
 import {
   Menu,
@@ -18,6 +19,7 @@ import {
 } from "lucide-react";
 
 const Sidebar = () => {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
@@ -324,6 +326,9 @@ const Sidebar = () => {
           <button
             onClick={() => {
               // Handle logout
+              Cookies.remove("token");
+              Cookies.remove("user");
+              navigate("/login");
             }}
             className="w-full flex items-center gap-3 px-3 py-2 mt-2 rounded-lg transition-all duration-300 hover:bg-red-50 text-red-600"
           >
