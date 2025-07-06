@@ -49,27 +49,41 @@ const DashboardPage = () => {
         },
       ],
     },
-    registrationTrend: {
-      labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس'],
+    voterParticipation: {
+      labels: ['بغداد', 'البصرة', 'نينوى', 'أربيل', 'السليمانية', 'كركوك', 'ديالى'],
       datasets: [
         {
-          label: 'الناخبون المسجلون',
-          data: [2000, 4500, 6800, 9200, 11500, 13200, 14500, 15000],
-          borderColor: 'rgba(20, 184, 166, 1)', // تيل 500
-          backgroundColor: 'rgba(20, 184, 166, 0.1)',
-          borderWidth: 2,
-          fill: true,
-          tension: 0.4,
+          label: 'نسبة المشاركة',
+          data: [75, 68, 62, 80, 72, 65, 70],
+          backgroundColor: [
+            'rgba(54, 162, 235, 0.7)',
+            'rgba(255, 99, 132, 0.7)',
+            'rgba(255, 206, 86, 0.7)',
+            'rgba(75, 192, 192, 0.7)',
+            'rgba(153, 102, 255, 0.7)',
+            'rgba(255, 159, 64, 0.7)',
+            'rgba(199, 199, 199, 0.7)'
+          ],
+          borderColor: [
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 99, 132, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(199, 199, 199, 1)'
+          ],
+          borderWidth: 1,
         },
         {
-          label: 'الهدف',
-          data: [2500, 5000, 7500, 10000, 12500, 15000, 17500, 20000],
-          borderColor: 'rgba(250, 204, 21, 1)', // أصفر 400
-          backgroundColor: 'rgba(250, 204, 21, 0.1)',
-          borderWidth: 2,
-          borderDash: [5, 5],
+          label: 'المتوسط الوطني',
+          data: [70, 70, 70, 70, 70, 70, 70],
+          type: 'line',
           fill: false,
-          tension: 0.4,
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderDash: [5, 5],
+          borderWidth: 2,
+          pointRadius: 0,
         }
       ],
     },
@@ -198,23 +212,14 @@ const DashboardPage = () => {
           </div>
           
           <div className="bg-white p-6 rounded-lg shadow-sm">
-            <h2 className="text-lg font-semibold mb-4">تقدم تسجيل الناخبين عبر الزمن</h2>
+            <h2 className="text-lg font-semibold mb-4">نسبة المشاركة في الانتخابات حسب المحافظات</h2>
             <div className="flex flex-col items-center mb-3">
-              <div className="flex items-center justify-between w-full max-w-md mb-2">
-                <div className="flex items-center">
-                  <div className="w-4 h-4 rounded-full bg-teal-500 mr-2"></div>
-                  <span>الناخبون المسجلون حالياً: 15,000 ناخب</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-4 h-4 rounded-full bg-yellow-400 mr-2"></div>
-                  <span>الهدف النهائي: 20,000 ناخب</span>
-                </div>
-              </div>
-              <div className="text-sm text-gray-500">نسبة الإنجاز الحالية: 75% من الهدف</div>
+              <div className="text-sm text-gray-500 mb-2">متوسط نسبة المشاركة الوطنية: 70%</div>
+              <div className="text-sm text-gray-500">أعلى نسبة مشاركة: أربيل (80%)</div>
             </div>
             <div className="h-64 flex items-center justify-center">
-              <Line 
-                data={chartData.registrationTrend}
+              <Bar 
+                data={chartData.voterParticipation}
                 options={{
                   responsive: true,
                   maintainAspectRatio: false,
@@ -230,35 +235,34 @@ const DashboardPage = () => {
                     tooltip: {
                       callbacks: {
                         label: function(context) {
-                          return `${context.dataset.label}: ${context.raw.toLocaleString()} ناخب`;
+                          return `${context.dataset.label}: ${context.raw}%`;
                         }
                       }
                     },
                     datalabels: {
-                      display: function(context) {
-                        // عرض التسميات فقط للنقاط الأخيرة في كل مجموعة بيانات
-                        return context.dataIndex === context.dataset.data.length - 1;
-                      },
                       formatter: (value) => {
-                        return value.toLocaleString();
+                        return value + '%';
                       },
-                      align: 'top',
-                      anchor: 'end',
                       color: function(context) {
-                        return context.dataset.borderColor;
+                        return context.dataset.type === 'line' ? context.dataset.borderColor : '#fff';
+                      },
+                      display: function(context) {
+                        return context.dataset.type !== 'line';
                       },
                       font: {
                         weight: 'bold',
                         family: 'Cairo',
+                        size: 12
                       },
                     }
                   },
                   scales: {
                     y: {
                       beginAtZero: true,
+                      max: 100,
                       ticks: {
                         callback: function(value) {
-                          return value.toLocaleString();
+                          return value + '%';
                         },
                         font: {
                           family: 'Cairo',
@@ -266,7 +270,7 @@ const DashboardPage = () => {
                       },
                       title: {
                         display: true,
-                        text: 'عدد الناخبين',
+                        text: 'نسبة المشاركة',
                         font: {
                           family: 'Cairo',
                           size: 14,

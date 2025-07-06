@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/urlogo.png";
 import useNotificationsHook from "../../hook/notifications/use-notifications-hook";
@@ -16,6 +16,19 @@ import {
   LogIn,
   DollarSign,
   BarChart,
+  User,
+  Building,
+  Map,
+  MapPin,
+  Landmark,
+  UserCheck,
+  FileText,
+  PieChart,
+  Settings,
+  ChevronDown,
+  Briefcase,
+  ClipboardList,
+  LayoutDashboard
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -25,6 +38,8 @@ const Sidebar = () => {
   const location = useLocation();
   const [activeItem, setActiveItem] = useState("");
   const { unreadCount } = useNotificationsHook();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userData, setUserData] = useState(null);
 
   React.useEffect(() => {
     const currentPath = location.pathname;
@@ -34,11 +49,28 @@ const Sidebar = () => {
     }
   }, [location]);
 
+  // التحقق من وجود بيانات المستخدم في الكوكيز
+  useEffect(() => {
+    const userCookie = Cookies.get("user");
+    if (userCookie) {
+      try {
+        const parsedUser = JSON.parse(userCookie);
+        setUserData(parsedUser);
+        setIsLoggedIn(true);
+      } catch (error) {
+        console.error("خطأ في تحليل بيانات المستخدم:", error);
+        setIsLoggedIn(false);
+      }
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
+
   const [openSubmenu, setOpenSubmenu] = useState(null);
 
   const menuItems = [
-    { id: "dashboard", label: "لوحة التحكم", icon: Home, href: "/dashboard" },
-    { id: "voters", label: "الناخبين", icon: Vote, href: "/elected" },
+    { id: "dashboard", label: "لوحة التحكم", icon: LayoutDashboard, href: "/dashboard" },
+    { id: "voters", label: "الناخبين", icon: UserCheck, href: "/elected" },
     {
       id: "supervisors",
       label: "المشرفين",
@@ -48,49 +80,53 @@ const Sidebar = () => {
     {
       id: "coordinators",
       label: "المرتكزين",
-      icon: Vote,
+      icon: Briefcase,
       href: "/coordinators",
     },
     {
       id: "centers",
       label: "إدارة المراكز",
-      icon: UserCog,
+      icon: Building,
       submenu: [
         {
           id: "centers",
           label: "المراكز الانتخابية",
           href: "/centers",
+          icon: Landmark,
         },
-        { id: "governorates", label: "المحافظات", href: "/governorate" },
-        { id: "districts", label: "الأقضية", href: "/districts" },
-        { id: "sub-districts", label: "النواحي", href: "/subdistricts" },
+        { id: "governorates", label: "المحافظات", href: "/governorate", icon: Map },
+        { id: "districts", label: "الأقضية", href: "/districts", icon: MapPin },
+        { id: "sub-districts", label: "النواحي", href: "/subdistricts", icon: MapPin },
         {
           id: "center-managers",
           label: "مدراء المراكز",
           href: "/centerManagers",
+          icon: UserCog,
         },
         {
           id: "district-managers",
           label: "مدراء الأقضية",
           href: "/districtsManagers",
+          icon: UserCog,
         },
       ],
     },
     {
       id: "electoralStrips",
       label: "الاشرطة الانتخابية",
-      icon: Vote,
+      icon: FileText,
       href: "/electoralStrips",
     },
     {
-      id: "statistics",
-      label: "الإحصائيات",
-      icon: BarChart,
+      id: "financial",
+      label: "الحسابات",
+      icon: DollarSign,
       submenu: [
         {
           id: "financial-statistics",
           label: "الإحصائيات المالية",
           href: "/financial-statistics",
+          icon: PieChart,
         },
         // يمكن إضافة المزيد من أنواع الإحصائيات هنا في المستقبل
       ],
@@ -143,10 +179,10 @@ const Sidebar = () => {
             {!isOpen && (
               <button
                 onClick={toggleSidebar}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                className="p-2 hover:bg-blue-50 rounded-lg transition-colors duration-200"
                 title="فتح القائمة"
               >
-                <Menu size={20} className="text-gray-600" />
+                <Menu size={22} className="text-blue-600" />
               </button>
             )}
             <h1 className="text-xl font-semibold text-gray-800 font-['Cairo']">
@@ -158,23 +194,33 @@ const Sidebar = () => {
             <div className="flex items-center gap-4">
               <Link
                 to="/notifications"
-                className="p-2 hover:bg-gray-100 rounded-full relative transition-colors duration-200"
+                className="p-2 hover:bg-blue-50 rounded-full relative transition-colors duration-200"
                 title="الإشعارات"
               >
-                <Bell size={20} className="text-gray-600" />
+                <Bell size={22} className="text-blue-600" />
                 {unreadCount > 0 && (
                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                    {unreadCount > 9 ? '9+' : unreadCount}
+                    {unreadCount > 9 ? "9+" : unreadCount}
                   </span>
                 )}
               </Link>
-              <Link
-                to="/login"
-                className="p-2.5 hover:bg-gray-100 rounded-full transition-colors duration-200"
-                title="تسجيل الدخول"
-              >
-                <LogIn size={22} className="text-gray-700" />
-              </Link>
+              {isLoggedIn ? (
+                <Link
+                  to="/profile"
+                  className="p-2.5 hover:bg-blue-50 rounded-full transition-colors duration-200"
+                  title="الملف الشخصي"
+                >
+                  <User size={22} className="text-blue-600" />
+                </Link>
+              ) : (
+                <Link
+                  to="/login"
+                  className="p-2.5 hover:bg-blue-50 rounded-full transition-colors duration-200"
+                  title="تسجيل الدخول"
+                >
+                  <LogIn size={22} className="text-blue-600" />
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -205,16 +251,16 @@ const Sidebar = () => {
           <div className="flex justify-end m-4">
             <button
               onClick={toggleSidebar}
-              className="p-1.5 rounded-lg hover:bg-gray-100 hover:rotate-90 transition-all duration-300"
+              className="p-1.5 rounded-lg hover:bg-blue-50 hover:rotate-90 transition-all duration-300"
             >
-              <X size={18} />
+              <X size={20} className="text-blue-600" />
             </button>
           </div>
           <div className="flex items-center justify-between p-4">
             <div className="flex flex-col items-center gap-2 flex-1 justify-center">
               <img src={logo} alt="شعار الشركة" className="h-20 w-auto" />
               <span className="font-bold text-lg text-gray-800">
-                نظام الانتخابات
+                نظام حملتي
               </span>
             </div>
           </div>
@@ -247,38 +293,39 @@ const Sidebar = () => {
                         />
                         <span className="font-medium">{item.label}</span>
                       </div>
-                      <svg
+                      <ChevronDown
                         className={`w-4 h-4 transition-transform duration-200 ${
                           openSubmenu === item.id ? "transform rotate-180" : ""
                         }`}
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19 9l-7 7-7-7"
-                        />
-                      </svg>
+                      />
                     </button>
                     {openSubmenu === item.id && (
                       <div className="mt-1 mr-4 space-y-1">
-                        {item.submenu.map((subItem) => (
-                          <Link
-                            key={subItem.id}
-                            to={subItem.href}
-                            onClick={closeSidebar}
-                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-gray-50 ${
-                              activeItem === subItem.id
-                                ? "bg-blue-50 text-blue-700 shadow-sm"
-                                : "text-gray-700"
-                            }`}
-                          >
-                            <span className="font-medium">{subItem.label}</span>
-                          </Link>
-                        ))}
+                        {item.submenu.map((subItem) => {
+                          const SubIcon = subItem.icon || null;
+                          return (
+                            <Link
+                              key={subItem.id}
+                              to={subItem.href}
+                              onClick={closeSidebar}
+                              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-gray-50 ${
+                                activeItem === subItem.id
+                                  ? "bg-blue-50 text-blue-700 shadow-sm"
+                                  : "text-gray-700"
+                              }`}
+                            >
+                              {SubIcon && (
+                                <SubIcon
+                                  size={16}
+                                  className={`transition-all duration-200 ${
+                                    activeItem === subItem.id ? "text-blue-600" : "text-gray-500"
+                                  }`}
+                                />
+                              )}
+                              <span className="font-medium">{subItem.label}</span>
+                            </Link>
+                          );
+                        })}
                       </div>
                     )}
                   </div>
@@ -309,32 +356,47 @@ const Sidebar = () => {
         </nav>
 
         {/* Footer */}
-        <div className="p-4 border-t border-gray-200 min-w-64 flex-shrink-0">
-          <div className="flex items-center gap-3 hover:bg-gray-50 rounded-lg p-2 transition-all duration-200 cursor-pointer">
-            <div className="flex-1 min-w-0 text-right order-1">
-              <p className="text-sm font-medium text-gray-900 truncate">
-                الحسن محمد
-              </p>
-              <p className="text-xs text-gray-500 truncate">
-                alhassan@gmail.com
-              </p>
+        <div className="p-2 border-t border-gray-200 min-w-64 flex-shrink-0">
+          {isLoggedIn && userData ? (
+            <div className="flex flex-row items-center justify-between">
+              <div className="flex items-center gap-2 hover:bg-gray-50 rounded-lg p-1 transition-all duration-200 cursor-pointer flex-grow">
+                <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center hover:scale-105 transition-transform duration-200 flex-shrink-0">
+                  <span className="text-gray-600 font-medium text-xs">
+                    {userData.full_name ? userData.full_name.charAt(0) : "م"}
+                  </span>
+                </div>
+                <div className="flex-1 min-w-0 text-right">
+                  <p className="text-xs font-medium text-gray-900 truncate">
+                    {userData.full_name || "المستخدم"}
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    // Handle logout
+                    Cookies.remove("token");
+                    Cookies.remove("user");
+                    setIsLoggedIn(false);
+                    setUserData(null);
+                    navigate("/login");
+                  }}
+                  className="flex items-center justify-center p-1.5 rounded-lg transition-all duration-300 hover:bg-red-50 text-red-600"
+                  title="تسجيل الخروج"
+                >
+                  <LogOut size={18} className="hover:scale-110 transition-transform duration-200" />
+                </button>
+              </div>
             </div>
-            <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center order-2 hover:scale-105 transition-transform duration-200">
-              <span className="text-gray-600 font-medium text-sm">أم</span>
+          ) : (
+            <div className="flex items-center justify-center py-1">
+              <Link 
+                to="/login"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300 hover:shadow-md"
+              >
+                <LogIn size={16} className="animate-pulse" />
+                <span className="font-medium">تسجيل الدخول</span>
+              </Link>
             </div>
-          </div>
-          <button
-            onClick={() => {
-              // Handle logout
-              Cookies.remove("token");
-              Cookies.remove("user");
-              navigate("/login");
-            }}
-            className="w-full flex items-center gap-3 px-3 py-2 mt-2 rounded-lg transition-all duration-300 hover:bg-red-50 text-red-600"
-          >
-            <LogOut size={20} />
-            <span className="font-medium">تسجيل الخروج</span>
-          </button>
+          )}
         </div>
       </div>
     </div>

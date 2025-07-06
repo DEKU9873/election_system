@@ -84,13 +84,15 @@ const LoginHook = () => {
         try {
           Cookies.set("user", JSON.stringify(user.data), {
             expires: 7,
-            secure: true,
-            sameSite: "strict",
+            secure: false,
+            sameSite: "lax",
+            path: "/",
           });
           Cookies.set("token", user.token, {
             expires: 7,
-            secure: true,
-            sameSite: "strict",
+            secure: false,
+            sameSite: "lax",
+            path: "/",
           });
 
           notify("تم تسجيل الدخول بنجاح", "success");
