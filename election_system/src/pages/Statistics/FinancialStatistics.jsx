@@ -36,7 +36,7 @@ const FinancialStatistics = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Sidebar />
+      {/* <Sidebar /> */}
       <div className="w-full pt-4">
         <div className="p-6">
           {/* عنوان الصفحة */}

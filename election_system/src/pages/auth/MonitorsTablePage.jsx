@@ -156,8 +156,8 @@ const MonitorsTablePage = () => {
   };
   return (
     <div>
-      <Sidebar />
-      <div className="w-full max-w-[1440px] mx-auto p-6 bg-white" dir="rtl">
+      {/* <Sidebar /> */}
+      <div className="w-full max-w-[1440px] mx-auto p-3 sm:p-6 bg-white min-h-screen" dir="rtl">
         <div className="mb-6">
           <UserTableTitle title="المشرفين" subtitle="قائمة المشرفين" />
 
@@ -176,8 +176,8 @@ const MonitorsTablePage = () => {
         </div>
 
         {/* الجدول */}
-        <div className="border border-gray-200 rounded-lg shadow-sm">
-          <table className="w-full">
+        <div className="border border-gray-200 rounded-lg shadow-sm overflow-x-auto">
+          <table className="w-full min-w-[800px]">
             <UserTableHeader
               tableHeaders={MonitorsTableHeaders}
               visibleColumns={visibleColumns}
@@ -189,8 +189,8 @@ const MonitorsTablePage = () => {
 
             {loading ? (
               <tr>
-                <td colSpan="12" className="px-4 py-12 text-center">
-                  <div className="flex justify-center items-center h-40">
+                <td colSpan="12" className="px-2 sm:px-4 py-8 sm:py-12 text-center">
+                  <div className="flex justify-center items-center h-32 sm:h-40">
                     <Loader />
                   </div>
                 </td>
@@ -206,32 +206,32 @@ const MonitorsTablePage = () => {
                     }`}
                   >
                     {visibleColumns.select && (
-                      <td className="px-4 py-3">
+                      <td className="px-2 sm:px-4 py-2 sm:py-3">
                         <input
                           type="checkbox"
                           checked={selectedRows.has(row.id)}
                           onChange={() => handleSelectRow(row.id)}
-                          className="rounded text-blue-600"
+                          className="rounded text-blue-600 h-3 w-3 sm:h-4 sm:w-4"
                         />
                       </td>
                     )}
                     {visibleColumns.id && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{index + 1}</div>
+                      <td className="px-2 sm:px-4 py-2 sm:py-3">
+                        <div className="text-xs sm:text-sm text-gray-900">{index + 1}</div>
                       </td>
                     )}
                     {visibleColumns.full_name && (
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2">
-                          <div className="font-medium text-gray-900">
+                      <td className="px-2 sm:px-4 py-2 sm:py-3">
+                        <div className="flex items-center gap-1 sm:gap-2">
+                          <div className="font-medium text-xs sm:text-sm text-gray-900">
                             {row.full_name}
                           </div>
                         </div>
                       </td>
                     )}
                     {visibleColumns.phone_number && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">
+                      <td className="px-2 sm:px-4 py-2 sm:py-3">
+                        <div className="text-xs sm:text-sm text-gray-900">
                           {row.phone_number}
                         </div>
                       </td>
@@ -250,7 +250,7 @@ const MonitorsTablePage = () => {
                     )}
 
                     {visibleColumns.actions && (
-                      <td className="px-4 py-3">
+                      <td className="px-2 sm:px-4 py-2 sm:py-3">
                         <div className="relative">
                           <button
                             onClick={() =>
@@ -260,29 +260,29 @@ const MonitorsTablePage = () => {
                             }
                             className="p-1 hover:bg-gray-100 rounded transition-colors"
                           >
-                            <MoreHorizontal className="w-4 h-4" />
+                            <MoreHorizontal className="w-3 h-3 sm:w-4 sm:h-4" />
                           </button>
 
                           {showActionMenu === row.id && (
-                            <div className="absolute left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-999999999">
+                            <div className="absolute left-0 mt-1 w-36 sm:w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-999999999">
                               <div className="py-1">
                                 <button
                                   onClick={() =>
                                     handleDetailsUserAction(row.id)
                                   }
-                                  className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                  className="block w-full text-right px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
                                   عرض التفاصيل
                                 </button>
                                 <button
                                   onClick={() => handleUserAction("edit", row)}
-                                  className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                  className="block w-full text-right px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
                                   تعديل
                                 </button>
                                 <button
                                   onClick={() => handleDeleteConfirm(row.id)}
-                                  className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
+                                  className="block w-full text-right px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-red-700 hover:bg-red-50 transition-colors"
                                 >
                                   حذف
                                 </button>
@@ -290,7 +290,7 @@ const MonitorsTablePage = () => {
                                   onClick={() =>
                                     handleUserAction("permissions", row)
                                   }
-                                  className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                  className="block w-full text-right px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
                                   إدارة الصلاحيات
                                 </button>
@@ -307,11 +307,11 @@ const MonitorsTablePage = () => {
                 <tr>
                   <td
                     colSpan="6"
-                    className="px-4 py-12 text-center text-gray-500"
+                    className="px-2 sm:px-4 py-8 sm:py-12 text-center text-gray-500"
                   >
-                    <User className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                    <p className="text-lg font-medium">لا توجد نتائج</p>
-                    <p className="text-sm">جرب تغيير مصطلحات البحث</p>
+                    <User className="w-8 h-8 sm:w-12 sm:h-12 text-gray-300 mx-auto mb-2 sm:mb-4" />
+                    <p className="text-base sm:text-lg font-medium">لا توجد نتائج</p>
+                    <p className="text-xs sm:text-sm">جرب تغيير مصطلحات البحث</p>
                   </td>
                 </tr>
               )}

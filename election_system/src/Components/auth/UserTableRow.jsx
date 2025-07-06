@@ -21,25 +21,25 @@ const UserTableRow = ({
       }`}
     >
       {visibleColumns.select && (
-        <td className="px-4 py-3">
+        <td className="px-2 sm:px-4 py-2 sm:py-3">
           <input
             type="checkbox"
             checked={selectedRows.has(row.id)}
             onChange={() => handleSelectRow(row.id)}
-            className="rounded text-blue-600"
+            className="rounded text-blue-600 h-3 w-3 sm:h-4 sm:w-4"
           />
         </td>
       )}
       {visibleColumns.id && (
-        <td className="px-4 py-3">
-          <div className="text-sm text-gray-900">{row.id}</div>
+        <td className="px-2 sm:px-4 py-2 sm:py-3">
+          <div className="text-xs sm:text-sm text-gray-900">{row.id}</div>
         </td>
       )}
       {visibleColumns.name && (
-        <td className="px-4 py-3">
-          <div className="flex items-center gap-2">
+        <td className="px-2 sm:px-4 py-2 sm:py-3">
+          <div className="flex items-center gap-1 sm:gap-2">
             <div
-              className="font-medium text-gray-900 cursor-pointer hover:text-blue-600 transition-colors"
+              className="font-medium text-xs sm:text-sm text-gray-900 cursor-pointer hover:text-blue-600 transition-colors"
               onClick={() => {
                 const marker = document.querySelector(
                   `[data-marker-id="${row.id}"]`
@@ -58,27 +58,27 @@ const UserTableRow = ({
         </td>
       )}
       {visibleColumns.phone && (
-        <td className="px-4 py-3">
-          <div className="text-sm text-gray-900">{row.phone}</div>
+        <td className="px-2 sm:px-4 py-2 sm:py-3">
+          <div className="text-xs sm:text-sm text-gray-900">{row.phone}</div>
         </td>
       )}
       {visibleColumns.birthYear && (
-        <td className="px-4 py-3">
-          <div className="text-sm text-gray-900">{row.birthYear}</div>
+        <td className="px-2 sm:px-4 py-2 sm:py-3">
+          <div className="text-xs sm:text-sm text-gray-900">{row.birthYear}</div>
         </td>
       )}
       {visibleColumns.registrationDate && (
-        <td className="px-4 py-3">
-          <div className="text-sm text-gray-900">{row.registrationDate}</div>
+        <td className="px-2 sm:px-4 py-2 sm:py-3">
+          <div className="text-xs sm:text-sm text-gray-900">{row.registrationDate}</div>
         </td>
       )}
       {visibleColumns.registrationMethod && (
-        <td className="px-4 py-3">
-          <div className="text-sm text-gray-900">{row.registrationMethod}</div>
+        <td className="px-2 sm:px-4 py-2 sm:py-3">
+          <div className="text-xs sm:text-sm text-gray-900">{row.registrationMethod}</div>
         </td>
       )}
       {visibleColumns.actions && (
-        <td className="px-4 py-3">
+        <td className="px-2 sm:px-4 py-2 sm:py-3">
           <div className="relative">
             <button
               onClick={() =>
@@ -86,40 +86,40 @@ const UserTableRow = ({
               }
               className="p-1 hover:bg-gray-100 rounded transition-colors"
             >
-              <MoreHorizontal className="w-4 h-4" />
+              <MoreHorizontal className="w-3 h-3 sm:w-4 sm:h-4" />
             </button>
 
             {showActionMenu === row.id && (
-              <div className="absolute left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-999999999">
+              <div className="absolute left-0 mt-1 w-36 sm:w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-999999999">
                 <div className="py-1">
                   <button
                     onClick={() => handleUserAction("view", row)}
-                    className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                    className="block w-full text-right px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                   >
                      عرض التفاصيل
                   </button>
                   <button
                     onClick={() => handleUserAction("edit", row)}
-                    className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                    className="block w-full text-right px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                   >
                      تعديل
                   </button>
                   <button
                     onClick={() => handleUserAction("delete", row)}
-                    className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
+                    className="block w-full text-right px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-red-700 hover:bg-red-50 transition-colors"
                   >
                      حذف
                   </button>
                   <button
                     onClick={() => handleUserAction("permissions", row)}
-                    className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                    className="block w-full text-right px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                   >
                      إدارة الصلاحيات
                   </button>
                   <hr className="my-1" />
                   <button
                     onClick={() => handleUserAction("delete", row)}
-                    className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
+                    className="block w-full text-right px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-red-700 hover:bg-red-50 transition-colors"
                   >
                      حذف المستخدم
                   </button>

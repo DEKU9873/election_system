@@ -169,9 +169,9 @@ const UserTablePage = () => {
 
 
   return (
-    <div>
-      <Sidebar />
-      <div className="w-full max-w-[1440px] mx-auto p-6 bg-white" dir="rtl">
+    <div className="min-h-screen">
+      {/* <Sidebar /> */}
+      <div className="w-full max-w-[1440px] mx-auto p-2 sm:p-4 md:p-6 bg-white" dir="rtl">
         <div className="mb-6">
           <UserTableTitle title="المستخدمين" subtitle="قائمة المستخدمين" />
 
@@ -203,14 +203,15 @@ const UserTablePage = () => {
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
             link="/register"
+            className="flex-wrap"
           />
 
           <UserTableStats data={allUsers} title = "اجمالي السمتخدمين" />
         </div>
 
         {/* الجدول */}
-        <div className="border border-gray-200 rounded-lg shadow-sm">
-          <table className="w-full">
+        <div className="border border-gray-200 rounded-lg shadow-sm overflow-x-auto">
+          <table className="w-full min-w-[800px]">
             <UserTableHeader
               tableHeaders={userTableHeaders}
               visibleColumns={visibleColumns}
@@ -239,7 +240,7 @@ const UserTablePage = () => {
                     }`}
                   >
                     {visibleColumns.select && (
-                      <td className="px-4 py-3">
+                      <td className="px-2 sm:px-4 py-2 sm:py-3">
                         <input
                           type="checkbox"
                           checked={selectedRows.has(row.id)}
@@ -249,15 +250,15 @@ const UserTablePage = () => {
                       </td>
                     )}
                     {visibleColumns.id && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.id}</div>
+                      <td className="px-2 sm:px-4 py-2 sm:py-3">
+                        <div className="text-xs sm:text-sm text-gray-900">{row.id}</div>
                       </td>
                     )}
                     {visibleColumns.full_name && (
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2">
+                      <td className="px-2 sm:px-4 py-2 sm:py-3">
+                        <div className="flex items-center gap-1 sm:gap-2">
                           <div
-                            className="font-medium text-gray-900 cursor-pointer hover:text-blue-600 transition-colors"
+                            className="font-medium text-xs sm:text-sm text-gray-900 cursor-pointer hover:text-blue-600 transition-colors"
                             onClick={() => {
                               const marker = document.querySelector(
                                 `[data-marker-id="${row.id}"]`
@@ -276,39 +277,39 @@ const UserTablePage = () => {
                       </td>
                     )}
                     {visibleColumns.phone_number && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">
+                      <td className="px-2 sm:px-4 py-2 sm:py-3">
+                        <div className="text-xs sm:text-sm text-gray-900">
                           {row.phone_number}
                         </div>
                       </td>
                     )}
                     {visibleColumns.pollingCenter && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">
+                      <td className="px-2 sm:px-4 py-2 sm:py-3">
+                        <div className="text-xs sm:text-sm text-gray-900">
                           {row.pollingCenter}
                         </div>
                       </td>
                     )}
                     {visibleColumns.role && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.role}</div>
+                      <td className="px-2 sm:px-4 py-2 sm:py-3">
+                        <div className="text-xs sm:text-sm text-gray-900">{row.role}</div>
                       </td>
                     )}
                     {visibleColumns.addBy && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">{row.addBy}</div>
+                      <td className="px-2 sm:px-4 py-2 sm:py-3">
+                        <div className="text-xs sm:text-sm text-gray-900">{row.addBy}</div>
                       </td>
                     )}
                     {visibleColumns.createdAt && (
-                      <td className="px-4 py-3">
-                        <div className="text-sm text-gray-900">
+                      <td className="px-2 sm:px-4 py-2 sm:py-3">
+                        <div className="text-xs sm:text-sm text-gray-900">
                           {formatDate(row.createdAt)}
                         </div>
                       </td>
                     )}
 
                     {visibleColumns.actions && (
-                      <td className="px-4 py-3">
+                      <td className="px-2 sm:px-4 py-2 sm:py-3">
                         <div className="relative">
                           <button
                             onClick={() =>
@@ -322,7 +323,7 @@ const UserTablePage = () => {
                           </button>
 
                           {showActionMenu === row.id && (
-                            <div className="absolute left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-999999999">
+                            <div className="absolute left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
                               <div className="py-1">
                                 <button
                                   onClick={() => handleDetailsUserAction(row.id)}

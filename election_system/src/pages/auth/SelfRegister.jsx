@@ -46,31 +46,31 @@ const SelfRegister = () => {
   return (
     <div
       dir="rtl"
-      className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-purple-100 p-4 md:p-8"
+      className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-purple-100 p-3 sm:p-4 md:p-8"
     >
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-7xl mx-auto p-4 md:p-8">
-        <div className="flex justify-center mb-8">
-          <img src={logo} alt="شعار النظام الانتخابي" className="w-32 h-32" />
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-7xl mx-auto p-3 sm:p-4 md:p-8">
+        <div className="flex justify-center mb-4 sm:mb-6 md:mb-8">
+          <img src={logo} alt="شعار النظام الانتخابي" className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32" />
         </div>
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center text-gray-800 mb-4 sm:mb-6 md:mb-8">
           تسجيل ناخب جديد
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 md:space-y-6">
           {/* المعلومات الأساسية */}
           <div className="space-y-4">
-            <h3 className="text-xl font-semibold text-gray-700 mb-4">
+            <h3 className="text-lg sm:text-xl font-semibold text-gray-700 mb-2 sm:mb-3 md:mb-4">
               المعلومات الأساسية
             </h3>
             <div className="grid md:grid-cols-2 gap-4">
               <div className="relative">
-                <User className="absolute right-3 top-3 text-gray-400" size={20} />
+                <User className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
                 <input
                   type="text"
                   placeholder="الاسم الأول"
                   value={firstName}
                   onChange={handleFirstNameChange}
-                  className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
+                  className="w-full pr-8 sm:pr-10 py-1.5 sm:py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right text-sm sm:text-base"
                 />
               </div>
 
@@ -97,7 +97,7 @@ const SelfRegister = () => {
               </div>
 
               <div className="relative">
-                <Phone className="absolute right-3 top-3 text-gray-400" size={20} />
+                <Phone className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
                 <input
                   type="tel"
                   placeholder="رقم الهاتف"
@@ -108,7 +108,7 @@ const SelfRegister = () => {
               </div>
 
               <div className="relative">
-                <IdCard className="absolute right-3 top-3 text-gray-400" size={20} />
+                <IdCard className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
                 <input
                   type="number"
                   placeholder="سنة الميلاد"
@@ -119,7 +119,7 @@ const SelfRegister = () => {
               </div>
 
               <div className="relative">
-                <Lock className="absolute right-3 top-3 text-gray-400" size={20} />
+                <Lock className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
                 <input
                   type="password"
                   placeholder="كلمة المرور"
@@ -148,7 +148,7 @@ const SelfRegister = () => {
               معلومات المركز الانتخابي
             </h3>
             <div className="relative">
-              <MapPin className="absolute right-3 top-3 text-gray-400" size={20} />
+              <MapPin className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
               <input
                 type="text"
                 placeholder="اسم المركز الانتخابي"
@@ -170,9 +170,9 @@ const SelfRegister = () => {
                 id="hasVotingRight"
                 checked={hasVotingRight}
                 onChange={handleHasVotingRightChange}
-                className="h-4 w-4 text-blue-500"
+                className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500"
               />
-              <label htmlFor="hasVotingRight" className="text-gray-700">
+              <label htmlFor="hasVotingRight" className="text-gray-700 text-sm sm:text-base">
                 لدي حق التصويت
               </label>
             </div>
@@ -185,7 +185,7 @@ const SelfRegister = () => {
                 onChange={handleIdCardUpdatedChange}
                 className="h-4 w-4 text-blue-500"
               />
-              <label htmlFor="idUpdated" className="text-gray-700">
+              <label htmlFor="idUpdated" className="text-gray-700 text-sm sm:text-base">
                 قمت بتحديث الهوية
               </label>
             </div>
@@ -196,10 +196,10 @@ const SelfRegister = () => {
             <h3 className="text-xl font-semibold text-gray-700 mb-4">
               الصور والمستندات
             </h3>
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
               {/* الصورة الشخصية */}
               <div className="space-y-2">
-                <label className="block text-gray-700 font-medium">الصورة الشخصية</label>
+                <label className="block text-gray-700 font-medium text-sm sm:text-base">الصورة الشخصية</label>
                 <div className="relative border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50">
                   <input
                     type="file"
@@ -215,8 +215,8 @@ const SelfRegister = () => {
                     />
                   ) : (
                     <div className="flex flex-col items-center">
-                      <Camera className="w-8 h-8 text-gray-400" />
-                      <span className="mt-2 text-sm text-gray-500">اختر صورة</span>
+                      <Camera className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-gray-400" />
+                      <span className="mt-1 sm:mt-2 text-xs sm:text-sm text-gray-500">اختر صورة</span>
                     </div>
                   )}
                 </div>
@@ -279,13 +279,13 @@ const SelfRegister = () => {
           {/* زر التسجيل */}
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium text-base shadow-md hover:bg-blue-700 transition-colors"
+            className="w-full bg-blue-600 text-white py-2 sm:py-2.5 md:py-3 px-4 sm:px-5 md:px-6 rounded-lg font-medium text-sm sm:text-base shadow-md hover:bg-blue-700 transition-colors"
           >
             تسجيل
           </button>
 
-          <div className="text-center mt-4">
-            <Link to="/login" className="text-blue-600 hover:underline">
+          <div className="text-center mt-3 sm:mt-4">
+            <Link to="/login" className="text-blue-600 hover:underline text-sm sm:text-base">
               لديك حساب بالفعل؟ تسجيل الدخول
             </Link>
           </div>

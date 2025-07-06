@@ -103,7 +103,7 @@ const DashboardPage = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <Sidebar />
+      {/* <Sidebar /> */}
       <div className="flex-1 p-8 pt-20">
         {/* <h1 className="text-2xl font-bold text-gray-800 mb-6">لوحة التحكم</h1> */}
         

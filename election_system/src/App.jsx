@@ -22,6 +22,7 @@ import FinancialStatistics from "./pages/Statistics/FinancialStatistics";
 import NotificationsPage from "./pages/Notifications/NotificationsPage";
 import DashboardPage from "./pages/Dashboard/DashboardPage";
 import PrivateRoute from "./Components/PrivateRoute";
+import Sidebar from "./Components/Uitily/Sidebar";
 
 const App = () => {
   return (
@@ -29,6 +30,8 @@ const App = () => {
       <NotificationToast />
       <NotificationButton />
       <BrowserRouter>
+            <Sidebar />
+
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/selfRegister" element={<SelfRegister />} />

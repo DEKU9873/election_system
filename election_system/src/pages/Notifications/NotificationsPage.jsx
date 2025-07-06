@@ -46,7 +46,7 @@ const NotificationsPage = () => {
 
   return (
     <div className={notificationPageStyles.pageContainer}>
-      <Sidebar />
+      {/* <Sidebar /> */}
       <div className={notificationPageStyles.pageContent}>
         <div className={notificationPageStyles.contentWrapper}>
           {/* عنوان الصفحة */}

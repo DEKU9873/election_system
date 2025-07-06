@@ -14,12 +14,32 @@ L.Icon.Default.mergeOptions({
 const UsersMap = ({ data, selectedRows, handleSelectRow, mapCenter, mapZoom }) => {
   // أنماط CSS للخريطة
   const mapStyles = {
-    height: '400px',
+    height: '250px',
     width: '100%',
     marginBottom: '20px',
     borderRadius: '8px',
     boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
   };
+  
+  // تعديل ارتفاع الخريطة بناءً على حجم الشاشة
+  useEffect(() => {
+    const updateMapHeight = () => {
+      const mapContainer = document.querySelector('.leaflet-container');
+      if (mapContainer) {
+        if (window.innerWidth >= 768) {
+          mapContainer.style.height = '400px';
+        } else if (window.innerWidth >= 480) {
+          mapContainer.style.height = '300px';
+        } else {
+          mapContainer.style.height = '250px';
+        }
+      }
+    };
+
+    updateMapHeight();
+    window.addEventListener('resize', updateMapHeight);
+    return () => window.removeEventListener('resize', updateMapHeight);
+  }, []);
 
   // إضافة أنماط CSS للعلامات المخصصة
   useEffect(() => {
@@ -52,12 +72,13 @@ const UsersMap = ({ data, selectedRows, handleSelectRow, mapCenter, mapZoom }) =
     : [];
 
   return (
-    <div className="mb-6">
+    <div className="mb-4 sm:mb-6">
       <MapContainer
         center={mapCenter}
         zoom={mapZoom}
         style={mapStyles}
         zoomControl={false}
+        className="z-0"
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -82,9 +103,9 @@ const UsersMap = ({ data, selectedRows, handleSelectRow, mapCenter, mapZoom }) =
             >
               <Popup>
                 <div className="text-right">
-                  <h3 className="font-bold">{user.name}</h3>
-                  <p>رقم الهاتف: {user.phone}</p>
-                  <p>طريقة التسجيل: {user.registrationMethod}</p>
+                  <h3 className="text-sm sm:text-base font-bold">{user.name}</h3>
+                  <p className="text-xs sm:text-sm">رقم الهاتف: {user.phone}</p>
+                  <p className="text-xs sm:text-sm">طريقة التسجيل: {user.registrationMethod}</p>
                 </div>
               </Popup>
             </Marker>
@@ -97,7 +118,7 @@ const UsersMap = ({ data, selectedRows, handleSelectRow, mapCenter, mapZoom }) =
 
       {/* عرض رسالة أسفل الخريطة إذا لم توجد بيانات */}
       {validData.length === 0 && (
-        <div className="text-center text-gray-500 mt-2">
+        <div className="text-center text-gray-500 mt-2 text-xs sm:text-sm">
           لا توجد بيانات لعرضها على الخريطة
         </div>
       )}

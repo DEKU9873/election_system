@@ -126,7 +126,7 @@ const UsersTable = () => {
 
   return (
     <div>
-      <Sidebar />
+      {/* <Sidebar /> */}
       <div className="w-full max-w-[1440px] mx-auto p-6 bg-white" dir="rtl">
         <div className="mb-6">
           <UserTableTitle />

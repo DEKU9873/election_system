@@ -1,5 +1,5 @@
 import React from "react";
-import { Search, User, ChevronDown } from "lucide-react";
+import { Search, User, ChevronDown, Menu } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const UserTableToolbar = ({
@@ -11,26 +11,27 @@ const UserTableToolbar = ({
   visibleColumns,
   setVisibleColumns,
   onOpen,
+  className,
 }) => {
 
 
   return (
-    <div className="flex items-center justify-between gap-4 mb-4">
-      <div className="relative flex-1 max-w-md">
+    <div className={`flex flex-wrap items-center justify-between gap-2 sm:gap-4 mb-3 sm:mb-4 ${className}`}>
+      <div className="relative flex-1 min-w-[200px] w-full sm:w-auto sm:max-w-md mb-2 sm:mb-0">
         <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
         <input
           type="text"
           placeholder="البحث ..."
           value={filterText}
           onChange={(e) => setFilterText(e.target.value)}
-          className="w-full pr-10 pl-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full pr-10 pl-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
       </div>
 
       <div className="flex items-center gap-2">
         {/* زر إضافة مستخدم جديد */}
-        <button onClick={onOpen} className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500">
-          {/* <User className="w-4 h-4" /> */}
+        <button onClick={onOpen} className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500">
+          {/* <User className="w-3 sm:w-4 h-3 sm:h-4" /> */}
           {title}
         </button>
 
@@ -38,14 +39,14 @@ const UserTableToolbar = ({
         <div className="relative">
           <button
             onClick={() => setShowColumnMenu(!showColumnMenu)}
-            className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-blue-500"
+            className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-blue-500"
           >
             الأعمدة
-            <ChevronDown className="w-4 h-4" />
+            <ChevronDown className="w-3 sm:w-4 h-3 sm:h-4" />
           </button>
 
           {showColumnMenu && (
-            <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+            <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
               <div className="p-2">
                 {Object.entries(visibleColumns).map(
                   ([key, visible]) =>

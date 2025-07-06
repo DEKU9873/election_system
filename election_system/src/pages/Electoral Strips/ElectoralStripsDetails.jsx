@@ -69,16 +69,16 @@ const ElectoralStripsDetails = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4" dir="rtl">
+    <div className="min-h-screen bg-gray-50 py-4 sm:py-6 md:py-8 px-2 sm:px-4" dir="rtl">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm border mb-6 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-2xl font-bold text-gray-900">
+        <div className="bg-white rounded-lg shadow-sm border mb-4 sm:mb-6 p-3 sm:p-4 md:p-6">
+          <div className="flex flex-wrap items-center justify-between mb-2 sm:mb-4">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-0">
               تفاصيل الشريط الانتخابي #{data.id}
             </h1>
             <span
-              className={`px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(
+              className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium border ${getStatusColor(
                 data.status
               )}`}
             >
@@ -87,23 +87,23 @@ const ElectoralStripsDetails = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
           {/* Information Card */}
-          <div className="bg-white rounded-lg shadow-sm border p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-              <FileText className="ml-2 h-5 w-5 text-blue-600" />
+          <div className="bg-white rounded-lg shadow-sm border p-3 sm:p-4 md:p-6">
+            <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4 flex items-center">
+              <FileText className="ml-2 h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
               المعلومات الأساسية
             </h2>
 
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {/* Election Center */}
               <div className="flex items-start">
-                <MapPin className="ml-2 h-5 w-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                <MapPin className="ml-2 h-4 w-4 sm:h-5 sm:w-5 text-gray-400 mt-0.5 flex-shrink-0" />
                 <div>
-                  <p className="text-sm font-medium text-gray-900">
+                  <p className="text-xs sm:text-sm font-medium text-gray-900">
                     المركز الانتخابي
                   </p>
-                  <p className="text-gray-600">{data.ElectionCenter.name}</p>
+                  <p className="text-xs sm:text-sm text-gray-600">{data.ElectionCenter.name}</p>
                   <p className="text-xs text-gray-500">
                     رقم المركز: {data.ElectionCenter.id}
                   </p>
@@ -112,10 +112,10 @@ const ElectoralStripsDetails = () => {
 
               {/* Station */}
               <div className="flex items-start">
-                <MapPin className="ml-2 h-5 w-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                <MapPin className="ml-2 h-4 w-4 sm:h-5 sm:w-5 text-gray-400 mt-0.5 flex-shrink-0" />
                 <div>
-                  <p className="text-sm font-medium text-gray-900">المحطة</p>
-                  <p className="text-gray-600">{data.Station.name}</p>
+                  <p className="text-xs sm:text-sm font-medium text-gray-900">المحطة</p>
+                  <p className="text-xs sm:text-sm text-gray-600">{data.Station.name}</p>
                   <p className="text-xs text-gray-500">
                     رقم المحطة: {data.Station.id}
                   </p>
@@ -124,24 +124,24 @@ const ElectoralStripsDetails = () => {
 
               {/* Date */}
               <div className="flex items-start">
-                <Calendar className="ml-2 h-5 w-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                <Calendar className="ml-2 h-4 w-4 sm:h-5 sm:w-5 text-gray-400 mt-0.5 flex-shrink-0" />
                 <div>
-                  <p className="text-sm font-medium text-gray-900">
+                  <p className="text-xs sm:text-sm font-medium text-gray-900">
                     تاريخ الشريط
                   </p>
-                  <p className="text-gray-600">{formatDate(data.date)}</p>
+                  <p className="text-xs sm:text-sm text-gray-600">{formatDate(data.date)}</p>
                 </div>
               </div>
 
               {/* Notes */}
               {data.notes && (
                 <div className="flex items-start">
-                  <FileText className="ml-2 h-5 w-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                  <FileText className="ml-2 h-4 w-4 sm:h-5 sm:w-5 text-gray-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-medium text-gray-900">
+                    <p className="text-xs sm:text-sm font-medium text-gray-900">
                       الملاحظات
                     </p>
-                    <p className="text-gray-600 whitespace-pre-wrap">
+                    <p className="text-xs sm:text-sm text-gray-600 whitespace-pre-wrap">
                       {data.notes}
                     </p>
                   </div>
@@ -151,9 +151,9 @@ const ElectoralStripsDetails = () => {
           </div>
 
           {/* Image Card */}
-          <div className="bg-white rounded-lg shadow-sm border p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-              <ImageIcon className="ml-2 h-5 w-5 text-blue-600" />
+          <div className="bg-white rounded-lg shadow-sm border p-3 sm:p-4 md:p-6">
+            <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4 flex items-center">
+              <ImageIcon className="ml-2 h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
               صورة الشريط
             </h2>
 
@@ -186,22 +186,22 @@ const ElectoralStripsDetails = () => {
                     </p>
                   </div>
                 </div>
-                <div className="absolute top-2 right-2 flex gap-2">
+                <div className="absolute top-1 sm:top-2 right-1 sm:right-2 flex gap-1 sm:gap-2">
                   <a
                     href={data.tape_image}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs hover:bg-opacity-70 transition-opacity"
+                    className="bg-black bg-opacity-50 text-white px-1 sm:px-2 py-0.5 sm:py-1 rounded text-xs hover:bg-opacity-70 transition-opacity"
                   >
                     عرض بالحجم الكامل
                   </a>
                 </div>
               </div>
             ) : (
-              <div className="flex items-center justify-center h-48 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300">
+              <div className="flex items-center justify-center h-36 sm:h-48 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300">
                 <div className="text-center">
-                  <ImageIcon className="h-12 w-12 text-gray-400 mx-auto mb-2" />
-                  <p className="text-gray-500">لا توجد صورة متاحة</p>
+                  <ImageIcon className="h-8 w-8 sm:h-10 md:h-12 sm:w-10 md:w-12 text-gray-400 mx-auto mb-1 sm:mb-2" />
+                  <p className="text-xs sm:text-sm text-gray-500">لا توجد صورة متاحة</p>
                 </div>
               </div>
             )}
@@ -209,25 +209,25 @@ const ElectoralStripsDetails = () => {
         </div>
 
         {/* Timestamps Card */}
-        <div className="bg-white rounded-lg shadow-sm border p-6 mt-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-            <Clock className="ml-2 h-5 w-5 text-blue-600" />
+        <div className="bg-white rounded-lg shadow-sm border p-3 sm:p-4 md:p-6 mt-3 sm:mt-4 md:mt-6">
+          <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4 flex items-center">
+            <Clock className="ml-2 h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
             التواريخ والأوقات
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <p className="text-sm font-medium text-gray-900 mb-1">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-4">
+            <div className="bg-gray-50 p-2 sm:p-3 md:p-4 rounded-lg">
+              <p className="text-xs sm:text-sm font-medium text-gray-900 mb-0.5 sm:mb-1">
                 تاريخ الإنشاء
               </p>
-              <p className="text-gray-600">{formatDate(data.createdAt)}</p>
+              <p className="text-xs sm:text-sm text-gray-600">{formatDate(data.createdAt)}</p>
             </div>
 
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <p className="text-sm font-medium text-gray-900 mb-1">
+            <div className="bg-gray-50 p-2 sm:p-3 md:p-4 rounded-lg">
+              <p className="text-xs sm:text-sm font-medium text-gray-900 mb-0.5 sm:mb-1">
                 تاريخ آخر تحديث
               </p>
-              <p className="text-gray-600">{formatDate(data.updatedAt)}</p>
+              <p className="text-xs sm:text-sm text-gray-600">{formatDate(data.updatedAt)}</p>
             </div>
           </div>
         </div>
