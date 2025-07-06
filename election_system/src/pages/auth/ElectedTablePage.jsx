@@ -221,7 +221,7 @@ const ElectedTablePage = () => {
         </div>
 
         {/* الجدول */}
-        <div className="border border-gray-200 rounded-lg shadow-sm overflow-x-auto">
+        <div className="border border-gray-200 rounded-lg shadow-sm overflow-x-auto md:overflow-x-visible">
           <table className="w-full min-w-[800px]">
             <UserTableHeader
               tableHeaders={tableHeaders}
