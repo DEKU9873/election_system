@@ -142,7 +142,6 @@ const UserTablePage = () => {
     setShowActionMenu(null);
   };
 
-
   const handleDeleteConfirm = (id) => {
     setUserIdToDelete(id);
     setShowDeleteModal(true);
@@ -167,11 +166,13 @@ const UserTablePage = () => {
     }
   };
 
-
   return (
     <div className="min-h-screen">
       {/* <Sidebar /> */}
-      <div className="w-full max-w-[1440px] mx-auto p-2 sm:p-4 md:p-6 bg-white" dir="rtl">
+      <div
+        className="w-full max-w-[1440px] mx-auto p-2 sm:p-4 md:p-6 bg-white"
+        dir="rtl"
+      >
         <div className="mb-6">
           <UserTableTitle title="المستخدمين" subtitle="قائمة المستخدمين" />
 
@@ -206,7 +207,7 @@ const UserTablePage = () => {
             className="flex-wrap"
           />
 
-          <UserTableStats data={allUsers} title = "اجمالي السمتخدمين" />
+          <UserTableStats data={allUsers} title="اجمالي السمتخدمين" />
         </div>
 
         {/* الجدول */}
@@ -231,153 +232,163 @@ const UserTablePage = () => {
               </tr>
             ) : (
               <tbody className="divide-y divide-gray-200">
-              {paginatedData.length > 0 ? (
-                paginatedData.map((row) => (
-                  <tr
-                    key={row.id}
-                    className={`hover:bg-gray-50 transition-colors ${
-                      selectedRows.has(row.id) ? "bg-blue-50" : ""
-                    }`}
-                  >
-                    {visibleColumns.select && (
-                      <td className="px-2 sm:px-4 py-2 sm:py-3">
-                        <input
-                          type="checkbox"
-                          checked={selectedRows.has(row.id)}
-                          onChange={() => handleSelectRow(row.id)}
-                          className="rounded text-blue-600"
-                        />
-                      </td>
-                    )}
-                    {visibleColumns.id && (
-                      <td className="px-2 sm:px-4 py-2 sm:py-3">
-                        <div className="text-xs sm:text-sm text-gray-900">{row.id}</div>
-                      </td>
-                    )}
-                    {visibleColumns.full_name && (
-                      <td className="px-2 sm:px-4 py-2 sm:py-3">
-                        <div className="flex items-center gap-1 sm:gap-2">
-                          <div
-                            className="font-medium text-xs sm:text-sm text-gray-900 cursor-pointer hover:text-blue-600 transition-colors"
-                            onClick={() => {
-                              const marker = document.querySelector(
-                                `[data-marker-id="${row.id}"]`
-                              );
-                              if (marker) {
-                                marker.click();
-                              }
-                              setSelectedRows(new Set([row.id]));
-                              setMapCenter(row.location);
-                              setMapZoom(12);
-                            }}
-                          >
-                            {row.full_name}
+                {paginatedData.length > 0 ? (
+                  paginatedData.map((row) => (
+                    <tr
+                      key={row.id}
+                      className={`hover:bg-gray-50 transition-colors ${
+                        selectedRows.has(row.id) ? "bg-blue-50" : ""
+                      }`}
+                    >
+                      {visibleColumns.select && (
+                        <td className="px-2 sm:px-4 py-2 sm:py-3">
+                          <input
+                            type="checkbox"
+                            checked={selectedRows.has(row.id)}
+                            onChange={() => handleSelectRow(row.id)}
+                            className="rounded text-blue-600"
+                          />
+                        </td>
+                      )}
+                      {visibleColumns.id && (
+                        <td className="px-2 sm:px-4 py-2 sm:py-3">
+                          <div className="text-xs sm:text-sm text-gray-900">
+                            {row.id}
                           </div>
-                        </div>
-                      </td>
-                    )}
-                    {visibleColumns.phone_number && (
-                      <td className="px-2 sm:px-4 py-2 sm:py-3">
-                        <div className="text-xs sm:text-sm text-gray-900">
-                          {row.phone_number}
-                        </div>
-                      </td>
-                    )}
-                    {visibleColumns.pollingCenter && (
-                      <td className="px-2 sm:px-4 py-2 sm:py-3">
-                        <div className="text-xs sm:text-sm text-gray-900">
-                          {row.pollingCenter}
-                        </div>
-                      </td>
-                    )}
-                    {visibleColumns.role && (
-                      <td className="px-2 sm:px-4 py-2 sm:py-3">
-                        <div className="text-xs sm:text-sm text-gray-900">{row.role}</div>
-                      </td>
-                    )}
-                    {visibleColumns.addBy && (
-                      <td className="px-2 sm:px-4 py-2 sm:py-3">
-                        <div className="text-xs sm:text-sm text-gray-900">{row.addBy}</div>
-                      </td>
-                    )}
-                    {visibleColumns.createdAt && (
-                      <td className="px-2 sm:px-4 py-2 sm:py-3">
-                        <div className="text-xs sm:text-sm text-gray-900">
-                          {formatDate(row.createdAt)}
-                        </div>
-                      </td>
-                    )}
-
-                    {visibleColumns.actions && (
-                      <td className="px-2 sm:px-4 py-2 sm:py-3">
-                        <div className="relative">
-                          <button
-                            onClick={() =>
-                              setShowActionMenu(
-                                showActionMenu === row.id ? null : row.id
-                              )
-                            }
-                            className="p-1 hover:bg-gray-100 rounded transition-colors"
-                          >
-                            <MoreHorizontal className="w-4 h-4" />
-                          </button>
-
-                          {showActionMenu === row.id && (
-                            <div className="absolute left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-                              <div className="py-1">
-                                <button
-                                  onClick={() => handleDetailsUserAction(row.id)}
-                                  className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                                >
-                                  عرض التفاصيل
-                                </button>
-                                <button
-                                  onClick={() => handleUserAction("edit", row)}
-                                  className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                                >
-                                  تعديل
-                                </button>
-                                <button
-                                  onClick={() => handleDeleteConfirm(row.id)}
-                                  className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
-                                >
-                                  حذف
-                                </button>
-                                <button
-                                  onClick={() =>
-                                    handleUserAction("permissions", row)
-                                  }
-                                  className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                                >
-                                  إدارة الصلاحيات
-                                </button>
-                                <hr className="my-1" />
-                                <button
-                                  onClick={() => handleDeleteConfirm(row.id)}
-                                  className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
-                                >
-                                  حذف المستخدم
-                                </button>
-                              </div>
+                        </td>
+                      )}
+                      {visibleColumns.full_name && (
+                        <td className="px-2 sm:px-4 py-2 sm:py-3">
+                          <div className="flex items-center gap-1 sm:gap-2">
+                            <div
+                              className="font-medium text-xs sm:text-sm text-gray-900 cursor-pointer hover:text-blue-600 transition-colors"
+                              onClick={() => {
+                                const marker = document.querySelector(
+                                  `[data-marker-id="${row.id}"]`
+                                );
+                                if (marker) {
+                                  marker.click();
+                                }
+                                setSelectedRows(new Set([row.id]));
+                                setMapCenter(row.location);
+                                setMapZoom(12);
+                              }}
+                            >
+                              {row.full_name}
                             </div>
-                          )}
-                        </div>
-                      </td>
-                    )}
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.phone_number && (
+                        <td className="px-2 sm:px-4 py-2 sm:py-3">
+                          <div className="text-xs sm:text-sm text-gray-900">
+                            {row.phone_number}
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.pollingCenter && (
+                        <td className="px-2 sm:px-4 py-2 sm:py-3">
+                          <div className="text-xs sm:text-sm text-gray-900">
+                            {row.pollingCenter}
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.role && (
+                        <td className="px-2 sm:px-4 py-2 sm:py-3">
+                          <div className="text-xs sm:text-sm text-gray-900">
+                            {row.role}
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.addBy && (
+                        <td className="px-2 sm:px-4 py-2 sm:py-3">
+                          <div className="text-xs sm:text-sm text-gray-900">
+                            {row.addBy}
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.createdAt && (
+                        <td className="px-2 sm:px-4 py-2 sm:py-3">
+                          <div className="text-xs sm:text-sm text-gray-900">
+                            {formatDate(row.createdAt)}
+                          </div>
+                        </td>
+                      )}
+
+                      {visibleColumns.actions && (
+                        <td className="px-2 sm:px-4 py-2 sm:py-3">
+                          <div className="relative">
+                            <button
+                              onClick={() =>
+                                setShowActionMenu(
+                                  showActionMenu === row.id ? null : row.id
+                                )
+                              }
+                              className="p-1 hover:bg-gray-100 rounded transition-colors"
+                            >
+                              <MoreHorizontal className="w-4 h-4" />
+                            </button>
+
+                            {showActionMenu === row.id && (
+                              <div className="absolute left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                                <div className="py-1">
+                                  <button
+                                    onClick={() =>
+                                      handleDetailsUserAction(row.id)
+                                    }
+                                    className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                  >
+                                    عرض التفاصيل
+                                  </button>
+                                  <button
+                                    onClick={() =>
+                                      handleUserAction("edit", row)
+                                    }
+                                    className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                  >
+                                    تعديل
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteConfirm(row.id)}
+                                    className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
+                                  >
+                                    حذف
+                                  </button>
+                                  <button
+                                    onClick={() =>
+                                      handleUserAction("permissions", row)
+                                    }
+                                    className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                  >
+                                    إدارة الصلاحيات
+                                  </button>
+                                  <hr className="my-1" />
+                                  <button
+                                    onClick={() => handleDeleteConfirm(row.id)}
+                                    className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
+                                  >
+                                    حذف المستخدم
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                      )}
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="6"
+                      className="px-4 py-12 text-center text-gray-500"
+                    >
+                      <User className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                      <p className="text-lg font-medium">لا توجد نتائج</p>
+                      <p className="text-sm">جرب تغيير مصطلحات البحث</p>
+                    </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td
-                    colSpan="6"
-                    className="px-4 py-12 text-center text-gray-500"
-                  >
-                    <User className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                    <p className="text-lg font-medium">لا توجد نتائج</p>
-                    <p className="text-sm">جرب تغيير مصطلحات البحث</p>
-                  </td>
-                </tr>
-              )}
+                )}
               </tbody>
             )}
           </table>
@@ -403,10 +414,10 @@ const UserTablePage = () => {
         )}
 
         {/* نافذة تأكيد الحذف */}
-        <DeleteModal 
-          isOpen={showDeleteModal} 
-          onCancel={handleDeleteCancel} 
-          onConfirm={handleDeleteConfirmation} 
+        <DeleteModal
+          isOpen={showDeleteModal}
+          onCancel={handleDeleteCancel}
+          onConfirm={handleDeleteConfirmation}
         />
       </div>
     </div>

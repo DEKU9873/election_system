@@ -197,7 +197,7 @@ const StationPage = () => {
                           type="checkbox"
                           checked={selectedRows.has(row.id)}
                           onChange={() => handleSelectRow(row.id)}
-                          className="rounded text-blue-600 w-3 h-3 sm:w-4 sm:h-4"
+                          className="rounded text-blue-600"
                         />
                       </td>
                     )}

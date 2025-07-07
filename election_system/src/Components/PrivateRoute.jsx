@@ -6,7 +6,6 @@ const PrivateRoute = ({ allowedRoles }) => {
   const userCookie = Cookies.get("user");
   const user = userCookie ? JSON.parse(userCookie) : null;
 
-  console.log(user);
 
   if (!token || !user) {
     return <Navigate to="/login" />;

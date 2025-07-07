@@ -205,7 +205,7 @@ const CenterManagers = () => {
                           type="checkbox"
                           checked={selectedRows.has(row.id)}
                           onChange={() => handleSelectRow(row.id)}
-                          className="rounded text-blue-600 h-3 w-3 sm:h-4 sm:w-4"
+                          className="rounded text-blue-600"
                         />
                       </td>
                     )}

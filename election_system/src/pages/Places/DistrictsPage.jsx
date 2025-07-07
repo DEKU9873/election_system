@@ -24,7 +24,6 @@ const DistrictsPage = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [districtIdToDelete, setDistrictIdToDelete] = useState(null);
   const [selectedDistrict, setSelectedDistrict] = useState(null);
-
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
@@ -209,7 +208,7 @@ const DistrictsPage = () => {
                           type="checkbox"
                           checked={selectedRows.has(row.id)}
                           onChange={() => handleSelectRow(row.id)}
-                          className="rounded text-blue-600 w-4 h-4 sm:w-5 sm:h-5"
+                          className="rounded text-blue-600"
                         />
                       </td>
                     )}
@@ -231,7 +230,7 @@ const DistrictsPage = () => {
                     {visibleColumns.governorate && (
                       <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
                         <div className="text-xs sm:text-sm text-gray-900">
-                          {row.governorate}
+                          {row?.governorate?.name}
                         </div>
                       </td>
                     )}

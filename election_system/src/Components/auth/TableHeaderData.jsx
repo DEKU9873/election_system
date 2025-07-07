@@ -593,19 +593,19 @@ export const CenterHeader = [
     icon: null,
   },
   {
-    id: "governorate_name",
+    id: "governorate",
     label: "المحافظة",
     sortable: true,
     icon: null,
   },
   {
-    id: "district_name",
+    id: "district",
     label: "اسم القضاء",
     sortable: true,
     icon: null,
   },
   {
-    id: "subdistrict_name",
+    id: "subdistrict",
     label: "اسم الناحية",
     sortable: true,
     icon: null,

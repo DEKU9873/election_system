@@ -25,6 +25,7 @@ const GovernoratePage = () => {
   const [governateIdToDelete, setGovernateIdToDelete] = useState(null);
   const [selectedGovernate, setSelectedGovernate] = useState(null);
 
+
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
@@ -218,7 +219,7 @@ const handleDeleteConfirmation = async () => {
                           type="checkbox"
                           checked={selectedRows.has(row.id)}
                           onChange={() => handleSelectRow(row.id)}
-                          className="rounded text-blue-600 w-4 h-4 sm:w-5 sm:h-5"
+                          className="rounded text-blue-600"
                         />
                       </td>
                     )}

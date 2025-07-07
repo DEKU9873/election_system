@@ -31,6 +31,7 @@ const CenterPage = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [centerIdToDelete, setCenterIdToDelete] = useState(null);
   const [selectedCenter, setSelectedCenter] = useState(null);
+  console.log(electionCenters)
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -42,9 +43,9 @@ const CenterPage = () => {
     id: true,
     code: true,
     name: true,
-    governorate_name: true,
-    district_name: true,
-    subdistrict_name: true,
+    governorate: true,
+    district: true,
+    subdistrict: true,
     stations_count: true,
     users_count: true,
     percentageOfVoters: true,
@@ -166,12 +167,13 @@ const CenterPage = () => {
     setSelectedCenter(null);
   };
 
-  console.log(loading);
-
   return (
     <div>
       {/* <Sidebar /> */}
-      <div className="w-full max-w-[1440px] mx-auto p-3 sm:p-4 md:p-6 bg-white min-h-screen" dir="rtl">
+      <div
+        className="w-full max-w-[1440px] mx-auto p-3 sm:p-4 md:p-6 bg-white min-h-screen"
+        dir="rtl"
+      >
         <div className="mb-6">
           <UserTableTitle
             title="المراكز الانتخابية"
@@ -228,13 +230,15 @@ const CenterPage = () => {
                             type="checkbox"
                             checked={selectedRows.has(row.id)}
                             onChange={() => handleSelectRow(row.id)}
-                            className="rounded text-blue-600 w-4 h-4 sm:w-5 sm:h-5"
+                            className="rounded text-blue-600"
                           />
                         </td>
                       )}
                       {visibleColumns.id && (
                         <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
-                          <div className="text-xs sm:text-sm text-gray-900">{row.id}</div>
+                          <div className="text-xs sm:text-sm text-gray-900">
+                            {row.id}
+                          </div>
                         </td>
                       )}
 
@@ -254,25 +258,25 @@ const CenterPage = () => {
                           </div>
                         </td>
                       )}
-                      {visibleColumns.governorate_name && (
+                      {visibleColumns.governorate && (
                         <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
                           <div className="text-xs sm:text-sm text-gray-900">
-                            {row.governorate_name}
+                            {row.governorate?.name}
                           </div>
                         </td>
                       )}
 
-                      {visibleColumns.district_name && (
+                      {visibleColumns.district && (
                         <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
                           <div className="text-xs sm:text-sm text-gray-900">
-                            {row.district_name}
+                            {row.district?.name}
                           </div>
                         </td>
                       )}
-                      {visibleColumns.subdistrict_name && (
+                      {visibleColumns.subdistrict && (
                         <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
                           <div className="text-xs sm:text-sm text-gray-900">
-                            {row.subdistrict_name}
+                            {row.subdistrict?.name}
                           </div>
                         </td>
                       )}
@@ -350,8 +354,12 @@ const CenterPage = () => {
                       className="px-4 py-12 text-center text-gray-500"
                     >
                       <User className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-gray-300 mx-auto mb-2 sm:mb-4" />
-                      <p className="text-base sm:text-lg font-medium">لا توجد نتائج</p>
-                      <p className="text-xs sm:text-sm">جرب تغيير مصطلحات البحث</p>
+                      <p className="text-base sm:text-lg font-medium">
+                        لا توجد نتائج
+                      </p>
+                      <p className="text-xs sm:text-sm">
+                        جرب تغيير مصطلحات البحث
+                      </p>
                     </td>
                   </tr>
                 )}

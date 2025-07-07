@@ -22,7 +22,7 @@ const UserTableHeader = ({
                   type="checkbox"
                   checked={selectedRows.size === paginatedData.length && paginatedData.length > 0}
                   onChange={handleSelectAll}
-                  className="rounded text-blue-600 h-3 w-3 sm:h-4 sm:w-4"
+                  className="rounded text-blue-600"
                 />
               </th>
             );

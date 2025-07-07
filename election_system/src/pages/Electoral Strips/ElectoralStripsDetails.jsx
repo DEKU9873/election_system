@@ -75,14 +75,14 @@ const ElectoralStripsDetails = () => {
         <div className="bg-white rounded-lg shadow-sm border mb-4 sm:mb-6 p-3 sm:p-4 md:p-6">
           <div className="flex flex-wrap items-center justify-between mb-2 sm:mb-4">
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-0">
-              تفاصيل الشريط الانتخابي #{data.id}
+              تفاصيل الشريط الانتخابي #{data?.id}
             </h1>
             <span
               className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium border ${getStatusColor(
-                data.status
+                data?.status
               )}`}
             >
-              {getStatusText(data.status)}
+              {getStatusText(data?.status)}
             </span>
           </div>
         </div>
@@ -103,9 +103,9 @@ const ElectoralStripsDetails = () => {
                   <p className="text-xs sm:text-sm font-medium text-gray-900">
                     المركز الانتخابي
                   </p>
-                  <p className="text-xs sm:text-sm text-gray-600">{data.ElectionCenter.name}</p>
+                  <p className="text-xs sm:text-sm text-gray-600">{data?.ElectionCenter?.name}</p>
                   <p className="text-xs text-gray-500">
-                    رقم المركز: {data.ElectionCenter.id}
+                    رقم المركز: {data?.ElectionCenter?.id}
                   </p>
                 </div>
               </div>
@@ -115,9 +115,9 @@ const ElectoralStripsDetails = () => {
                 <MapPin className="ml-2 h-4 w-4 sm:h-5 sm:w-5 text-gray-400 mt-0.5 flex-shrink-0" />
                 <div>
                   <p className="text-xs sm:text-sm font-medium text-gray-900">المحطة</p>
-                  <p className="text-xs sm:text-sm text-gray-600">{data.Station.name}</p>
+                  <p className="text-xs sm:text-sm text-gray-600">{data?.Station?.name}</p>
                   <p className="text-xs text-gray-500">
-                    رقم المحطة: {data.Station.id}
+                    رقم المحطة: {data?.Station?.id}
                   </p>
                 </div>
               </div>
@@ -129,12 +129,12 @@ const ElectoralStripsDetails = () => {
                   <p className="text-xs sm:text-sm font-medium text-gray-900">
                     تاريخ الشريط
                   </p>
-                  <p className="text-xs sm:text-sm text-gray-600">{formatDate(data.date)}</p>
+                  <p className="text-xs sm:text-sm text-gray-600">{formatDate(data?.date)}</p>
                 </div>
               </div>
 
               {/* Notes */}
-              {data.notes && (
+              {data?.notes && (
                 <div className="flex items-start">
                   <FileText className="ml-2 h-4 w-4 sm:h-5 sm:w-5 text-gray-400 mt-0.5 flex-shrink-0" />
                   <div>
@@ -142,7 +142,7 @@ const ElectoralStripsDetails = () => {
                       الملاحظات
                     </p>
                     <p className="text-xs sm:text-sm text-gray-600 whitespace-pre-wrap">
-                      {data.notes}
+                      {data?.notes}
                     </p>
                   </div>
                 </div>
@@ -157,10 +157,10 @@ const ElectoralStripsDetails = () => {
               صورة الشريط
             </h2>
 
-            {data.tape_imageurl ? (
+            {data?.tape_imageurl ? (
               <div className="relative">
                 <img
-                  src={data.tape_imageurl}
+                  src={data?.tape_imageurl}
                   alt="صورة الشريط الانتخابي"
                   className="w-full h-auto max-h-96 object-contain rounded-lg border border-gray-200 shadow-sm bg-gray-50"
                   onError={(e) => {
@@ -188,7 +188,7 @@ const ElectoralStripsDetails = () => {
                 </div>
                 <div className="absolute top-1 sm:top-2 right-1 sm:right-2 flex gap-1 sm:gap-2">
                   <a
-                    href={data.tape_image}
+                    href={data?.tape_image}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="bg-black bg-opacity-50 text-white px-1 sm:px-2 py-0.5 sm:py-1 rounded text-xs hover:bg-opacity-70 transition-opacity"
@@ -220,14 +220,14 @@ const ElectoralStripsDetails = () => {
               <p className="text-xs sm:text-sm font-medium text-gray-900 mb-0.5 sm:mb-1">
                 تاريخ الإنشاء
               </p>
-              <p className="text-xs sm:text-sm text-gray-600">{formatDate(data.createdAt)}</p>
+              <p className="text-xs sm:text-sm text-gray-600">{formatDate(data?.createdAt)}</p>
             </div>
 
             <div className="bg-gray-50 p-2 sm:p-3 md:p-4 rounded-lg">
               <p className="text-xs sm:text-sm font-medium text-gray-900 mb-0.5 sm:mb-1">
                 تاريخ آخر تحديث
               </p>
-              <p className="text-xs sm:text-sm text-gray-600">{formatDate(data.updatedAt)}</p>
+              <p className="text-xs sm:text-sm text-gray-600">{formatDate(data?.updatedAt)}</p>
             </div>
           </div>
         </div>

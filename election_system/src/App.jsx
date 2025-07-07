@@ -23,6 +23,7 @@ import NotificationsPage from "./pages/Notifications/NotificationsPage";
 import DashboardPage from "./pages/Dashboard/DashboardPage";
 import PrivateRoute from "./Components/PrivateRoute";
 import Sidebar from "./Components/Uitily/Sidebar";
+import ExpensePage from "./pages/finance/ExpensePage";
 
 const App = () => {
   return (
@@ -30,7 +31,7 @@ const App = () => {
       <NotificationToast />
       <NotificationButton />
       <BrowserRouter>
-            <Sidebar />
+        <Sidebar />
 
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -60,6 +61,7 @@ const App = () => {
             <Route path="/notifications" element={<NotificationsPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/" element={<DashboardPage />} />
+            <Route path="/expense" element={<ExpensePage />} />
           </Route>
         </Routes>
       </BrowserRouter>

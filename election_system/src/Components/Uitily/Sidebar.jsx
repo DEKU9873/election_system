@@ -28,7 +28,7 @@ import {
   ChevronDown,
   Briefcase,
   ClipboardList,
-  LayoutDashboard
+  LayoutDashboard,
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -69,7 +69,12 @@ const Sidebar = () => {
   const [openSubmenu, setOpenSubmenu] = useState(null);
 
   const menuItems = [
-    { id: "dashboard", label: "لوحة التحكم", icon: LayoutDashboard, href: "/dashboard" },
+    {
+      id: "dashboard",
+      label: "لوحة التحكم",
+      icon: LayoutDashboard,
+      href: "/dashboard",
+    },
     { id: "voters", label: "الناخبين", icon: UserCheck, href: "/elected" },
     {
       id: "supervisors",
@@ -94,9 +99,19 @@ const Sidebar = () => {
           href: "/centers",
           icon: Landmark,
         },
-        { id: "governorates", label: "المحافظات", href: "/governorate", icon: Map },
+        {
+          id: "governorates",
+          label: "المحافظات",
+          href: "/governorate",
+          icon: Map,
+        },
         { id: "districts", label: "الأقضية", href: "/districts", icon: MapPin },
-        { id: "sub-districts", label: "النواحي", href: "/subdistricts", icon: MapPin },
+        {
+          id: "sub-districts",
+          label: "النواحي",
+          href: "/subdistricts",
+          icon: MapPin,
+        },
         {
           id: "center-managers",
           label: "مدراء المراكز",
@@ -122,6 +137,18 @@ const Sidebar = () => {
       label: "الحسابات",
       icon: DollarSign,
       submenu: [
+        {
+          id: "Payments",
+          label: "المدفوعات",
+          href: "/financial-statistics",
+          icon: PieChart,
+        },
+        {
+          id: "Expenses",
+          label: "المصروفات",
+          href: "/expense",
+          icon: PieChart,
+        },
         {
           id: "financial-statistics",
           label: "الإحصائيات المالية",
@@ -318,11 +345,15 @@ const Sidebar = () => {
                                 <SubIcon
                                   size={16}
                                   className={`transition-all duration-200 ${
-                                    activeItem === subItem.id ? "text-blue-600" : "text-gray-500"
+                                    activeItem === subItem.id
+                                      ? "text-blue-600"
+                                      : "text-gray-500"
                                   }`}
                                 />
                               )}
-                              <span className="font-medium">{subItem.label}</span>
+                              <span className="font-medium">
+                                {subItem.label}
+                              </span>
                             </Link>
                           );
                         })}
@@ -357,46 +388,37 @@ const Sidebar = () => {
 
         {/* Footer */}
         <div className="p-2 border-t border-gray-200 min-w-64 flex-shrink-0">
-          {isLoggedIn && userData ? (
-            <div className="flex flex-row items-center justify-between">
-              <div className="flex items-center gap-2 hover:bg-gray-50 rounded-lg p-1 transition-all duration-200 cursor-pointer flex-grow">
-                <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center hover:scale-105 transition-transform duration-200 flex-shrink-0">
-                  <span className="text-gray-600 font-medium text-xs">
-                    {userData.full_name ? userData.full_name.charAt(0) : "م"}
-                  </span>
-                </div>
-                <div className="flex-1 min-w-0 text-right">
-                  <p className="text-xs font-medium text-gray-900 truncate">
-                    {userData.full_name || "المستخدم"}
-                  </p>
-                </div>
-                <button
-                  onClick={() => {
-                    // Handle logout
-                    Cookies.remove("token");
-                    Cookies.remove("user");
-                    setIsLoggedIn(false);
-                    setUserData(null);
-                    navigate("/login");
-                  }}
-                  className="flex items-center justify-center p-1.5 rounded-lg transition-all duration-300 hover:bg-red-50 text-red-600"
-                  title="تسجيل الخروج"
-                >
-                  <LogOut size={18} className="hover:scale-110 transition-transform duration-200" />
-                </button>
+          <div className="flex flex-row items-center justify-between">
+            <div className="flex items-center gap-2 hover:bg-gray-50 rounded-lg p-1 transition-all duration-200 cursor-pointer flex-grow">
+              <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center hover:scale-105 transition-transform duration-200 flex-shrink-0">
+                <span className="text-gray-600 font-medium text-xs">
+                  {userData?.full_name ? userData?.full_name.charAt(0) : "م"}
+                </span>
               </div>
-            </div>
-          ) : (
-            <div className="flex items-center justify-center py-1">
-              <Link 
-                to="/login"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300 hover:shadow-md"
+              <div className="flex-1 min-w-0 text-right">
+                <p className="text-xs font-medium text-gray-900 truncate">
+                  {userData?.full_name || "المستخدم"}
+                </p>
+              </div>
+              <button
+                onClick={() => {
+                  // Handle logout
+                  Cookies.remove("token");
+                  Cookies.remove("user");
+                  setIsLoggedIn(false);
+                  setUserData(null);
+                  navigate("/login");
+                }}
+                className="flex items-center justify-center p-1.5 rounded-lg transition-all duration-300 hover:bg-red-50 text-red-600"
+                title="تسجيل الخروج"
               >
-                <LogIn size={16} className="animate-pulse" />
-                <span className="font-medium">تسجيل الدخول</span>
-              </Link>
+                <LogOut
+                  size={18}
+                  className="hover:scale-110 transition-transform duration-200"
+                />
+              </button>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>

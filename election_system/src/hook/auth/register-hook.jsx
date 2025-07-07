@@ -186,7 +186,6 @@ const RegisterHook = () => {
 
       if (result && result.data) {
         await dispatch(getAllUsers());
-        console.log(formData)
         notify("تم التسجيل بنجاح", "success");
         // Reset form
         setFirstName("");

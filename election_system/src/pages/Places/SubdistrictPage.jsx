@@ -26,6 +26,8 @@ const SubdistrictPage = () => {
   const [subdistrictIdToDelete, setSubdistrictIdToDelete] = useState(null);
   const [selectedSubdistrict, setSelectedSubdistrict] = useState(null);
 
+  console.log(subdistricts);
+
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -212,7 +214,7 @@ const SubdistrictPage = () => {
                           type="checkbox"
                           checked={selectedRows.has(row.id)}
                           onChange={() => handleSelectRow(row.id)}
-                          className="rounded text-blue-600 w-3 h-3 sm:w-4 sm:h-4"
+                          className="rounded text-blue-600"
                         />
                       </td>
                     )}
@@ -234,14 +236,14 @@ const SubdistrictPage = () => {
                     {visibleColumns.district && (
                       <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
                         <div className="text-xs sm:text-sm text-gray-900">
-                          {row.district}
+                          {row.district?.name}
                         </div>
                       </td>
                     )}
                     {visibleColumns.governorate && (
                       <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
                         <div className="text-xs sm:text-sm text-gray-900">
-                          {row.governorate}
+                          {row.governorate?.name}
                         </div>
                       </td>
                     )}
