@@ -14,8 +14,8 @@ const EditDistrictsHook = (districtData) => {
 
   useEffect(() => {
     if (districtData) {
-      setDistrict(districtData.name || "");
-      setGovernorateId(districtData.governorate_id || "");
+      setDistrict(districtData?.name || "");
+      setGovernorateId(districtData.governorate.id || "");
       setDistrictId(districtData.id || null);
     }
   }, [districtData]);

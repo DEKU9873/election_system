@@ -1,7 +1,5 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import NotificationToast from "./Components/Notifications/NotificationToast";
-import NotificationButton from "./Components/Notifications/NotificationButton";
 import Login from "./pages/auth/Login";
 import UserTablePage from "./pages/auth/UserTablePage";
 import CoordinatorTablePage from "./pages/auth/CoordinatorTablePage";
@@ -22,19 +20,15 @@ import FinancialStatistics from "./pages/Statistics/FinancialStatistics";
 import NotificationsPage from "./pages/Notifications/NotificationsPage";
 import DashboardPage from "./pages/Dashboard/DashboardPage";
 import PrivateRoute from "./Components/PrivateRoute";
-import Sidebar from "./Components/Uitily/Sidebar";
+import MainLayout from "./Components/Layout/MainLayout";
 import ExpensePage from "./pages/finance/ExpensePage";
 
 const App = () => {
   return (
-    <div className="font-cairo">
-      <NotificationToast />
-      <NotificationButton />
-      <BrowserRouter>
-        <Sidebar />
-
-        <Routes>
-          <Route path="/login" element={<Login />} />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route element={<MainLayout />}>
           <Route path="/selfRegister" element={<SelfRegister />} />
           <Route element={<PrivateRoute allowedRoles={["system_admin"]} />}>
             <Route path="/elected" element={<ElectedTablePage />} />
@@ -63,9 +57,9 @@ const App = () => {
             <Route path="/" element={<DashboardPage />} />
             <Route path="/expense" element={<ExpensePage />} />
           </Route>
-        </Routes>
-      </BrowserRouter>
-    </div>
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 };
 

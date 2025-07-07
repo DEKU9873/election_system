@@ -105,13 +105,13 @@ const EditCenterModal = ({ onClose, centerData }) => {
 
   return (
     <div
-      className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 min-h-screen flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 min-h-screen flex items-center justify-center p-2 sm:p-4"
       onClick={onClose}
     >
       <div className="absolute inset-0" />
 
       <div
-        className="bg-white backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-full max-w-lg flex flex-col items-center relative "
+        className="bg-white backdrop-blur-sm p-4 sm:p-8 rounded-2xl shadow-2xl w-full max-w-lg flex flex-col items-center relative overflow-y-auto max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -120,10 +120,10 @@ const EditCenterModal = ({ onClose, centerData }) => {
         >
           <X size={24} />
         </button>
-        <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">
           تعديل المركز
         </h1>
-        <div dir="rtl" className="w-full grid grid-cols-1 gap-6">
+        <div dir="rtl" className="w-full grid grid-cols-1 gap-4 sm:gap-6">
           <div>
             <label className="block text-gray-700 font-medium mb-2 text-right">
               اسم المركز
@@ -131,7 +131,7 @@ const EditCenterModal = ({ onClose, centerData }) => {
             <div className="relative">
               <input
                 type="text"
-                className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
+                className="w-full pr-10 py-2 text-sm sm:text-base border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
                 value={center}
                 onChange={onChangeCenter}
                 dir="rtl"
@@ -150,7 +150,7 @@ const EditCenterModal = ({ onClose, centerData }) => {
             <div className="relative">
               <input
                 type="text"
-                className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
+                className="w-full pr-10 py-2 text-sm sm:text-base border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
                 value={code}
                 onChange={onChangeCode}
                 dir="rtl"
@@ -236,7 +236,7 @@ const EditCenterModal = ({ onClose, centerData }) => {
         <button
           type="submit"
           onClick={onSubmit}
-          className="w-full mt-8 bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg font-medium text-base transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full mt-6 sm:mt-8 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 sm:px-6 rounded-lg font-medium text-sm sm:text-base transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={loading}
         >
           {loading ? (
@@ -253,7 +253,7 @@ const EditCenterModal = ({ onClose, centerData }) => {
         </button>
         <button
           onClick={onClose}
-          className="w-full mt-4 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-6 rounded-lg font-medium text-base transition-colors duration-200"
+          className="w-full mt-3 sm:mt-4 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-4 sm:px-6 rounded-lg font-medium text-sm sm:text-base transition-colors duration-200"
         >
           إلغاء
         </button>

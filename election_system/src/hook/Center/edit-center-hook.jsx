@@ -17,11 +17,12 @@ const EditCenterHook = (centerData) => {
 
   useEffect(() => {
     if (centerData) {
+      console.log(centerData);
       setCenter(centerData.name || "");
       setCode(centerData.code || "");
-      setGovernorateId(centerData.governorate_id || "");
-      setDistrictId(centerData.district_id || "");
-      setSubdistrictId(centerData.subdistrict_id || "");
+      setGovernorateId(centerData?.governorate?.id || "");
+      setDistrictId(centerData?.district?.id || "");
+      setSubdistrictId(centerData?.subdistrict?.id || "");
       setCenterId(centerData.id || null);
     }
   }, [centerData]);

@@ -16,8 +16,8 @@ const EditSubdistrictsHook = (subdistrictData) => {
   useEffect(() => {
     if (subdistrictData) {
       setSubdistrict(subdistrictData.name || "");
-      setDistrictID(subdistrictData.district_id || "");
-      setGovernorateId(subdistrictData.governorate_id || "");
+      setDistrictID(subdistrictData?.district?.id || "");
+      setGovernorateId(subdistrictData?.governorate?.id || "");
       setSubdistrictId(subdistrictData.id || null);
     }
   }, [subdistrictData]);

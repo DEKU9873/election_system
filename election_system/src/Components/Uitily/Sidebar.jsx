@@ -31,9 +31,8 @@ import {
   LayoutDashboard,
 } from "lucide-react";
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, setIsOpen }) => {
   const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
   const [activeItem, setActiveItem] = useState("");
@@ -182,42 +181,53 @@ const Sidebar = () => {
       setIsOpen(false);
     }
   };
+  
+  // تأخير إغلاق السايدبار عند النقر على عنصر القائمة
+  const handleMenuItemClick = () => {
+    setTimeout(() => {
+      closeSidebar();
+    }, 150);
+  };
 
   // إغلاق الـ sidebar في الموبايل عند تغيير الحجم
   React.useEffect(() => {
     if (isMobile) {
       setIsOpen(false);
+    } else {
+      setIsOpen(true);
     }
   }, [isMobile]);
+  
+  // إغلاق السايدبار عند تغيير المسار في وضع الموبايل
+  React.useEffect(() => {
+    if (isMobile) {
+      closeSidebar();
+    }
+  }, [location.pathname, isMobile]);
 
   return (
     <div dir="rtl" className="font-['Cairo',_'Segoe_UI',_Tahoma,_sans-serif]">
-      {/* Main Content Wrapper */}
-      <div className="pt-16">{/* Content goes here */}</div>
 
       {/* Navbar */}
       <div
-        className={`fixed top-0 left-0 bg-white border-b border-gray-200 shadow-sm z-40 py-3 transition-all duration-500 ${
-          isOpen ? "right-64" : "right-0"
-        }`}
+        className="fixed top-0 left-0 bg-white border-b border-gray-200 z-50 py-3 transition-all duration-500 "
+        style={{ right: isOpen && !isMobile ? '16rem' : '0', width: 'auto', left: '0' }}
       >
         <div className="flex items-center justify-between px-6">
           <div className="flex items-center gap-4">
-            {!isOpen && (
-              <button
-                onClick={toggleSidebar}
-                className="p-2 hover:bg-blue-50 rounded-lg transition-colors duration-200"
-                title="فتح القائمة"
-              >
-                <Menu size={22} className="text-blue-600" />
-              </button>
-            )}
+            <button
+              onClick={toggleSidebar}
+              className="p-2 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+              title={isOpen ? "إغلاق القائمة" : "فتح القائمة"}
+            >
+              {isOpen ? <X size={22} className="text-blue-600 transition-transform duration-300" /> : <Menu size={22} className="text-blue-600 transition-transform duration-300" />}
+            </button>
             <h1 className="text-xl font-semibold text-gray-800 font-['Cairo']">
               {menuItems.find((item) => item.id === activeItem)?.label ||
                 "لوحة التحكم"}
             </h1>
           </div>
-          <div className="flex items-center space-x-4 rtl:space-x-reverse">
+          <div className="flex items-center space-x-4 rtl:space-x-reverse min-w-min ">
             <div className="flex items-center gap-4">
               <Link
                 to="/notifications"
@@ -256,16 +266,16 @@ const Sidebar = () => {
       {/* Overlay للموبايل */}
       {isMobile && isOpen && (
         <div
-          className="fixed inset-0  bg-opacity-50 z-40 md:hidden transition-all duration-300"
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden transition-all duration-300"
           onClick={closeSidebar}
         />
       )}
 
       {/* Sidebar */}
       <div
-        className={`bg-white border-l border-gray-200 transition-all duration-500 ease-out flex flex-col shadow-2xl z-50 ${
+        className={`bg-white border-l border-gray-200 transition-all duration-500 ease-out flex flex-col z-40 shadow-lg ${
           isMobile
-            ? `fixed right-0 top-0 h-full ${
+            ? `fixed right-0 top-16 h-[calc(100%-4rem)] ${
                 isOpen ? "w-64 translate-x-0" : "w-64 translate-x-full"
               }`
             : `fixed right-0 top-0 h-full ${
@@ -275,14 +285,6 @@ const Sidebar = () => {
       >
         {/* Header with Logo */}
         <div className="border-b border-gray-200 min-w-64 flex-shrink-0">
-          <div className="flex justify-end m-4">
-            <button
-              onClick={toggleSidebar}
-              className="p-1.5 rounded-lg hover:bg-blue-50 hover:rotate-90 transition-all duration-300"
-            >
-              <X size={20} className="text-blue-600" />
-            </button>
-          </div>
           <div className="flex items-center justify-between p-4">
             <div className="flex flex-col items-center gap-2 flex-1 justify-center">
               <img src={logo} alt="شعار الشركة" className="h-20 w-auto" />
@@ -307,7 +309,7 @@ const Sidebar = () => {
                       }
                       className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-all duration-300 hover:bg-gray-50 ${
                         activeItem === item.id
-                          ? "bg-blue-50 text-blue-700 shadow-sm"
+                          ? "bg-blue-50 text-blue-700"
                           : "text-gray-700"
                       }`}
                     >
@@ -334,10 +336,10 @@ const Sidebar = () => {
                             <Link
                               key={subItem.id}
                               to={subItem.href}
-                              onClick={closeSidebar}
+                              onClick={handleMenuItemClick}
                               className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-300 hover:bg-gray-50 ${
                                 activeItem === subItem.id
-                                  ? "bg-blue-50 text-blue-700 shadow-sm"
+                                  ? "bg-blue-50 text-blue-700"
                                   : "text-gray-700"
                               }`}
                             >
@@ -366,10 +368,10 @@ const Sidebar = () => {
                 <Link
                   key={item.id}
                   to={item.href}
-                  onClick={closeSidebar}
+                  onClick={handleMenuItemClick}
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-300 hover:bg-gray-50 ${
                     activeItem === item.id
-                      ? "bg-blue-50 text-blue-700 shadow-sm"
+                      ? "bg-blue-50 text-blue-700"
                       : "text-gray-700"
                   }`}
                 >
