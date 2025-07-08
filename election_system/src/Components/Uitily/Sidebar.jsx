@@ -137,12 +137,6 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       icon: DollarSign,
       submenu: [
         {
-          id: "Payments",
-          label: "المدفوعات",
-          href: "/financial-statistics",
-          icon: PieChart,
-        },
-        {
           id: "Expenses",
           label: "المصروفات",
           href: "/expense",
