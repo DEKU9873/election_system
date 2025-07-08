@@ -51,17 +51,17 @@ const EditExpenseHook = (expense) => {
         updateExpense({ id: expenseId, title: title, description: description, amount: amount })
       );
 
-      if (res.type === "finance/addExpense/fulfilled") {
+      if (res.type === "finance/updateExpense/fulfilled") {
         await dispatch(getExpenses());
 
-        notify("تمت إضافة وصل  بنجاح", "success");
+        notify("تمت تعديل الوصل  بنجاح", "success");
         setTitle("");
         setDescription("");
       } else {
-        notify(res.payload?.message || "حدث خطأ أثناء الإضافة", "error");
+        notify(res.payload?.message || "حدث خطأ أثناء التعديل", "error");
       }
     } catch (err) {
-      notify("فشل الإضافة", "error");
+      notify("فشل التعديل", "error");
     }
 
     setLoading(false);
