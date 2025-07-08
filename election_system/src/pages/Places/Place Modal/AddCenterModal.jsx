@@ -108,7 +108,7 @@ const AddCenterModal = ({ onClose }) => {
       className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 min-h-screen flex items-center justify-center p-2 sm:p-4"
       onClick={onClose}
     >
-            <div className="absolute inset-0" />
+      <div className="absolute inset-0" />
 
       <div
         className="bg-white backdrop-blur-sm p-3 sm:p-6 md:p-8 rounded-2xl shadow-2xl w-full max-w-2xl flex flex-col items-center relative overflow-y-auto max-h-[70vh]"
@@ -123,7 +123,10 @@ const AddCenterModal = ({ onClose }) => {
         <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 mb-3 sm:mb-5 text-center w-full">
           إضافة مركز جديد
         </h1>
-        <div dir="rtl" className="w-full grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-x-6 md:gap-y-4">
+        <div
+          dir="rtl"
+          className="w-full grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-x-6 md:gap-y-4"
+        >
           <div>
             <label className="block text-gray-700 font-medium mb-1 text-right text-sm">
               اسم المركز

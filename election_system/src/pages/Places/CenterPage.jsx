@@ -31,7 +31,6 @@ const CenterPage = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [centerIdToDelete, setCenterIdToDelete] = useState(null);
   const [selectedCenter, setSelectedCenter] = useState(null);
-  console.log(electionCenters)
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());

@@ -30,7 +30,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route element={<MainLayout />}>
           <Route path="/selfRegister" element={<SelfRegister />} />
-          <Route element={<PrivateRoute allowedRoles={["system_admin"]} />}>
+          <Route element={<PrivateRoute allowedRoles={["system_admin", "voter"]} />}>
             <Route path="/elected" element={<ElectedTablePage />} />
             <Route path="/monitors" element={<MonitorsTablePage />} />
             <Route path="/coordinators" element={<CoordinatorTablePage />} />

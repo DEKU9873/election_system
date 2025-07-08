@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import notify from "../useNotification";
-import { addExpense, getExpenses, updateExpense } from "../../redux/financeSlice";
+import { getExpenses, updateExpense, resetState } from "../../redux/financeSlice";
 
 const EditExpenseHook = (expense) => {
-  console.log("id",expense);
   const dispatch = useDispatch();
 
   const [title, setTitle] = useState("");
@@ -39,6 +38,9 @@ const EditExpenseHook = (expense) => {
     e.preventDefault();
     setLoginClicked(true);
     setLoading(true);
+    
+    // إعادة تعيين حالة الخطأ والنجاح
+    dispatch(resetState());
 
     if (!title || !description || !amount) {
       notify("يرجى إدخال جميع الحقول", "warning");
@@ -47,14 +49,19 @@ const EditExpenseHook = (expense) => {
     }
 
     try {
-      const res = await dispatch(
-        updateExpense({ id: expenseId, title: title, description: description, amount: amount })
-      );
+      const expenseData = {
+        id: expenseId,
+        title: title,
+        description: description,
+        amount: amount
+      };
+      
+      const res = await dispatch(updateExpense(expenseData));
 
       if (res.type === "finance/updateExpense/fulfilled") {
         await dispatch(getExpenses());
 
-        notify("تمت تعديل الوصل  بنجاح", "success");
+        notify("تمت تعديل الوصل بنجاح", "success");
         setTitle("");
         setDescription("");
       } else {

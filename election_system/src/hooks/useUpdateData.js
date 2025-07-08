@@ -26,5 +26,14 @@ const useUpdateDataWithToken = async (url, parmas) => {
   const res = await baseUrl.put(url, parmas, config);
   return res;
 };
+const usePatchDataWithToken = async (url, parmas) => {
+  const token = Cookies.get("token");
 
-export { useInUpdateDataWithImage, useUpdateData, useUpdateDataWithToken };
+  const config = {
+    headers: { Authorization: token ? `Bearer ${token}` : undefined },
+  };
+  const res = await baseUrl.patch(url, parmas, config);
+  return res;
+};
+
+export { useInUpdateDataWithImage, useUpdateData, useUpdateDataWithToken, usePatchDataWithToken };

@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import notify from "../useNotification";
-import { addGovernate, getGovernates } from "../../redux/placeSlice";
-import { addExpense, getExpenses } from "../../redux/financeSlice";
+import { addExpense, getExpenses, resetState } from "../../redux/financeSlice";
 
 const AddExpenseHook = () => {
   const dispatch = useDispatch();
@@ -29,6 +28,9 @@ const AddExpenseHook = () => {
     e.preventDefault();
     setLoginClicked(true);
     setLoading(true);
+    
+    // إعادة تعيين حالة الخطأ والنجاح
+    dispatch(resetState());
 
     if (!title || !description || !amount) {
       notify("يرجى إدخال جميع الحقول", "warning");
@@ -37,20 +39,29 @@ const AddExpenseHook = () => {
     }
 
     try {
-      const res = await dispatch(
-        addExpense({ title: title, description: description, amount: amount })
-      );
+      const expenseData = {
+        title: title,
+        description: description,
+        amount: amount
+      };
+      
+      const res = await dispatch(addExpense(expenseData));
 
       if (res.type === "finance/addExpense/fulfilled") {
         await dispatch(getExpenses());
 
-        notify("تمت إضافة وصل  بنجاح", "success");
+        notify("تمت إضافة وصل بنجاح", "success");
         setTitle("");
         setDescription("");
+        setAmount("");
       } else {
-        notify(res.payload?.message || "حدث خطأ أثناء الإضافة", "error");
+        // استخراج رسالة الخطأ من الاستجابة
+        console.log("Error response:", res.payload); // للتشخيص
+        const errorMessage = res.payload?.message || "حدث خطأ أثناء الإضافة";
+        notify(errorMessage, "error");
       }
     } catch (err) {
+      console.error("Unexpected error:", err); // للتشخيص
       notify("فشل الإضافة", "error");
     }
 

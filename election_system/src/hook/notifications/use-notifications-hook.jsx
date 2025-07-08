@@ -1,127 +1,138 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  addNotification,
-  markAsRead,
-  markAllAsRead,
-  deleteNotification,
-  clearAllNotifications
-} from '../../redux/notificationsSlice';
-import {
   fetchNotifications,
-  markNotificationAsRead,
-  markAllNotificationsAsRead,
-  deleteNotification as apiDeleteNotification,
+  addNotification,
+  deleteNotification,
   deleteAllNotifications,
+  markNotificationRead,
+  resetState
+} from '../../redux/notificationSlice';
+import {
   subscribeToNotifications
 } from '../../Api/notificationsAPI';
 
+
+
 const useNotificationsHook = () => {
   const dispatch = useDispatch();
-  const { notifications, unreadCount } = useSelector((state) => state.notifications);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const { items: notifications, loading, error, success } = useSelector((state) => state.notifications);
+  const [unreadCount, setUnreadCount] = useState(0);
   
   // جلب الإشعارات من الخادم عند تحميل المكون
   useEffect(() => {
     const fetchNotificationsFromServer = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        // يمكن تعليق هذا الكود حتى يتم تنفيذ الواجهة الخلفية
-        // const data = await fetchNotifications();
-        // data.forEach(notification => dispatch(addNotification(notification)));
-      } catch (err) {
-        setError('فشل في جلب الإشعارات');
-        console.error('Error fetching notifications:', err);
-      } finally {
-        setLoading(false);
-      }
+      dispatch(resetState());
+      dispatch(fetchNotifications());
     };
 
-    // تعليق استدعاء الدالة حتى يتم تنفيذ الواجهة الخلفية
-    // fetchNotificationsFromServer();
+    fetchNotificationsFromServer();
   }, [dispatch]);
+  
+  // حساب عدد الإشعارات غير المقروءة
+  useEffect(() => {
+    if (notifications) {
+      const count = notifications.filter(notification => 
+        // التحقق من كلا الخاصيتين isRead و read
+        (!notification.isRead && !notification.read)
+      ).length;
+      setUnreadCount(count);
+    }
+  }, [notifications]);
   
   // الاشتراك في الإشعارات في الوقت الحقيقي
   useEffect(() => {
-    // يمكن تعليق هذا الكود حتى يتم تنفيذ الواجهة الخلفية
-    // const unsubscribe = subscribeToNotifications((newNotifications) => {
-    //   // تحديث الإشعارات في Redux
-    //   newNotifications.forEach(notification => {
-    //     if (!notifications.some(n => n.id === notification.id)) {
-    //       dispatch(addNotification(notification));
-    //     }
-    //   });
-    // });
-    // 
-    // return () => {
-    //   unsubscribe();
-    // };
-  }, [dispatch, notifications]);
+    const unsubscribe = subscribeToNotifications((newNotifications) => {
+      // تحديث الإشعارات عن طريق إعادة جلبها من الخادم
+      dispatch(resetState());
+      dispatch(fetchNotifications());
+    });
+    
+    return () => {
+      unsubscribe();
+    };
+  }, [dispatch]);
 
   // إضافة إشعار جديد
-  const createNotification = (notification) => {
-    // إضافة معرف فريد وتاريخ للإشعار إذا لم يكن موجودًا
-    const newNotification = {
-      id: Date.now(), // استخدام الطابع الزمني كمعرف فريد
-      time: new Date().toLocaleString('ar-SA'), // تنسيق التاريخ بالعربية
-      read: false,
-      ...notification
-    };
-    dispatch(addNotification(newNotification));
-    return newNotification.id; // إرجاع معرف الإشعار الجديد
+  const createNotification = async (notification) => {
+    try {
+      // إضافة تاريخ للإشعار إذا لم يكن موجودًا
+      const now = new Date();
+      const newNotification = {
+        time: now.toLocaleString('ar-SA'), 
+        read: false,
+        isRead: false, // إضافة خاصية isRead لتتوافق مع الباك اند
+        // تحويل البيانات لتتوافق مع ما يتوقعه الباك اند
+        name: notification.name || notification.title, // دعم كلا الصيغتين
+        message: notification.message,
+        type: notification.type,
+        send_to: notification.send_to || "all",
+        // دعم كلا الصيغتين للتاريخ
+        created_at: notification.created_at || now.toISOString(),
+        createdAt: notification.createdAt || notification.created_at || now.toISOString(),
+        // إضافة معرف مؤقت للإشعار الجديد (سيتم استبداله بالمعرف الفعلي من الخادم)
+        notification_id: notification.notification_id || `temp-${Date.now()}`
+      };
+      
+      // إضافة الإشعار مؤقتًا إلى الحالة المحلية قبل الاتصال بالخادم
+      // هذا يضمن ظهور الإشعار فورًا للمستخدم
+      if (notifications) {
+        // تحديث الحالة المحلية مباشرة
+        const updatedNotifications = [newNotification, ...notifications];
+        // يمكن استخدام هذا السطر إذا كنت تريد تحديث الحالة المحلية مباشرة
+        // setNotifications(updatedNotifications);
+      }
+      
+      dispatch(resetState());
+      const result = await dispatch(addNotification(newNotification));
+      
+      // بعد الإضافة بنجاح، قم بتحديث الإشعارات من الخادم
+      dispatch(fetchNotifications());
+      
+      return true; // إرجاع نجاح العملية
+    } catch (error) {
+      return false;
+    }
   };
 
   // تحديد إشعار كمقروء
-  const handleMarkAsRead = async (id) => {
-    try {
-      dispatch(markAsRead(id));
-      // يمكن تعليق هذا الكود حتى يتم تنفيذ الواجهة الخلفية
-      // await markNotificationAsRead(id);
-    } catch (err) {
-      console.error('Error marking notification as read:', err);
-    }
+  const handleMarkAsRead = async (notification_id) => {
+    dispatch(resetState());
+    dispatch(markNotificationRead(notification_id));
   };
 
   // تحديد جميع الإشعارات كمقروءة
   const handleMarkAllAsRead = async () => {
-    try {
-      dispatch(markAllAsRead());
-      // يمكن تعليق هذا الكود حتى يتم تنفيذ الواجهة الخلفية
-      // await markAllNotificationsAsRead();
-    } catch (err) {
-      console.error('Error marking all notifications as read:', err);
+    // نقوم بتعليم كل إشعار كمقروء بشكل فردي
+    if (notifications && notifications.length > 0) {
+      dispatch(resetState());
+      // يمكن تنفيذ هذا بشكل أفضل في الباك اند بإضافة API خاص بتعليم جميع الإشعارات كمقروءة
+      notifications.forEach(notification => {
+        if (!notification.read) {
+          dispatch(markNotificationRead(notification.notification_id));
+        }
+      });
     }
   };
 
   // حذف إشعار
-  const handleDeleteNotification = async (id) => {
-    try {
-      dispatch(deleteNotification(id));
-      // يمكن تعليق هذا الكود حتى يتم تنفيذ الواجهة الخلفية
-      // await apiDeleteNotification(id);
-    } catch (err) {
-      console.error('Error deleting notification:', err);
-    }
+  const handleDeleteNotification = async (notification_id) => {
+    dispatch(resetState());
+    dispatch(deleteNotification(notification_id));
   };
 
   // حذف جميع الإشعارات
   const handleClearAllNotifications = async () => {
-    try {
-      dispatch(clearAllNotifications());
-      // يمكن تعليق هذا الكود حتى يتم تنفيذ الواجهة الخلفية
-      // await deleteAllNotifications();
-    } catch (err) {
-      console.error('Error clearing all notifications:', err);
-    }
+    dispatch(resetState());
+    dispatch(deleteAllNotifications());
   };
 
   return {
-    notifications,
+    notifications: notifications || [],
     unreadCount,
     loading,
     error,
+    success,
     createNotification,
     markAsRead: handleMarkAsRead,
     markAllAsRead: handleMarkAllAsRead,

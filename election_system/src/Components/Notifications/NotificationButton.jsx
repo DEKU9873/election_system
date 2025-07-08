@@ -3,6 +3,19 @@ import { useNotifications } from "./NotificationProvider";
 import { notificationButtonStyles } from "./NotificationStyles";
 import { X } from "lucide-react";
 
+/**
+ * مكون زر إضافة إشعار جديد
+ * 
+ * يرسل البيانات إلى الباك اند بالتنسيق التالي:
+ * {
+ *   name: "اسم الإشعار",
+ *   message: "محتوى الإشعار",
+ *   type: "نوع الإشعار",
+ *   send_to: "all",
+ *   created_at: "تاريخ الإنشاء"
+ * }
+ */
+
 const NotificationButton = () => {
   const { createNotification } = useNotifications();
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -10,6 +23,7 @@ const NotificationButton = () => {
     title: "",
     message: "",
     type: "info",
+    send_to: "all", // القيمة الافتراضية هي إرسال إلى الجميع
   });
 
   // فتح/إغلاق نموذج الإشعار
@@ -30,10 +44,13 @@ const NotificationButton = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (notificationData.title.trim() && notificationData.message.trim()) {
+      // إرسال الإشعار إلى الباك اند بالتنسيق المطلوب
       createNotification({
-        type: notificationData.type,
-        title: notificationData.title,
+        name: notificationData.title, // استخدام العنوان كاسم للإشعار
         message: notificationData.message,
+        type: notificationData.type,
+        send_to: notificationData.send_to, // استخدام القيمة المحددة من القائمة المنسدلة
+        created_at: new Date().toISOString(),
       });
 
       // إعادة تعيين النموذج
@@ -41,6 +58,7 @@ const NotificationButton = () => {
         title: "",
         message: "",
         type: "info",
+        send_to: "all",
       });
 
       // إغلاق النموذج
@@ -102,7 +120,7 @@ const NotificationButton = () => {
                 ></textarea>
               </div>
 
-              <div className="mb-6">
+              <div className="mb-4">
                 <label
                   className="block text-gray-700 text-sm font-bold mb-2"
                   htmlFor="type"
@@ -120,11 +138,31 @@ const NotificationButton = () => {
                   <option value="warning">تحذير</option>
                   <option value="success">نجاح</option>
                   <option value="error">خطأ</option>
-                  <option value="voter">ناخب</option>
-                  <option value="center">مركز</option>
-                  <option value="report">تقرير</option>
-                  <option value="monitor">مراقب</option>
-                  <option value="system">نظام</option>
+                </select>
+              </div>
+
+              <div className="mb-6">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="send_to"
+                >
+                  إرسال إلى
+                </label>
+                <select
+                  id="send_to"
+                  name="send_to"
+                  value={notificationData.send_to}
+                  onChange={handleInputChange}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                >
+                  <option value="all">الجميع</option>
+                  <option value="voter">الناخب</option>
+                  <option value="observer">المراقب</option>
+                  <option value="coordinator">المنسق</option>
+                  <option value="center_manager">مدير المركز</option>
+                  <option value="district_manager">مدير المنطقة</option>
+                  <option value="finance_auditor">المدقق المالي</option>
+                  <option value="system_admin">مدير النظام</option>
                 </select>
               </div>
 

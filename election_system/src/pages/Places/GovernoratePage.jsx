@@ -25,7 +25,6 @@ const GovernoratePage = () => {
   const [governateIdToDelete, setGovernateIdToDelete] = useState(null);
   const [selectedGovernate, setSelectedGovernate] = useState(null);
 
-
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
@@ -135,20 +134,19 @@ const GovernoratePage = () => {
     setGovernateIdToDelete(null);
   };
 
-const handleDeleteConfirmation = async () => {
-  if (governateIdToDelete) {
-    try {
-      await dispatch(deleteGovernate(governateIdToDelete));
-      await dispatch(getGovernates());
-    } catch (error) {
-      console.error("حدث خطأ أثناء الحذف:", error);
-    } finally {
-      setShowDeleteModal(false); // 👈 يغلق المودال دائمًا
-      setGovernateIdToDelete(null);
+  const handleDeleteConfirmation = async () => {
+    if (governateIdToDelete) {
+      try {
+        await dispatch(deleteGovernate(governateIdToDelete));
+        await dispatch(getGovernates());
+      } catch (error) {
+        console.error("حدث خطأ أثناء الحذف:", error);
+      } finally {
+        setShowDeleteModal(false);
+        setGovernateIdToDelete(null);
+      }
     }
-  }
-};
-
+  };
 
   const handleOpenModal = () => {
     setShowModal(true);
@@ -165,7 +163,10 @@ const handleDeleteConfirmation = async () => {
   return (
     <div>
       {/* <Sidebar /> */}
-      <div className="w-full max-w-[1440px] mx-auto p-3 sm:p-4 md:p-6 bg-white min-h-screen" dir="rtl">
+      <div
+        className="w-full max-w-[1440px] mx-auto p-3 sm:p-4 md:p-6 bg-white min-h-screen"
+        dir="rtl"
+      >
         <div className="mb-6">
           <UserTableTitle title="المحافظات" subtitle="قائمة المحافظات" />
 
@@ -177,7 +178,7 @@ const handleDeleteConfirmation = async () => {
             setShowColumnMenu={setShowColumnMenu}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
-            onOpen = {handleOpenModal}
+            onOpen={handleOpenModal}
           />
 
           <UserTableStats data={governates} title="اجمالي المحافظات" />
@@ -205,128 +206,138 @@ const handleDeleteConfirmation = async () => {
               </tr>
             ) : (
               <tbody className="divide-y divide-gray-200">
-              {paginatedData.length > 0 ? (
-                paginatedData.map((row) => (
-                  <tr
-                    key={row.id}
-                    className={`hover:bg-gray-50 transition-colors ${
-                      selectedRows.has(row.id) ? "bg-blue-50" : ""
-                    }`}
-                  >
-                    {visibleColumns.select && (
-                      <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
-                        <input
-                          type="checkbox"
-                          checked={selectedRows.has(row.id)}
-                          onChange={() => handleSelectRow(row.id)}
-                          className="rounded text-blue-600"
-                        />
-                      </td>
-                    )}
-                    {visibleColumns.id && (
-                      <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
-                        <div className="text-xs sm:text-sm text-gray-900">{row.id}</div>
-                      </td>
-                    )}
-                    {visibleColumns.code && (
-                      <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
-                        <div className="text-xs sm:text-sm text-gray-900">{row.code}</div>
-                      </td>
-                    )}
-                    {visibleColumns.name && (
-                      <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
-                        <div className="flex items-center gap-2">
-                          <div className="text-xs sm:text-sm font-medium text-gray-900">
-                            {row.name}
+                {paginatedData.length > 0 ? (
+                  paginatedData.map((row) => (
+                    <tr
+                      key={row.id}
+                      className={`hover:bg-gray-50 transition-colors ${
+                        selectedRows.has(row.id) ? "bg-blue-50" : ""
+                      }`}
+                    >
+                      {visibleColumns.select && (
+                        <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                          <input
+                            type="checkbox"
+                            checked={selectedRows.has(row.id)}
+                            onChange={() => handleSelectRow(row.id)}
+                            className="rounded text-blue-600"
+                          />
+                        </td>
+                      )}
+                      {visibleColumns.id && (
+                        <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                          <div className="text-xs sm:text-sm text-gray-900">
+                            {row.id}
                           </div>
-                        </div>
-                      </td>
-                    )}
-                    {visibleColumns.districts_count && (
-                      <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
-                        <div className="text-xs sm:text-sm text-gray-900">
-                          {row.districts_count}
-                        </div>
-                      </td>
-                    )}
-                    {visibleColumns.election_centers_count && (
-                      <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
-                        <div className="text-xs sm:text-sm text-gray-900">
-                          {row.election_centers_count}
-                        </div>
-                      </td>
-                    )}
-                    {visibleColumns.users_count && (
-                      <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
-                        <div className="text-xs sm:text-sm text-gray-900">
-                          {row.users_count}
-                        </div>
-                      </td>
-                    )}
-                    {visibleColumns.confirmed_voting_users_count && (
-                      <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
-                        <div className="text-xs sm:text-sm text-gray-900">
-                          {row.confirmed_voting_users_count}
-                        </div>
-                      </td>
-                    )}
-                    {visibleColumns.percentageOfVoters && (
-                      <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
-                        <div className="text-xs sm:text-sm text-gray-900">
-                          {row.percentageOfVoters}
-                        </div>
-                      </td>
-                    )}
-
-                    {visibleColumns.actions && (
-                      <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
-                        <div className="relative">
-                          <button
-                            onClick={() =>
-                              setShowActionMenu(
-                                showActionMenu === row.id ? null : row.id
-                              )
-                            }
-                            className="p-1 hover:bg-gray-100 rounded transition-colors"
-                          >
-                            <MoreHorizontal className="w-3 h-3 sm:w-4 sm:h-4" />
-                          </button>
-
-                          {showActionMenu === row.id && (
-                            <div className="absolute left-0 mt-1 w-36 sm:w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-999999999">
-                              <div className="py-1">
-                                <button
-                                  onClick={() => handleUserAction("edit", row)}
-                                  className="block w-full text-right px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                                >
-                                  تعديل
-                                </button>
-                                <button
-                                  onClick={() => handleDeleteConfirm(row.id)}
-                                  className="block w-full text-right px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm text-red-700 hover:bg-red-50 transition-colors"
-                                >
-                                  حذف
-                                </button>
-                              </div>
+                        </td>
+                      )}
+                      {visibleColumns.code && (
+                        <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                          <div className="text-xs sm:text-sm text-gray-900">
+                            {row.code}
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.name && (
+                        <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                          <div className="flex items-center gap-2">
+                            <div className="text-xs sm:text-sm font-medium text-gray-900">
+                              {row.name}
                             </div>
-                          )}
-                        </div>
-                      </td>
-                    )}
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.districts_count && (
+                        <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                          <div className="text-xs sm:text-sm text-gray-900">
+                            {row.districts_count}
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.election_centers_count && (
+                        <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                          <div className="text-xs sm:text-sm text-gray-900">
+                            {row.election_centers_count}
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.users_count && (
+                        <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                          <div className="text-xs sm:text-sm text-gray-900">
+                            {row.users_count}
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.confirmed_voting_users_count && (
+                        <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                          <div className="text-xs sm:text-sm text-gray-900">
+                            {row.confirmed_voting_users_count}
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.percentageOfVoters && (
+                        <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                          <div className="text-xs sm:text-sm text-gray-900">
+                            {row.percentageOfVoters}
+                          </div>
+                        </td>
+                      )}
+
+                      {visibleColumns.actions && (
+                        <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                          <div className="relative">
+                            <button
+                              onClick={() =>
+                                setShowActionMenu(
+                                  showActionMenu === row.id ? null : row.id
+                                )
+                              }
+                              className="p-1 hover:bg-gray-100 rounded transition-colors"
+                            >
+                              <MoreHorizontal className="w-3 h-3 sm:w-4 sm:h-4" />
+                            </button>
+
+                            {showActionMenu === row.id && (
+                              <div className="absolute left-0 mt-1 w-36 sm:w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-999999999">
+                                <div className="py-1">
+                                  <button
+                                    onClick={() =>
+                                      handleUserAction("edit", row)
+                                    }
+                                    className="block w-full text-right px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                  >
+                                    تعديل
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteConfirm(row.id)}
+                                    className="block w-full text-right px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm text-red-700 hover:bg-red-50 transition-colors"
+                                  >
+                                    حذف
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                      )}
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="6"
+                      className="px-4 py-12 text-center text-gray-500"
+                    >
+                      <User className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-gray-300 mx-auto mb-2 sm:mb-4" />
+                      <p className="text-base sm:text-lg font-medium">
+                        لا توجد نتائج
+                      </p>
+                      <p className="text-xs sm:text-sm">
+                        جرب تغيير مصطلحات البحث
+                      </p>
+                    </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td
-                    colSpan="6"
-                    className="px-4 py-12 text-center text-gray-500"
-                  >
-                    <User className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-gray-300 mx-auto mb-2 sm:mb-4" />
-                    <p className="text-base sm:text-lg font-medium">لا توجد نتائج</p>
-                    <p className="text-xs sm:text-sm">جرب تغيير مصطلحات البحث</p>
-                  </td>
-                </tr>
-              )}
+                )}
               </tbody>
             )}
           </table>
@@ -352,8 +363,13 @@ const handleDeleteConfirmation = async () => {
         )}
       </div>
       {showModal && <AddGovernorateModal onClose={handleCloseModal} />}
-      {showEditModal && <EditGovernorateModal onClose={handleCloseEditModal} governate={selectedGovernate} />}
-      <DeleteModal 
+      {showEditModal && (
+        <EditGovernorateModal
+          onClose={handleCloseEditModal}
+          governate={selectedGovernate}
+        />
+      )}
+      <DeleteModal
         isOpen={showDeleteModal}
         onCancel={handleDeleteCancel}
         onConfirm={handleDeleteConfirmation}

@@ -12,7 +12,7 @@ import { useDispatch } from "react-redux";
 import DeleteModal from "../../Components/Uitily/DeleteModal";
 import Loader from "../../Components/Uitily/Loader";
 import GetAllExpenseHook from "../../hook/finance/get-all-expense-hook";
-import { deleteExpense, getExpenses } from "../../redux/financeSlice";
+import { deleteExpense, getExpenses, resetState } from "../../redux/financeSlice";
 import AddExpenseModal from "./Finance Modal/AddExpenseModal";
 import EditExpenseModal from "./Finance Modal/EditExpenseModal";
 const ExpensePage = () => {
@@ -130,10 +130,18 @@ const ExpensePage = () => {
   const handleDeleteConfirmation = async () => {
     if (expenseIdDelete) {
       try {
-        await dispatch(deleteExpense(expenseIdDelete));
-        await dispatch(getExpenses());
+        // إعادة تعيين حالة الخطأ والنجاح
+        dispatch(resetState());
+        
+        const res = await dispatch(deleteExpense(expenseIdDelete));
+        
+        if (res.type === "finance/deleteExpense/fulfilled") {
+          await dispatch(getExpenses());
+        } else {
+          console.error("حدث خطأ أثناء الحذف:", res.payload);
+        }
       } catch (error) {
-        console.error("حدث خطأ أثناء الحذف:", error);
+        console.error("حدث خطأ غير متوقع أثناء الحذف:", error);
       } finally {
         setShowDeleteModal(false);
         setEXpenseIdToDelete(null);

@@ -8,7 +8,7 @@ import Cookies from 'js-cookie';
 export const fetchNotifications = async () => {
   try {
     const token = Cookies.get('token');
-    const response = await baseURL.get('/notifications', {
+    const response = await baseURL.get('/api/notifications/', {
       headers: {
         Authorization: token ? `Bearer ${token}` : undefined,
       },
@@ -25,8 +25,8 @@ export const fetchNotifications = async () => {
 export const markNotificationAsRead = async (notificationId) => {
   try {
     const token = Cookies.get('token');
-    const response = await baseURL.patch(
-      `/notifications/${notificationId}/read`,
+    const response = await baseURL.post(
+      `/api/notifications/mark-read/${notificationId}`,
       {},
       {
         headers: {
@@ -45,8 +45,8 @@ export const markNotificationAsRead = async (notificationId) => {
 export const markAllNotificationsAsRead = async () => {
   try {
     const token = Cookies.get('token');
-    const response = await baseURL.patch(
-      '/notifications/read-all',
+    const response = await baseURL.post(
+      '/api/notifications/mark-all-read',
       {},
       {
         headers: {
@@ -65,7 +65,7 @@ export const markAllNotificationsAsRead = async () => {
 export const deleteNotification = async (notificationId) => {
   try {
     const token = Cookies.get('token');
-    const response = await baseURL.delete(`/notifications/${notificationId}`, {
+    const response = await baseURL.delete(`/api/notifications/${notificationId}`, {
       headers: {
         Authorization: token ? `Bearer ${token}` : undefined,
       },
@@ -81,7 +81,7 @@ export const deleteNotification = async (notificationId) => {
 export const deleteAllNotifications = async () => {
   try {
     const token = Cookies.get('token');
-    const response = await baseURL.delete('/notifications/delete-all', {
+    const response = await baseURL.delete('/api/notifications/', {
       headers: {
         Authorization: token ? `Bearer ${token}` : undefined,
       },
@@ -97,17 +97,51 @@ export const deleteAllNotifications = async () => {
 export const subscribeToNotifications = (callback) => {
   // هذه الدالة ستكون مسؤولة عن إعداد اتصال WebSocket في المستقبل
   // حاليًا، يمكن استخدام استطلاع دوري للإشعارات الجديدة
-  const intervalId = setInterval(async () => {
+  
+  let lastFetchTime = 0; // تخزين وقت آخر استطلاع
+  let isFirstFetch = true; // علامة للاستطلاع الأول
+  
+  // استطلاع فوري عند بدء الاشتراك
+  const fetchImmediately = async () => {
     try {
+      console.log('بدء الاشتراك في الإشعارات - استطلاع فوري');
       const notifications = await fetchNotifications();
+      lastFetchTime = Date.now();
+      isFirstFetch = false;
       callback(notifications);
     } catch (error) {
-      console.error('Error in notification polling:', error);
+      console.error('خطأ في استطلاع الإشعارات الفوري:', error);
     }
-  }, 30000); // استطلاع كل 30 ثانية
+  };
+  
+  // تنفيذ استطلاع فوري
+  fetchImmediately();
+  
+  // ثم إعداد استطلاع دوري بفترات أقصر
+  const intervalId = setInterval(async () => {
+    try {
+      // تجنب الاستطلاعات المتكررة بشكل سريع جدًا
+      const now = Date.now();
+      const timeSinceLastFetch = now - lastFetchTime;
+      
+      // إذا كان الوقت منذ آخر استطلاع أقل من 2 ثانية، تخطي هذا الاستطلاع
+      if (!isFirstFetch && timeSinceLastFetch < 2000) {
+        console.log('تخطي استطلاع الإشعارات - تم الاستطلاع مؤخرًا');
+        return;
+      }
+      
+      console.log('استطلاع دوري للإشعارات');
+      const notifications = await fetchNotifications();
+      lastFetchTime = now;
+      callback(notifications);
+    } catch (error) {
+      console.error('خطأ في استطلاع الإشعارات الدوري:', error);
+    }
+  }, 5000); // استطلاع كل 5 ثوانٍ بدلاً من 10 ثوانٍ
 
   // إرجاع دالة لإلغاء الاشتراك
   return () => {
+    console.log('إلغاء الاشتراك في الإشعارات');
     clearInterval(intervalId);
   };
 };

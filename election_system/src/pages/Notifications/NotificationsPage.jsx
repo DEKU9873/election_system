@@ -3,7 +3,11 @@ import Sidebar from "../../Components/Uitily/Sidebar";
 import { Bell, Check, Trash2 } from "lucide-react";
 import { useNotifications } from "../../Components/Notifications/NotificationProvider";
 import NotificationIcon from "../../Components/Notifications/NotificationIcon";
-import { notificationListStyles, notificationElementStyles, notificationPageStyles } from "../../Components/Notifications/NotificationStyles";
+import {
+  notificationListStyles,
+  notificationElementStyles,
+  notificationPageStyles,
+} from "../../Components/Notifications/NotificationStyles";
 
 const NotificationsPage = () => {
   const {
@@ -12,37 +16,9 @@ const NotificationsPage = () => {
     markAsRead,
     markAllAsRead,
     deleteNotification,
-    createNotification
+    createNotification,
   } = useNotifications();
 
-  // إضافة بعض الإشعارات الوهمية للعرض إذا لم تكن هناك إشعارات
-  useEffect(() => {
-    // هذا الكود للعرض فقط، في التطبيق الحقيقي ستأتي البيانات من الخادم
-    if (notifications.length === 0) {
-      // إضافة بعض الإشعارات الوهمية للعرض
-      createNotification({
-        title: "تم تسجيل ناخب جديد",
-        message: "تم تسجيل ناخب جديد في المركز الانتخابي الموصل - حي الزهراء",
-        time: "منذ 5 دقائق",
-        type: "voter",
-      });
-      createNotification({
-        title: "تحديث في بيانات المركز",
-        message: "تم تحديث بيانات المركز الانتخابي في محافظة بغداد",
-        time: "منذ 30 دقيقة",
-        type: "center",
-      });
-      createNotification({
-        title: "تقرير جديد",
-        message: "تم إضافة تقرير جديد عن سير العملية الانتخابية",
-        time: "منذ 2 ساعة",
-        type: "report",
-        read: true,
-      });
-    }
-  }, [notifications.length, createNotification]);
-
-  // تم استبدال دالة getNotificationIcon بمكون NotificationIcon
 
   return (
     <div className={notificationPageStyles.pageContainer}>
@@ -73,20 +49,42 @@ const NotificationsPage = () => {
               <ul className={notificationListStyles.list}>
                 {notifications.map((notification) => (
                   <li
-                    key={notification.id}
-                    className={`${notificationListStyles.listItem} ${!notification.read ? notificationListStyles.unreadItem : ""}`}
+                    key={notification.notification_id}
+                    className={`${notificationListStyles.listItem} ${
+                      !notification.isRead
+                        ? notificationListStyles.unreadItem
+                        : ""
+                    }`}
                   >
                     <div className={notificationElementStyles.container}>
                       <div className={notificationElementStyles.iconContainer}>
-                        <NotificationIcon type={notification.type || 'info'} size={18} />
+                        <NotificationIcon
+                          type={notification.type || "info"}
+                          size={18}
+                        />
                       </div>
-                      <div className={notificationElementStyles.contentContainer}>
+                      <div
+                        className={notificationElementStyles.contentContainer}
+                      >
                         <div className={notificationElementStyles.header}>
-                          <p className={`${notificationElementStyles.title.base} ${!notification.read ? notificationElementStyles.title.unread : notificationElementStyles.title.read}`}>
-                            {notification.title}
+                          <p
+                            className={`${
+                              notificationElementStyles.title.base
+                            } ${
+                              !notification.isRead
+                                ? notificationElementStyles.title.unread
+                                : notificationElementStyles.title.read
+                            }`}
+                          >
+                            {notification.title || notification.name}
                           </p>
-                          <p className={notificationElementStyles.time}>
-                            {notification.time}
+                          <p className={notificationElementStyles.createdAt}>
+                            {notification.createdAt ||
+                              (notification.createdAt
+                                ? new Date(
+                                    notification.createdAt
+                                  ).toLocaleString("ar-SA")
+                                : "الآن")}
                           </p>
                         </div>
                         <p className={notificationElementStyles.message}>
@@ -94,21 +92,27 @@ const NotificationsPage = () => {
                         </p>
                       </div>
                       <div className={notificationElementStyles.actionButtons}>
-                        {!notification.read && (
+                        {!notification.isRead && (
                           <button
-                            onClick={() => markAsRead(notification.id)}
+                            onClick={() => markAsRead(notification.notification_id)}
                             className={notificationElementStyles.iconButton}
                             title="تحديد كمقروء"
                           >
-                            <Check size={16} className={notificationElementStyles.checkIcon} />
+                            <Check
+                              size={16}
+                              className={notificationElementStyles.checkIcon}
+                            />
                           </button>
                         )}
                         <button
-                          onClick={() => deleteNotification(notification.id)}
+                          onClick={() => deleteNotification(notification.notification_id)}
                           className={notificationElementStyles.iconButton}
                           title="حذف الإشعار"
                         >
-                          <Trash2 size={16} className={notificationElementStyles.trashIcon} />
+                          <Trash2
+                            size={16}
+                            className={notificationElementStyles.trashIcon}
+                          />
                         </button>
                       </div>
                     </div>
