@@ -104,13 +104,13 @@ export const subscribeToNotifications = (callback) => {
   // استطلاع فوري عند بدء الاشتراك
   const fetchImmediately = async () => {
     try {
-      console.log('بدء الاشتراك في الإشعارات - استطلاع فوري');
+      // console.log('بدء الاشتراك في الإشعارات - استطلاع فوري');
       const notifications = await fetchNotifications();
       lastFetchTime = Date.now();
       isFirstFetch = false;
       callback(notifications);
     } catch (error) {
-      console.error('خطأ في استطلاع الإشعارات الفوري:', error);
+      // console.error('خطأ في استطلاع الإشعارات الفوري:', error);
     }
   };
   
@@ -126,22 +126,22 @@ export const subscribeToNotifications = (callback) => {
       
       // إذا كان الوقت منذ آخر استطلاع أقل من 2 ثانية، تخطي هذا الاستطلاع
       if (!isFirstFetch && timeSinceLastFetch < 2000) {
-        console.log('تخطي استطلاع الإشعارات - تم الاستطلاع مؤخرًا');
+        // console.log('تخطي استطلاع الإشعارات - تم الاستطلاع مؤخرًا');
         return;
       }
       
-      console.log('استطلاع دوري للإشعارات');
+      // console.log('استطلاع دوري للإشعارات');
       const notifications = await fetchNotifications();
       lastFetchTime = now;
       callback(notifications);
     } catch (error) {
-      console.error('خطأ في استطلاع الإشعارات الدوري:', error);
+      // console.error('خطأ في استطلاع الإشعارات الدوري:', error);
     }
   }, 5000); // استطلاع كل 5 ثوانٍ بدلاً من 10 ثوانٍ
 
   // إرجاع دالة لإلغاء الاشتراك
   return () => {
-    console.log('إلغاء الاشتراك في الإشعارات');
+    // console.log('إلغاء الاشتراك في الإشعارات');
     clearInterval(intervalId);
   };
 };

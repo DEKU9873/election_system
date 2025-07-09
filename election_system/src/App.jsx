@@ -22,6 +22,7 @@ import DashboardPage from "./pages/Dashboard/DashboardPage";
 import PrivateRoute from "./Components/PrivateRoute";
 import MainLayout from "./Components/Layout/MainLayout";
 import ExpensePage from "./pages/finance/ExpensePage";
+import FinanceCapitalsPage from "./pages/finance/FinanceCapitalsPage";
 
 const App = () => {
   return (
@@ -56,6 +57,7 @@ const App = () => {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/" element={<DashboardPage />} />
             <Route path="/expense" element={<ExpensePage />} />
+            <Route path="/financeCapitals" element={<FinanceCapitalsPage />} />
           </Route>
         </Route>
       </Routes>

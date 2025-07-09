@@ -40,6 +40,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
 
+
   React.useEffect(() => {
     const currentPath = location.pathname;
     const currentItem = menuItems.find((item) => item.href === currentPath);
@@ -136,6 +137,12 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       label: "الحسابات",
       icon: DollarSign,
       submenu: [
+        {
+          id: "FinanceCapitals",
+          label: "رؤوس الاموال",
+          href: "/financeCapitals",
+          icon: PieChart,
+        },
         {
           id: "Expenses",
           label: "المصروفات",

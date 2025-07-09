@@ -711,3 +711,41 @@ export const ExpenseHeader = [
     icon: null,
   },
 ];
+export const FinanceCapitalsHeader = [
+  {
+    id: "select",
+    label: "",
+    sortable: false,
+    icon: null,
+  },
+  {
+    id: "id",
+    label: "ت",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "title",
+    label: "العنوان",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "amount",
+    label: "الكمية",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "description",
+    label: "الوصف",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "actions",
+    label: "الإجراءات",
+    sortable: false,
+    icon: null,
+  },
+];
