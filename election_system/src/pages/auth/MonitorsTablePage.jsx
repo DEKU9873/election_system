@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Sidebar from "../../Components/Uitily/Sidebar";
 import UserTableTitle from "../../Components/auth/UserTableTitle";
 import UserTableToolbar from "../../Components/auth/UserTableToolbar";
@@ -14,6 +14,7 @@ import { deleteUser, getAllUsers } from "../../redux/authSlice";
 import RegisterModal from "./Auth Modal/RegisterModal";
 import DeleteModal from "../../Components/Uitily/DeleteModal";
 import Loader from "../../Components/Uitily/Loader";
+import UsersMap from "../../Components/auth/UsersMap";
 const MonitorsTablePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -48,8 +49,25 @@ const MonitorsTablePage = () => {
   });
   const [showColumnMenu, setShowColumnMenu] = useState(false);
   const [showActionMenu, setShowActionMenu] = useState(null);
+  const [mapCenter, setMapCenter] = useState([24.7136, 46.6753]);
+  const [mapZoom, setMapZoom] = useState(5);
+  const [showMap, setShowMap] = useState(false);
 
   const itemsPerPage = 6;
+
+  // تحديث مركز الخريطة عند تحديد صف
+  useEffect(() => {
+    if (selectedRows.size === 1) {
+      const selectedUser = observer.find((user) => selectedRows.has(user.id));
+      if (selectedUser && selectedUser.location) {
+        setMapCenter(selectedUser.location);
+        setMapZoom(8);
+      }
+    } else {
+      setMapCenter([24.7136, 46.6753]);
+      setMapZoom(5);
+    }
+  }, [selectedRows, observer]);
 
   // تصفية البيانات
   const filteredData = useMemo(() => {
@@ -159,7 +177,26 @@ const MonitorsTablePage = () => {
       {/* <Sidebar /> */}
       <div className="w-full max-w-[1440px] mx-auto p-3 sm:p-6 bg-white min-h-screen" dir="rtl">
         <div className="mb-6">
-          <UserTableTitle title="المشرفين" subtitle="قائمة المشرفين" />
+          <UserTableTitle title="المشرفين" subtitle="قائمة المشرفين" />
+
+          {/* خريطة المشرفين */}
+          <div className="mb-4">
+            <button
+              onClick={() => setShowMap(!showMap)}
+              className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 focus:ring-2 focus:ring-gray-300 mb-2"
+            >
+              {showMap ? "إخفاء الخريطة" : "إظهار الخريطة"}
+            </button>
+            {showMap && (
+              <UsersMap
+                data={observer}
+                selectedRows={selectedRows}
+                handleSelectRow={handleSelectRow}
+                mapCenter={mapCenter}
+                mapZoom={mapZoom}
+              />
+            )}
+          </div>
 
           <UserTableToolbar
             title="اضافة مشرف"
