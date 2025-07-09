@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import notify from "../useNotification";
 import { addGovernate, getGovernates } from "../../redux/placeSlice";
 
-const AddDistrictsHook = () => {
+const AddGovernorateHook = (onClose) => {
   const dispatch = useDispatch();
 
   const [governorate, setGovernorate] = useState("");
@@ -41,6 +41,9 @@ const AddDistrictsHook = () => {
         notify("تمت إضافة المحافظة بنجاح", "success");
         setGovernorate("");
         setCode("");
+        
+        // إغلاق المودال بعد الإضافة الناجحة
+        if (onClose) onClose();
       } else {
         notify(res.payload?.message || "حدث خطأ أثناء الإضافة", "error");
       }
@@ -62,4 +65,4 @@ const AddDistrictsHook = () => {
   ];
 };
 
-export default AddDistrictsHook;
+export default AddGovernorateHook;

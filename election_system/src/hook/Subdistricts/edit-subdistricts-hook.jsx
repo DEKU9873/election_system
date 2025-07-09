@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import notify from "../useNotification";
 import { updateSubdistrict, getSubdistricts } from "../../redux/placeSlice";
 
-const EditSubdistrictsHook = (subdistrictData) => {
+const EditSubdistrictsHook = (subdistrictData, onClose) => {
   const dispatch = useDispatch();
 
   const [subdistrict, setSubdistrict] = useState("");
@@ -58,6 +58,9 @@ const EditSubdistrictsHook = (subdistrictData) => {
       if (res.type === "place/updateSubdistrict/fulfilled") {
         await dispatch(getSubdistricts());
         notify("تم تعديل الناحية بنجاح", "success");
+        
+        // إغلاق المودال بعد التعديل الناجح
+        if (onClose) onClose();
       } else {
         notify(res.payload?.message || "حدث خطأ أثناء التعديل", "error");
       }

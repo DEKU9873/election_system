@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import notify from "../useNotification";
 import { updateElectionCenter, getElectionCenters } from "../../redux/placeSlice";
 
-const EditCenterHook = (centerData) => {
+const EditCenterHook = (centerData, onClose) => {
   const dispatch = useDispatch();
 
   const [center, setCenter] = useState("");
@@ -61,6 +61,9 @@ const EditCenterHook = (centerData) => {
       if (res.type === "place/updateElectionCenter/fulfilled") {
         await dispatch(getElectionCenters());
         notify("تم تعديل المركز الانتخابي بنجاح", "success");
+        
+        // إغلاق المودال بعد التعديل الناجح
+        if (onClose) onClose();
       } else {
         notify(res.payload?.message || "حدث خطأ أثناء التعديل", "error");
       }

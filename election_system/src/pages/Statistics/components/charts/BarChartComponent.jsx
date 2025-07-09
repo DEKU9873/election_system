@@ -61,6 +61,8 @@ const BarChartComponent = ({
     scales: {
       y: {
         beginAtZero: true,
+        // إضافة حد أقصى للمحور العمودي لمنع الأشرطة من الخروج من المربع
+        suggestedMax: Math.max(...data.map(item => item[valueKey])) * 1.1, // إضافة هامش 10%
         ticks: {
           callback: function (value) {
             return (
@@ -74,9 +76,24 @@ const BarChartComponent = ({
           font: {
             size: 11,
           },
+          // تحسين عرض التسميات عندما تكون طويلة
+          maxRotation: 45,
+          minRotation: 45,
         },
       },
     },
+    // إضافة خيارات لتحسين العرض والتأكد من عدم خروج الأشرطة من المربع
+    layout: {
+      padding: {
+        top: 10,
+        right: 10,
+        bottom: 10,
+        left: 10
+      }
+    },
+    // تحديد الحد الأقصى للارتفاع
+    barPercentage: 0.8,
+    categoryPercentage: 0.8,
   };
 
   return (

@@ -10,7 +10,7 @@ const OverviewTab = ({ data }) => {
   return (
     <>
       {/* البطاقات الإحصائية */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
         <StatCard
           title="إجمالي الميزانية"
           value={`${financialData.totalBudget.toLocaleString()} د.ع`}
@@ -31,12 +31,6 @@ const OverviewTab = ({ data }) => {
           icon={TrendingUp}
           trend={3.1}
           color="bg-green-500"
-        />
-        <StatCard
-          title="متوسط تكلفة الناخب"
-          value="1,250 د.ع"
-          icon={Users}
-          color="bg-purple-500"
         />
       </div>
 

@@ -1,7 +1,6 @@
 import React from "react";
 import { Toaster } from "react-hot-toast";
 import { MapPin, Hash, LogIn, X } from "lucide-react";
-import AddExpenseHook from "../../../hook/finance/add-expense-hook";
 import AddFinanceCapitalsHook from "../../../hook/finance/add-finance-capitals-hook";
 
 const AddFinanceCapitalsModal = ({ onClose }) => {
@@ -15,7 +14,7 @@ const AddFinanceCapitalsModal = ({ onClose }) => {
     onChangeDescription,
     onChangeAmount,
     onSubmit,
-  ] = AddFinanceCapitalsHook();
+  ] = AddFinanceCapitalsHook(onClose);
   return (
     <div
       className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 min-h-screen flex items-center justify-center p-2 sm:p-4"

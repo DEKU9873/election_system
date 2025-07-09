@@ -1,19 +1,20 @@
 import React from "react";
 import { Toaster } from "react-hot-toast";
-import EditGovernorateHook from "../../../hook/Governate/edit-governorate-hook";
-import { MapPin, Hash, Save, X } from "lucide-react";
+import { MapPin, Hash, LogIn, X } from "lucide-react";
+import EditFinanceCapitalsHook from "../../../hook/finance/edit-finance-capitals-hook";
 
-const EditGovernorateModal = ({ onClose, governate }) => {
+const EditFinanceCapitalsModal = ({ onClose, financeCapital }) => {
   const [
-    governorate,
-    code,
+    title,
+    description,
+    amount,
     loading,
-    editClicked,
-    onChangeGovernorate,
-    onChangeCode,
+    loginClicked,
+    onChangeTitle,
+    onChangeDescription,
+    onChangeAmount,
     onSubmit,
-  ] = EditGovernorateHook(governate, onClose);
-
+  ] = EditFinanceCapitalsHook(financeCapital, onClose);
   return (
     <div
       className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 min-h-screen flex items-center justify-center p-2 sm:p-4"
@@ -31,24 +32,24 @@ const EditGovernorateModal = ({ onClose, governate }) => {
           <X size={24} />
         </button>
         <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">
-          تعديل المحافظة
+          تعديل رأس المال
         </h1>
         <div dir="rtl" className="w-full grid grid-cols-1 gap-4 sm:gap-6">
           <div>
             <label
-              htmlFor="governorate"
+              htmlFor="title"
               className="block text-gray-700 font-medium mb-2 text-right"
             >
-              اسم المحافظة
+              العنوان
             </label>
             <div className="relative">
               <input
                 type="text"
-                id="governorate"
-                placeholder="اسم المحافظة"
+                id="title"
+                placeholder="العنوان"
                 className="w-full pr-10 py-2 text-sm sm:text-base border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
-                value={governorate}
-                onChange={onChangeGovernorate}
+                value={title}
+                onChange={onChangeTitle}
               />
               <MapPin
                 className="absolute left-4 top-1/2 transform -translate-y-1/2 text-indigo-600"
@@ -59,19 +60,42 @@ const EditGovernorateModal = ({ onClose, governate }) => {
 
           <div>
             <label
-              htmlFor="code"
+              htmlFor="description"
               className="block text-gray-700 font-medium mb-2 text-right"
             >
-              رمز المحافظة
+              الوصف
             </label>
             <div className="relative">
               <input
                 type="text"
-                id="code"
-                placeholder="رمز المحافظة"
+                id="description"
+                placeholder="الوصف"
                 className="w-full pr-10 py-2 text-sm sm:text-base border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
-                value={code}
-                onChange={onChangeCode}
+                value={description}
+                onChange={onChangeDescription}
+              />
+              <Hash
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-indigo-600"
+                size={20}
+              />
+            </div>
+          </div>
+
+          <div>
+            <label
+              htmlFor="amount"
+              className="block text-gray-700 font-medium mb-2 text-right"
+            >
+              المبلغ
+            </label>
+            <div className="relative">
+              <input
+                type="number"
+                id="amount"
+                placeholder="المبلغ"
+                className="w-full pr-10 py-2 text-sm sm:text-base border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
+                value={amount}
+                onChange={onChangeAmount}
               />
               <Hash
                 className="absolute left-4 top-1/2 transform -translate-y-1/2 text-indigo-600"
@@ -81,6 +105,7 @@ const EditGovernorateModal = ({ onClose, governate }) => {
           </div>
         </div>
 
+        {/* Submit Button */}
         <button
           type="submit"
           onClick={onSubmit}
@@ -94,8 +119,8 @@ const EditGovernorateModal = ({ onClose, governate }) => {
             </>
           ) : (
             <>
-              حفظ التعديلات
-              <Save size={18} className="ml-1 inline" />
+              تعديل
+              <LogIn size={18} className="ml-1 inline" />
             </>
           )}
         </button>
@@ -111,4 +136,4 @@ const EditGovernorateModal = ({ onClose, governate }) => {
   );
 };
 
-export default EditGovernorateModal;
+export default EditFinanceCapitalsModal;

@@ -12,7 +12,7 @@ const AddGovernorateModal = ({ onClose }) => {
     onChangeGovernorate,
     onChangeCode,
     onSubmit,
-  ] = AddGovernorateHook();
+  ] = AddGovernorateHook(onClose);
   return (
     <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 min-h-screen flex items-center justify-center p-2 sm:p-4" onClick={onClose}>
       <div className="absolute inset-0" />

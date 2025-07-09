@@ -14,7 +14,7 @@ const EditDistrictsModal = ({ onClose, districtData }) => {
     onChangeDistrict,
     onChangeGovernorateId,
     onSubmit,
-  ] = EditDistrictsHook(districtData);
+  ] = EditDistrictsHook(districtData, onClose);
 
   const [governates, isLoading] = GetAllGovernorate();
 

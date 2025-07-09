@@ -15,13 +15,17 @@ import { useNavigate } from "react-router-dom";
 import { deleteTape } from "../../redux/electoralStripsSlice";
 import { useDispatch } from "react-redux";
 import AddElectoralStripsModal from "./Electoral Strips Modal/AddElectoralStripsModal";
+import EditElectoralStripsModal from "./Electoral Strips Modal/EditElectoralStripsModal";
+
 const ElectoralStrips = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // const { electoralStripsData } = useUserData();
   const [tapes, isLoading] = GetAllTapesHook();
- const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedTape, setSelectedTape] = useState(null);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -108,8 +112,13 @@ const ElectoralStrips = () => {
   };
 
   // إجراءات المستخدمين
-  const handleUserAction = (action, user) => {
+  const handleUserAction = (action, tape) => {
     setShowActionMenu(null);
+    
+    if (action === "edit") {
+      setSelectedTape(tape);
+      setShowEditModal(true);
+    }
   };
 
   const handleDeleteConfirm = async (id) => {
@@ -310,7 +319,8 @@ const ElectoralStrips = () => {
           />
         )}
       </div>
-           {showModal && <AddElectoralStripsModal onClose= {handleCloseModal} />}
+           {showModal && <AddElectoralStripsModal onClose={handleCloseModal} />}
+           {showEditModal && <EditElectoralStripsModal onClose={() => setShowEditModal(false)} tapeData={selectedTape} />}
 
     </div>
   );

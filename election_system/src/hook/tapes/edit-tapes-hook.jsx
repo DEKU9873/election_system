@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import notify from "../useNotification";
-import { addTape } from "../../redux/electoralStripsSlice";
+import { updateTape, getAllTapes } from "../../redux/electoralStripsSlice";
 
-const AddTapesHook = (onClose) => {
+const EditTapesHook = (tapeData, onClose) => {
   const dispatch = useDispatch();
 
   const [electionCenterId, setElectionCenterId] = useState("");
@@ -12,9 +12,22 @@ const AddTapesHook = (onClose) => {
   const [tape_image, setTapeImage] = useState(null);
   const [notes, setNotes] = useState("");
   const [status, setStatus] = useState("");
-
+  const [tapeId, setTapeId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [submitClicked, setSubmitClicked] = useState(false);
+  const [currentImageUrl, setCurrentImageUrl] = useState("");
+
+  useEffect(() => {
+    if (tapeData) {
+      setElectionCenterId(tapeData.ElectionCenter?.id || "");
+      setStationId(tapeData.Station?.id || "");
+      setDate(tapeData.date || "");
+      setNotes(tapeData.notes || "");
+      setStatus(tapeData.status || "");
+      setTapeId(tapeData.id || null);
+      setCurrentImageUrl(tapeData.tape_imageurl || "");
+    }
+  }, [tapeData]);
 
   const onChangeElectionCenterId = (e) => {
     setElectionCenterId(Number(e.target.value));
@@ -29,7 +42,12 @@ const AddTapesHook = (onClose) => {
   };
 
   const onChangeTapeImage = (e) => {
-    setTapeImage(e.target.files[0]);
+    if (e.target.files && e.target.files[0]) {
+      setTapeImage(e.target.files[0]);
+    } else {
+      // إذا تم مسح الصورة، نحتفظ بالصورة القديمة
+      setTapeImage(null);
+    }
   };
 
   const onChangeNotes = (e) => {
@@ -49,11 +67,10 @@ const AddTapesHook = (onClose) => {
       !electionCenterId ||
       !stationId ||
       !date ||
-      !tape_image ||
       !notes ||
       !status
     ) {
-      notify("يرجى إدخال جميع الحقول", "warning");
+      notify("يرجى إدخال جميع الحقول المطلوبة", "warning");
       setLoading(false);
       return;
     }
@@ -62,31 +79,28 @@ const AddTapesHook = (onClose) => {
     formData.append("election_center_id", electionCenterId);
     formData.append("station_id", stationId);
     formData.append("date", date);
-    formData.append("tape_image", tape_image);
     formData.append("notes", notes);
     formData.append("status", status);
 
-    try {
-      const res = await dispatch(addTape(formData));
+    // إضافة الصورة فقط إذا تم تحديد صورة جديدة
+    if (tape_image) {
+      formData.append("tape_image", tape_image);
+    }
 
-      if (res.type === "tape/add/fulfilled") {
-        notify("تمت إضافة الشريط بنجاح", "success");
-        setElectionCenterId("");
-        setStationId("");
-        setDate("");
-        setTapeImage(null);
-        setNotes("");
-        setStatus("");
-        
-        // إغلاق النافذة المنبثقة عند نجاح الإرسال
-        if (typeof onClose === 'function') {
-          onClose();
-        }
+    try {
+      const res = await dispatch(updateTape({ id: tapeId, data: formData }));
+
+      if (res.type === "tape/update/fulfilled") {
+        notify("تم تعديل الشريط بنجاح", "success");
+        // تحديث قائمة الأشرطة
+        dispatch(getAllTapes());
+        // إغلاق النافذة المنبثقة
+        if (onClose) onClose();
       } else {
-        notify(res.payload?.message || "حدث خطأ أثناء الإضافة", "error");
+        notify(res.payload?.message || "حدث خطأ أثناء التعديل", "error");
       }
     } catch (err) {
-      notify("فشل الإضافة", "error");
+      notify("فشل التعديل", "error");
     }
 
     setLoading(false);
@@ -101,6 +115,7 @@ const AddTapesHook = (onClose) => {
     status,
     loading,
     submitClicked,
+    currentImageUrl,
     onChangeElectionCenterId,
     onChangeStationId,
     onChangeDate,
@@ -111,4 +126,4 @@ const AddTapesHook = (onClose) => {
   ];
 };
 
-export default AddTapesHook;
+export default EditTapesHook;

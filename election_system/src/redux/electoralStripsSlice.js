@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { useInsertData, useInsertDataWithImage } from "../hooks/useInsertData";
 import { useGetDataToken } from "../hooks/useGetData";
 import { useDeleteDataWithToken } from "../hooks/useDeleteData";
+import { useInUpdateDataWithImage } from "../hooks/useUpdateData";
 //  Add Tape
 export const addTape = createAsyncThunk(
   "tape/add",
@@ -48,6 +49,19 @@ export const deleteTape = createAsyncThunk(
     try {
       await useDeleteDataWithToken(`/api/tapes/${id}`);
       return id;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+//  Update Tape
+export const updateTape = createAsyncThunk(
+  "tape/update",
+  async ({ id, data }, thunkAPI) => {
+    try {
+      const res = await useInUpdateDataWithImage(`/api/tapes/${id}`, data);
+      return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -118,6 +132,24 @@ const tapeSlice = createSlice({
         state.tapes = state.tapes.filter((tape) => tape.id !== action.payload);
       })
       .addCase(deleteTape.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      
+      // Update
+      .addCase(updateTape.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateTape.fulfilled, (state, action) => {
+        state.loading = false;
+        const index = state.tapes.findIndex((tape) => tape.id === action.payload.data.id);
+        if (index !== -1) {
+          state.tapes[index] = action.payload.data;
+        }
+        state.currentTape = action.payload;
+      })
+      .addCase(updateTape.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import notify from "../useNotification";
 import { addExpense, addFinanceCapital, getExpenses, resetState } from "../../redux/financeSlice";
 
-const AddFinanceCapitalsHook = () => {
+const AddFinanceCapitalsHook = (onClose) => {
   const dispatch = useDispatch();
 
   const [title, setTitle] = useState("");
@@ -54,6 +54,11 @@ const AddFinanceCapitalsHook = () => {
         setTitle("");
         setDescription("");
         setAmount("");
+        
+        // إغلاق المودال بعد الإضافة الناجحة
+        if (typeof onClose === 'function') {
+          onClose();
+        }
       } else {
         // استخراج رسالة الخطأ من الاستجابة
         console.log("Error response:", res.payload); // للتشخيص

@@ -18,7 +18,7 @@ const AddStationModal = ({ onClose }) => {
     onChangeName,
     onChangeElectionCenterId,
     onSubmit,
-  ] = AddStationHook();
+  ] = AddStationHook(onClose);
 
   const [electionCenters, isLoading] = GetAllCenter();
 

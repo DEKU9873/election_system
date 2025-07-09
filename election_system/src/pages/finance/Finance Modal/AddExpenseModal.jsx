@@ -14,7 +14,7 @@ const AddExpenseModal = ({ onClose }) => {
     onChangeDescription,
     onChangeAmount,
     onSubmit,
-  ] = AddExpenseHook();
+  ] = AddExpenseHook(onClose);
   return (
     <div
       className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 min-h-screen flex items-center justify-center p-2 sm:p-4"

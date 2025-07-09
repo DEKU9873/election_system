@@ -12,9 +12,9 @@ import { useDispatch } from "react-redux";
 import DeleteModal from "../../Components/Uitily/DeleteModal";
 import Loader from "../../Components/Uitily/Loader";
 import GetAllExpenseHook from "../../hook/finance/get-all-expense-hook";
-import { deleteExpense, getExpenses, resetState } from "../../redux/financeSlice";
+import { deleteFinanceCapital, getFinanceCapitals, resetState } from "../../redux/financeSlice";
 import AddExpenseModal from "./Finance Modal/AddExpenseModal";
-import EditExpenseModal from "./Finance Modal/EditExpenseModal";
+import EditFinanceCapitalsModal from "./Finance Modal/EditFinanceCapitalsModal";
 import GetAllFinanceCapitalsHook from "../../hook/finance/get-all-finance-capitals-hook";
 import AddFinanceCapitalsModal from "./Finance Modal/AddFinanceCapitalsModal";
 const FinanceCapitalsPage = () => {
@@ -135,10 +135,10 @@ const FinanceCapitalsPage = () => {
         // إعادة تعيين حالة الخطأ والنجاح
         dispatch(resetState());
         
-        const res = await dispatch(deleteExpense(expenseIdDelete));
+        const res = await dispatch(deleteFinanceCapital(expenseIdDelete));
         
-        if (res.type === "finance/deleteExpense/fulfilled") {
-          await dispatch(getExpenses());
+        if (res.type === "finance/deleteFinanceCapital/fulfilled") {
+          await dispatch(getFinanceCapitals());
         } else {
           console.error("حدث خطأ أثناء الحذف:", res.payload);
         }
@@ -339,9 +339,9 @@ const FinanceCapitalsPage = () => {
       </div>
       {showModal && <AddFinanceCapitalsModal onClose={handleCloseModal} />}
       {showEditModal && (
-        <EditExpenseModal
+        <EditFinanceCapitalsModal
           onClose={handleCloseEditModal}
-          expense={selectedExpense}
+          financeCapital={selectedExpense}
         />
       )}
       <DeleteModal

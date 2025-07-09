@@ -1,7 +1,6 @@
 import React from "react";
 import { Toaster } from "react-hot-toast";
 import { MapPin, Hash, LogIn, X } from "lucide-react";
-import AddExpenseHook from "../../../hook/finance/add-expense-hook";
 import EditExpenseHook from "../../../hook/finance/edit-expese-hook";
 
 const EditExpenseModal = ({ onClose, expense }) => {
@@ -15,7 +14,7 @@ const EditExpenseModal = ({ onClose, expense }) => {
     onChangeDescription,
     onChangeAmount,
     onSubmit,
-  ] = EditExpenseHook(expense);
+  ] = EditExpenseHook(expense, onClose);
   return (
     <div
       className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 min-h-screen flex items-center justify-center p-2 sm:p-4"

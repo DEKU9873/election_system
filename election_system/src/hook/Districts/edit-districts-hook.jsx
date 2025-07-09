@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import notify from "../useNotification";
 import { updateDistrict, getDistricts } from "../../redux/placeSlice";
 
-const EditDistrictsHook = (districtData) => {
+const EditDistrictsHook = (districtData, onClose) => {
   const dispatch = useDispatch();
 
   const [district, setDistrict] = useState("");
@@ -51,6 +51,9 @@ const EditDistrictsHook = (districtData) => {
       if (res.type === "place/updateDistrict/fulfilled") {
         await dispatch(getDistricts());
         notify("تم تعديل القضاء بنجاح", "success");
+        
+        // إغلاق المودال بعد التعديل الناجح
+        if (onClose) onClose();
       } else {
         notify(res.payload?.message || "حدث خطأ أثناء التعديل", "error");
       }
@@ -61,8 +64,7 @@ const EditDistrictsHook = (districtData) => {
     setLoading(false);
   };
 
-  console.log("districtData", districtData);
-console.log("governorateId inside hook:", governorateId);
+  // تم إزالة عبارات console.log
 
   return [
     district,

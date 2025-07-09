@@ -358,7 +358,7 @@ export const updateStation = createAsyncThunk(
   "place/updateStation",
   async (stationData, thunkAPI) => {
     try {
-      const response = await useInsertDataWithToken(
+      const response = await useUpdateDataWithToken(
         `/api/station/${stationData.id}`,
         stationData,
         "PUT"

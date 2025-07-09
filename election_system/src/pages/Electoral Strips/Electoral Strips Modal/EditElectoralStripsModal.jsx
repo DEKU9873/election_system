@@ -1,4 +1,4 @@
-import React, { useState, forwardRef } from "react";
+import React, { useState, forwardRef, useEffect } from "react";
 import { Toaster } from "react-hot-toast";
 import {
   Lock,
@@ -11,6 +11,7 @@ import {
   Check,
   AlertCircle,
   Clock,
+  Save,
 } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -47,11 +48,11 @@ const scrollbarStyles = `
 `;
 
 import GetAllCenter from "../../../hook/Center/get-all-center";
-import AddTapesHook from "../../../hook/tapes/add-tapse-hooks";
+import EditTapesHook from "../../../hook/tapes/edit-tapes-hook";
 import GetAllStation from "../../../hook/Stations/get-all-station";
 import Select from "react-select";
 
-const AddElectoralStripsModal = ({ onClose }) => {
+const EditElectoralStripsModal = ({ onClose, tapeData }) => {
   const [
     electionCenterId,
     stationId,
@@ -61,6 +62,7 @@ const AddElectoralStripsModal = ({ onClose }) => {
     status,
     loading,
     submitClicked,
+    currentImageUrl,
     onChangeElectionCenterId,
     onChangeStationId,
     onChangeDate,
@@ -68,7 +70,7 @@ const AddElectoralStripsModal = ({ onClose }) => {
     onChangeNotes,
     onChangeStatus,
     onSubmit,
-  ] = AddTapesHook(onClose);
+  ] = EditTapesHook(tapeData, onClose);
 
   const [centers] = GetAllCenter();
   const [stations] = GetAllStation();
@@ -117,11 +119,41 @@ const AddElectoralStripsModal = ({ onClose }) => {
     onChangeDate({ target: { value: date ? date.toISOString().split('T')[0] : '' } });
   };
 
+  // تهيئة معاينة الصورة عند تحميل المكون
+  useEffect(() => {
+    if (currentImageUrl) {
+      const previewElement = document.getElementById('image-preview');
+      if (previewElement) {
+        previewElement.style.backgroundImage = `url(${currentImageUrl})`;
+        previewElement.classList.add('has-image');
+        document.getElementById('upload-text').style.display = 'none';
+        document.getElementById('change-text').style.display = 'block';
+        
+        // تخزين URL الصورة للعرض
+        window.imagePreviewUrl = currentImageUrl;
+        
+        // إظهار المعاينة الكبيرة
+        const largePreviewElement = document.getElementById('large-image-preview');
+        if (largePreviewElement) {
+          setTimeout(() => {
+            largePreviewElement.classList.remove('hidden');
+            largePreviewElement.classList.add('opacity-100');
+          }, 10);
+          
+          const imageContainer = largePreviewElement.querySelector('.h-24');
+          if (imageContainer) {
+            imageContainer.style.backgroundImage = `url(${currentImageUrl})`;
+          }
+          
+          // إضافة اسم الملف (استخدام اسم افتراضي لأننا لا نعرف اسم الملف الأصلي)
+          document.getElementById('file-name').textContent = "الصورة الحالية";
+        }
+      }
+    }
+  }, [currentImageUrl]);
+
   // أنماط مخصصة للتقويم
-
-
-
-const selectStyles = {
+  const selectStyles = {
     control: (base) => ({
       ...base,
       paddingRight: "10px",
@@ -167,7 +199,7 @@ const selectStyles = {
           <X size={20} />
         </button>
         <h1 className="text-xl font-bold text-gray-800 mb-4 text-center">
-          إضافة شريط انتخابي جديد
+          تعديل الشريط الانتخابي
         </h1>
         <div className="w-full grid grid-cols-2 gap-3">
           <div>
@@ -768,12 +800,12 @@ const selectStyles = {
             {loading ? (
               <>
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin ml-2 inline-block"></div>
-                جاري الإضافة...
+                جاري التعديل...
               </>
             ) : (
               <>
-                إضافة شريط انتخابي
-                <LogIn size={16} className="mr-1 inline" />
+                حفظ التعديلات
+                <Save size={16} className="mr-1 inline" />
               </>
             )}
           </button>
@@ -784,4 +816,4 @@ const selectStyles = {
   );
 };
 
-export default AddElectoralStripsModal;
+export default EditElectoralStripsModal;

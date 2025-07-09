@@ -2,7 +2,7 @@ import React from "react";
 import { Pie } from "react-chartjs-2";
 
 // مكون لعرض الرسم البياني الدائري
-const PieChartComponent = ({ data }) => {
+const PieChartComponent = ({ data, title = "توزيع المصروفات حسب الفئة" }) => {
   // تحويل البيانات إلى الصيغة المطلوبة لمكتبة Chart.js
   const chartData = {
     labels: data.map((item) => item.category),
@@ -43,7 +43,13 @@ const PieChartComponent = ({ data }) => {
             size: 12,
           },
           color: "rgba(54, 162, 235, 1)",
+          // تحسين عرض التسميات في وسيلة الإيضاح
+          boxWidth: 15,
+          padding: 10,
         },
+        // تحسين موضع وسيلة الإيضاح
+        align: "center",
+        fullSize: true,
       },
       tooltip: {
         callbacks: {
@@ -61,12 +67,23 @@ const PieChartComponent = ({ data }) => {
         },
       },
     },
+    // إضافة خيارات لتحسين العرض
+    layout: {
+      padding: {
+        top: 10,
+        right: 10,
+        bottom: 10,
+        left: 10
+      }
+    },
+    // تحسين حجم الرسم البياني
+    cutout: '40%',
   };
 
   return (
     <div className="bg-white rounded-lg p-6 shadow-md border border-gray-100 hover:border-blue-200 transition-all duration-300">
       <h3 className="text-lg font-bold text-gray-900 mb-4">
-        توزيع المصروفات حسب الفئة
+        {title}
       </h3>
       <div style={{ height: "300px" }}>
         <Pie data={chartData} options={options} />

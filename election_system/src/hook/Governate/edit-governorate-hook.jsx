@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import notify from "../useNotification";
 import { updateGovernate, getGovernates } from "../../redux/placeSlice";
 
-const EditGovernorateHook = (governate) => {
+const EditGovernorateHook = (governate, onClose) => {
   const dispatch = useDispatch();
 
   const [governorate, setGovernorate] = useState("");
@@ -49,6 +49,9 @@ const EditGovernorateHook = (governate) => {
         await dispatch(getGovernates());
 
         notify("تم تعديل المحافظة بنجاح", "success");
+        
+        // إغلاق المودال بعد التعديل الناجح
+        if (onClose) onClose();
       } else {
         notify(res.payload?.message || "حدث خطأ أثناء التعديل", "error");
       }

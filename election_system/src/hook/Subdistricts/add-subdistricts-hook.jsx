@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import notify from "../useNotification";
 import { addSubdistrict, getSubdistricts } from "../../redux/placeSlice";
 
-const AddSubDistrictsHook = () => {
+const AddSubDistrictsHook = (onClose) => {
   const dispatch = useDispatch();
 
   const [subdistrict, setSubdistrict] = useState("");
@@ -16,7 +16,7 @@ const AddSubDistrictsHook = () => {
     setSubdistrict(e.target.value);
   };
 
-  const onChangeDistrict = (e) => {
+  const onChangeDistrictId = (e) => {
     setDistrictID(Number(e.target.value));
   };
 
@@ -50,6 +50,9 @@ const AddSubDistrictsHook = () => {
         setSubdistrict("");
         setDistrictID("");
         setGovernorateId("");
+        
+        // إغلاق المودال بعد الإضافة الناجحة
+        if (onClose) onClose();
       } else {
         notify(res.payload?.message || "حدث خطأ أثناء الإضافة", "error");
       }
@@ -67,7 +70,7 @@ const AddSubDistrictsHook = () => {
     loading,
     submitClicked,
     onChangeSubdistrict,
-    onChangeDistrict,
+    onChangeDistrictId,
     onChangeGovernorateId,
     onSubmit,
   ];

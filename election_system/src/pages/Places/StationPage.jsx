@@ -15,6 +15,7 @@ import { deleteStation, deleteSubdistrict, getStations, getStationsByCenterId } 
 import GetStationByCenter from "../../hook/Stations/get-station-by-center";
 import { useParams } from "react-router-dom";
 import AddStationModal from "./Place Modal/AddStationModal";
+import EditStationModal from "./Place Modal/EditStationModal";
 import DeleteModal from "../../Components/Uitily/DeleteModal";
 const StationPage = () => {
   const dispatch = useDispatch();
@@ -23,8 +24,10 @@ const StationPage = () => {
   // const { subdistrictsData } = useUserData();
   const [stations, loading] = GetStationByCenter(id);
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [stationIdToDelete, setStationIdToDelete] = useState(null);
+  const [selectedStation, setSelectedStation] = useState(null);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -108,8 +111,13 @@ const StationPage = () => {
   };
 
   // إجراءات المستخدمين
-  const handleUserAction = (action, user) => {
+  const handleUserAction = (action, station) => {
     setShowActionMenu(null);
+    
+    if (action === "edit") {
+      setSelectedStation(station);
+      setShowEditModal(true);
+    }
   };
 
   const handleDeleteConfirm = (id) => {
@@ -138,6 +146,11 @@ const StationPage = () => {
   };
   const handleCloseModal = () => {
     setShowModal(false);
+  };
+  
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
+    setSelectedStation(null);
   };
 
   return (
@@ -315,6 +328,7 @@ const StationPage = () => {
         )}
       </div>
       {showModal && <AddStationModal onClose={handleCloseModal} />}
+      {showEditModal && <EditStationModal onClose={handleCloseEditModal} station={selectedStation} />}
 
       <DeleteModal
         isOpen={showDeleteModal}

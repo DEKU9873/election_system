@@ -1,44 +1,32 @@
 import React from "react";
 import { Toaster } from "react-hot-toast";
-import GetAllGovernorate from "../../../hook/Governate/get-all-governorate";
-import { Landmark, MapPin, Map, LogIn, X } from "lucide-react";
-import AddDistrictsHook from "../../../hook/Districts/add-districts-hook";
-import AddSubDistrictsHook from "../../../hook/Subdistricts/add-subdistricts-hook";
-import GetallDistricts from "../../../hook/Districts/get-all-districts";
-import Select from 'react-select';
+import { Hash, Building2, LogIn, X } from "lucide-react";
+import EditStationHook from "../../../hook/Stations/edit-station-hook";
+import GetAllCenter from "../../../hook/Center/get-all-center";
+import Select from "react-select";
 
-const AddSubdistrictsModal = ({ onClose }) => {
+const EditStationModal = ({ onClose, station }) => {
   const [
-    subdistrict,
-    districtID,
-    governorateId,
+    code,
+    name,
+    electionCenterId,
     loading,
     submitClicked,
-    onChangeSubdistrict,
-    onChangeDistrictId,
-    onChangeGovernorateId,
+    onChangeCode,
+    onChangeName,
+    onChangeElectionCenterId,
     onSubmit,
-  ] = AddSubDistrictsHook(onClose);
+  ] = EditStationHook(onClose, station);
 
-  const [governates, isLoading] = GetAllGovernorate();
-  const [districts] = GetallDistricts();
+  const [electionCenters, isLoading] = GetAllCenter();
 
-  const governorateOptions = governates?.map(governorate => ({
-    value: governorate.id,
-    label: governorate.name
+  const centerOptions = electionCenters?.map(center => ({
+    value: center.id,
+    label: center.name
   }));
 
-  const districtOptions = districts?.map(district => ({
-    value: district.id,
-    label: district.name
-  }));
-
-  const handleGovernorateChange = (selectedOption) => {
-    onChangeGovernorateId({ target: { value: selectedOption.value } });
-  };
-
-  const handleDistrictChange = (selectedOption) => {
-    onChangeDistrictId({ target: { value: selectedOption.value } });
+  const handleCenterChange = (selectedOption) => {
+    onChangeElectionCenterId({ target: { value: selectedOption.value } });
   };
 
   const selectStyles = {
@@ -84,25 +72,44 @@ const AddSubdistrictsModal = ({ onClose }) => {
 
         <button
           onClick={onClose}
-          className="absolute left-4 top-4 text-gray-500 hover:text-gray-700"
+          className="absolute left-4 top-4 text-gray-500 hover:text-gray-700 transition-colors"
         >
           <X size={24} />
         </button>
-        <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">إضافة ناحية جديدة</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">تعديل المحطة</h1>
         <div dir="rtl" className="w-full grid grid-cols-1 gap-4 sm:gap-6">
           <div>
             <label className="block text-gray-700 font-medium mb-2 text-right">
-              اسم الناحية
+              رمز المحطة
             </label>
             <div className="relative">
               <input
                 type="text"
+                placeholder="رمز المحطة"
                 className="w-full pr-10 py-2 text-sm sm:text-base border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
-                value={subdistrict}
-                onChange={onChangeSubdistrict}
+                value={code}
+                onChange={onChangeCode}
               />
-              <Landmark
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-600"
+              <Hash
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-indigo-600"
+                size={20}
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-gray-700 font-medium mb-2 text-right">
+              اسم المحطة
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="اسم المحطة"
+                className="w-full pr-10 py-2 text-sm sm:text-base border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
+                value={name}
+                onChange={onChangeName}
+              />
+              <Building2
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-indigo-600"
                 size={20}
               />
             </div>
@@ -110,41 +117,21 @@ const AddSubdistrictsModal = ({ onClose }) => {
 
           <div>
             <label className="block text-gray-700 font-medium mb-2 text-right">
-              المحافظة
+              المركز الانتخابي
             </label>
             <div className="relative">
               <Select
-                options={governorateOptions}
-                value={governorateOptions?.find(option => option.value === governorateId)}
-                onChange={handleGovernorateChange}
-                placeholder="اختر المحافظة"
+                options={centerOptions}
+                value={centerOptions?.find(option => option.value === electionCenterId)}
+                onChange={handleCenterChange}
+                placeholder="اختر المركز"
                 isSearchable={true}
                 className="text-right"
                 styles={selectStyles}
+                isLoading={isLoading}
               />
-              <MapPin
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-600"
-                size={20}
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-gray-700 font-medium mb-2 text-right">
-              القضاء
-            </label>
-            <div className="relative">
-              <Select
-                options={districtOptions}
-                value={districtOptions?.find(option => option.value === districtID)}
-                onChange={handleDistrictChange}
-                placeholder="اختر القضاء"
-                isSearchable={true}
-                className="text-right"
-                styles={selectStyles}
-              />
-              <Map
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-600"
+              <Building2
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-indigo-600"
                 size={20}
               />
             </div>
@@ -159,11 +146,11 @@ const AddSubdistrictsModal = ({ onClose }) => {
             {loading ? (
               <>
                 <div className="w-5 h-5 border-3 border-white border-t-transparent rounded-full animate-spin mr-2 inline-block"></div>
-                جاري الإضافة...
+                جاري التحديث...
               </>
             ) : (
               <>
-                إضافة
+                تحديث
                 <LogIn size={18} className="ml-1 inline" />
               </>
             )}
@@ -180,4 +167,4 @@ const AddSubdistrictsModal = ({ onClose }) => {
   );
 };
 
-export default AddSubdistrictsModal;
+export default EditStationModal;

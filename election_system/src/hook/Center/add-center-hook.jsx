@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import notify from "../useNotification";
 import { addElectionCenter, getElectionCenters } from "../../redux/placeSlice"; // تأكد من أن الأكشن موجود هنا
 
-const AddCenterHook = () => {
+const AddCenterHook = (onClose) => {
   const dispatch = useDispatch();
 
   const [center, setCenter] = useState("");
@@ -53,6 +53,9 @@ const AddCenterHook = () => {
         setGovernorateId("");
         setDistrictId("");
         setSubdistrictId("");
+        
+        // إغلاق المودال بعد الإضافة الناجحة
+        if (onClose) onClose();
       } else {
         notify(res.payload?.message || "حدث خطأ أثناء الإضافة", "error");
       }

@@ -22,7 +22,7 @@ const EditCenterModal = ({ onClose, centerData }) => {
     onChangeDistrictId,
     onChangeSubdistrictId,
     onSubmit,
-  ] = EditCenterHook(centerData);
+  ] = EditCenterHook(centerData, onClose);
 
   const [governates, isLoading] = GetAllGovernorate();
   const [districts] = GetallDistricts();

@@ -1,26 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import notify from "../useNotification";
-import { getExpenses, updateExpense, resetState } from "../../redux/financeSlice";
+import { getFinanceCapitals, updateFinanceCapital, resetState } from "../../redux/financeSlice";
 
-const EditExpenseHook = (expense, onClose) => {
+const EditFinanceCapitalsHook = (financeCapital, onClose) => {
   const dispatch = useDispatch();
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
-  const [expenseId, setExpenseId] = useState(null);
+  const [financeCapitalId, setFinanceCapitalId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [loginClicked, setLoginClicked] = useState(false);
 
     useEffect(() => {
-      if (expense) {
-        setTitle(expense.title || "");
-        setDescription(expense.description || "");
-        setAmount(expense.amount || "");
-        setExpenseId(expense.id);
+      if (financeCapital) {
+        setTitle(financeCapital.title || "");
+        setDescription(financeCapital.description || "");
+        setAmount(financeCapital.amount || "");
+        setFinanceCapitalId(financeCapital.id);
       }
-    }, [expense]);
+    }, [financeCapital]);
 
   const onChangeTitle = (e) => {
     setTitle(e.target.value);
@@ -49,19 +49,19 @@ const EditExpenseHook = (expense, onClose) => {
     }
 
     try {
-      const expenseData = {
-        id: expenseId,
+      const financeCapitalData = {
+        id: financeCapitalId,
         title: title,
         description: description,
         amount: amount
       };
       
-      const res = await dispatch(updateExpense(expenseData));
+      const res = await dispatch(updateFinanceCapital(financeCapitalData));
 
-      if (res.type === "finance/updateExpense/fulfilled") {
-        await dispatch(getExpenses());
+      if (res.type === "finance/updateFinanceCapital/fulfilled") {
+        await dispatch(getFinanceCapitals());
 
-        notify("تمت تعديل الوصل بنجاح", "success");
+        notify("تم تعديل رأس المال بنجاح", "success");
         setTitle("");
         setDescription("");
         
@@ -92,4 +92,4 @@ const EditExpenseHook = (expense, onClose) => {
   ];
 };
 
-export default EditExpenseHook;
+export default EditFinanceCapitalsHook;
