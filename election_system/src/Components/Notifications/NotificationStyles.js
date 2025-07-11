@@ -116,7 +116,7 @@ export const notificationBadgeStyles = {
 // أنماط زر إضافة إشعار تجريبي
 export const notificationButtonStyles = {
   container: 'fixed bottom-4 left-4 z-50',
-  button: 'bg-blue-600 hover:bg-blue-700 text-white rounded-full p-3 shadow-lg transition-colors duration-200',
+  button: 'bg-sky-700 hover:bg-sky-800 text-white rounded-full p-3 shadow-lg transition-colors duration-200',
   icon: 'h-6 w-6',
 };
 

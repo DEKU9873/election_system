@@ -15,6 +15,8 @@ import AddSubdistrictsModal from "./Place Modal/AddSubdistrictsModal";
 import EditSubdistrictsModal from "./Place Modal/EditSubdistrictsModal";
 import DeleteModal from "../../Components/Uitily/DeleteModal";
 import Loader from "../../Components/Uitily/Loader";
+import { Toaster } from 'react-hot-toast';
+
 const SubdistrictPage = () => {
   const dispatch = useDispatch();
 
@@ -27,7 +29,6 @@ const SubdistrictPage = () => {
   const [selectedSubdistrict, setSelectedSubdistrict] = useState(null);
 
   console.log(subdistricts);
-
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -147,19 +148,22 @@ const SubdistrictPage = () => {
   const handleOpenModal = () => {
     setShowModal(true);
   };
-  const handleCloseModal = () =>{
+  const handleCloseModal = () => {
     setShowModal(false);
   };
-  
+
   const handleCloseEditModal = () => {
     setShowEditModal(false);
     setSelectedSubdistrict(null);
-  }
+  };
 
   return (
     <div>
       {/* <Sidebar /> */}
-      <div className="w-full max-w-[1440px] mx-auto p-3 sm:p-4 md:p-6 bg-white min-h-screen" dir="rtl">
+      <div
+        className="w-full max-w-[1440px] mx-auto p-3 sm:p-4 md:p-6 bg-white min-h-screen"
+        dir="rtl"
+      >
         <div className="mb-3 sm:mb-4 md:mb-6">
           <UserTableTitle title="النواحي" subtitle="قائمة النواحي" />
 
@@ -172,10 +176,9 @@ const SubdistrictPage = () => {
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
             onOpen={handleOpenModal}
-           
           />
 
-          <UserTableStats data={subdistricts} title = "اجمالي النواحي" />
+          <UserTableStats data={subdistricts} title="اجمالي النواحي" />
         </div>
 
         {/* الجدول */}
@@ -200,119 +203,123 @@ const SubdistrictPage = () => {
               </tr>
             ) : (
               <tbody className="divide-y divide-gray-200">
-              {paginatedData.length > 0 ? (
-                paginatedData.map((row) => (
-                  <tr
-                    key={row.id}
-                    className={`hover:bg-gray-50 transition-colors ${
-                      selectedRows.has(row.id) ? "bg-blue-50" : ""
-                    }`}
-                  >
-                    {visibleColumns.select && (
-                      <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
-                        <input
-                          type="checkbox"
-                          checked={selectedRows.has(row.id)}
-                          onChange={() => handleSelectRow(row.id)}
-                          className="rounded text-blue-600"
-                        />
-                      </td>
-                    )}
-                    {visibleColumns.id && (
-                      <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
-                        <div className="text-xs sm:text-sm text-gray-900">{row.id}</div>
-                      </td>
-                    )}
-
-                    {visibleColumns.name && (
-                      <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
-                        <div className="flex items-center gap-1 sm:gap-2">
-                          <div className="font-medium text-xs sm:text-sm text-gray-900">
-                            {row.name}
+                {paginatedData.length > 0 ? (
+                  paginatedData.map((row) => (
+                    <tr
+                      key={row.id}
+                      className={`hover:bg-gray-50 transition-colors ${
+                        selectedRows.has(row.id) ? "bg-blue-50" : ""
+                      }`}
+                    >
+                      {visibleColumns.select && (
+                        <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                          <input
+                            type="checkbox"
+                            checked={selectedRows.has(row.id)}
+                            onChange={() => handleSelectRow(row.id)}
+                            className="rounded text-blue-600"
+                          />
+                        </td>
+                      )}
+                      {visibleColumns.id && (
+                        <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                          <div className="text-xs sm:text-sm text-gray-900">
+                            {row.id}
                           </div>
-                        </div>
-                      </td>
-                    )}
-                    {visibleColumns.district && (
-                      <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
-                        <div className="text-xs sm:text-sm text-gray-900">
-                          {row.district?.name}
-                        </div>
-                      </td>
-                    )}
-                    {visibleColumns.governorate && (
-                      <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
-                        <div className="text-xs sm:text-sm text-gray-900">
-                          {row.governorate?.name}
-                        </div>
-                      </td>
-                    )}
-                    {visibleColumns.election_centers_count && (
-                      <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
-                        <div className="text-xs sm:text-sm text-gray-900">
-                          {row.election_centers_count}
-                        </div>
-                      </td>
-                    )}
+                        </td>
+                      )}
 
-                    {visibleColumns.users_count && (
-                      <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
-                        <div className="text-xs sm:text-sm text-gray-900">
-                          {row.users_count}
-                        </div>
-                      </td>
-                    )}
-                    {visibleColumns.confirmed_voting_users_count && (
-                      <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
-                        <div className="text-xs sm:text-sm text-gray-900">
-                          {row.confirmed_voting_users_count}
-                        </div>
-                      </td>
-                    )}
-                    {visibleColumns.percentageOfVoters && (
-                      <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
-                        <div className="text-xs sm:text-sm text-gray-900">
-                          {row.percentageOfVoters}
-                        </div>
-                      </td>
-                    )}
+                      {visibleColumns.name && (
+                        <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                          <div className="flex items-center gap-1 sm:gap-2">
+                            <div className="font-medium text-xs sm:text-sm text-gray-900">
+                              {row.name}
+                            </div>
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.district && (
+                        <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                          <div className="text-xs sm:text-sm text-gray-900">
+                            {row.district?.name}
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.governorate && (
+                        <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                          <div className="text-xs sm:text-sm text-gray-900">
+                            {row.governorate?.name}
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.election_centers_count && (
+                        <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                          <div className="text-xs sm:text-sm text-gray-900">
+                            {row.election_centers_count}
+                          </div>
+                        </td>
+                      )}
 
-                    {visibleColumns.actions && (
-                      <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
-                        <div className="relative">
-                          <button
-                            onClick={() =>
-                              setShowActionMenu(
-                                showActionMenu === row.id ? null : row.id
-                              )
-                            }
-                            className="p-0.5 sm:p-1 hover:bg-gray-100 rounded transition-colors"
-                          >
-                            <MoreHorizontal className="w-3 h-3 sm:w-4 sm:h-4" />
-                          </button>
+                      {visibleColumns.users_count && (
+                        <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                          <div className="text-xs sm:text-sm text-gray-900">
+                            {row.users_count}
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.confirmed_voting_users_count && (
+                        <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                          <div className="text-xs sm:text-sm text-gray-900">
+                            {row.confirmed_voting_users_count}
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.percentageOfVoters && (
+                        <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                          <div className="text-xs sm:text-sm text-gray-900">
+                            {row.percentageOfVoters}
+                          </div>
+                        </td>
+                      )}
 
-                          {showActionMenu === row.id && (
-                            <div className="absolute left-0 mt-1 w-36 sm:w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-999999999">
-                              <div className="py-1">
-                                {/* <button
+                      {visibleColumns.actions && (
+                        <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                          <div className="relative">
+                            <button
+                              onClick={() =>
+                                setShowActionMenu(
+                                  showActionMenu === row.id ? null : row.id
+                                )
+                              }
+                              className="p-0.5 sm:p-1 hover:bg-gray-100 rounded transition-colors"
+                            >
+                              <MoreHorizontal className="w-3 h-3 sm:w-4 sm:h-4" />
+                            </button>
+
+                            {showActionMenu === row.id && (
+                              <div className="absolute left-0 mt-1 w-36 sm:w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-999999999">
+                                <div className="py-1">
+                                  {/* <button
                                   onClick={() => handleUserAction("view", row)}
                                   className="block w-full text-right px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
                                   عرض التفاصيل
                                 </button> */}
-                                <button
-                                  onClick={() => handleUserAction("edit", row)}
-                                  className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                                >
-                                  تعديل
-                                </button>
-                                <button
-                                  onClick={() => handleDeleteConfirm(row.id)}
-                                  className="block w-full text-right px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-red-700 hover:bg-red-50 transition-colors"
-                                >
-                                  حذف
-                                </button>
-                                {/* <button
+                                  <button
+                                    onClick={() =>
+                                      handleUserAction("edit", row)
+                                    }
+                                    className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                  >
+                                    تعديل
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteConfirm(row.id)}
+                                    className="block w-full text-right px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-red-700 hover:bg-red-50 transition-colors"
+                                  >
+                                    حذف
+                                  </button>
+                                  {/* <button
                                   onClick={() =>
                                     handleUserAction("permissions", row)
                                   }
@@ -320,7 +327,7 @@ const SubdistrictPage = () => {
                                 >
                                   إدارة الصلاحيات
                                 </button> */}
-                                {/* <hr className="my-1" />
+                                  {/* <hr className="my-1" />
                                 <button
                                   onClick={() =>
                                     handleUserAction("delete", row)
@@ -329,26 +336,30 @@ const SubdistrictPage = () => {
                                 >
                                    حذف المستخدم
                                 </button> */}
+                                </div>
                               </div>
-                            </div>
-                          )}
-                        </div>
-                      </td>
-                    )}
+                            )}
+                          </div>
+                        </td>
+                      )}
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="6"
+                      className="px-2 sm:px-4 py-8 sm:py-12 text-center text-gray-500"
+                    >
+                      <User className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-gray-300 mx-auto mb-2 sm:mb-4" />
+                      <p className="text-base sm:text-lg font-medium">
+                        لا توجد نتائج
+                      </p>
+                      <p className="text-xs sm:text-sm">
+                        جرب تغيير مصطلحات البحث
+                      </p>
+                    </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td
-                    colSpan="6"
-                    className="px-2 sm:px-4 py-8 sm:py-12 text-center text-gray-500"
-                  >
-                    <User className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-gray-300 mx-auto mb-2 sm:mb-4" />
-                    <p className="text-base sm:text-lg font-medium">لا توجد نتائج</p>
-                    <p className="text-xs sm:text-sm">جرب تغيير مصطلحات البحث</p>
-                  </td>
-                </tr>
-              )}
+                )}
               </tbody>
             )}
           </table>
@@ -373,16 +384,25 @@ const SubdistrictPage = () => {
           />
         )}
       </div>
-      {showModal && (
-        <AddSubdistrictsModal onClose={handleCloseModal} />
-      )}
+      {showModal && <AddSubdistrictsModal onClose={handleCloseModal} />}
       {showEditModal && (
-        <EditSubdistrictsModal onClose={handleCloseEditModal} subdistrictData={selectedSubdistrict} />
+        <EditSubdistrictsModal
+          onClose={handleCloseEditModal}
+          subdistrictData={selectedSubdistrict}
+        />
       )}
-      <DeleteModal 
+      <DeleteModal
         isOpen={showDeleteModal}
         onCancel={handleDeleteCancel}
         onConfirm={handleDeleteConfirmation}
+      />
+       <Toaster
+        position="top-center"
+        toastOptions={{
+          style: {
+            marginTop: "55px", 
+          },
+        }}
       />
     </div>
   );

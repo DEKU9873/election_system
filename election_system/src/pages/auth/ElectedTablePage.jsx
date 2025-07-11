@@ -17,6 +17,7 @@ import { useDispatch } from "react-redux";
 import RegisterModal from "./Auth Modal/RegisterModal";
 import DeleteModal from "../../Components/Uitily/DeleteModal";
 import Loader from "../../Components/Uitily/Loader";
+import { Toaster } from 'react-hot-toast';
 
 const ElectedTablePage = () => {
   const dispatch = useDispatch();
@@ -414,12 +415,13 @@ const ElectedTablePage = () => {
           />
         )}
       </div>
-      {showModal && <RegisterModal onClose={handleCloseModal} />}
+       {showModal && <RegisterModal onClose={handleCloseModal} />}
       <DeleteModal
         isOpen={showDeleteModal}
         onCancel={handleDeleteCancel}
         onConfirm={handleDeleteConfirmation}
       />
+
     </div>
   );
 };

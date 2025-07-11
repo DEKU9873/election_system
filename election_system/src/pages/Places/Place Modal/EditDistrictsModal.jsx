@@ -150,7 +150,6 @@ const EditDistrictsModal = ({ onClose, districtData }) => {
           إلغاء
         </button>
       </div>
-      <Toaster />
     </div>
   );
 };

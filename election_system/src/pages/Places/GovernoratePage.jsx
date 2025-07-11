@@ -16,6 +16,8 @@ import AddGovernorateModal from "./Place Modal/AddGovernorateModal";
 import EditGovernorateModal from "./Place Modal/EditGovernorateModal";
 import DeleteModal from "../../Components/Uitily/DeleteModal";
 import Loader from "../../Components/Uitily/Loader";
+import { Toaster } from "react-hot-toast";
+
 const GovernoratePage = () => {
   const dispatch = useDispatch();
   const [governates, loading] = GetAllGovernorate();
@@ -362,6 +364,7 @@ const GovernoratePage = () => {
           />
         )}
       </div>
+
       {showModal && <AddGovernorateModal onClose={handleCloseModal} />}
       {showEditModal && (
         <EditGovernorateModal
@@ -373,6 +376,14 @@ const GovernoratePage = () => {
         isOpen={showDeleteModal}
         onCancel={handleDeleteCancel}
         onConfirm={handleDeleteConfirmation}
+      />
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          style: {
+            marginTop: "55px", 
+          },
+        }}
       />
     </div>
   );

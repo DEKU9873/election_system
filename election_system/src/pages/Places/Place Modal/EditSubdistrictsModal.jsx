@@ -174,7 +174,6 @@ const EditSubdistrictsModal = ({ onClose, subdistrictData }) => {
           إلغاء
         </button>
       </div>
-      <Toaster />
     </div>
   );
 };

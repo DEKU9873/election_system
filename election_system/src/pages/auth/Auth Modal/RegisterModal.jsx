@@ -54,7 +54,7 @@ const RegisterModal = ({ onClose }) => {
     setIdPhotoPreview,
     setElectionCardPhoto,
     setElectionCardPhotoPreview,
-  ] = RegisterHook();
+  ] = RegisterHook(onClose);
 
     const [electionCenters, loading] = GetAllCenter();
 
@@ -504,7 +504,14 @@ const RegisterModal = ({ onClose }) => {
           </div>
         </form>
       </div>
-      <Toaster />
+       <Toaster
+        position="top-center"
+        toastOptions={{
+          style: {
+            marginTop: "55px", 
+          },
+        }}
+      />
     </div>
   );
 };

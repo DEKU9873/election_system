@@ -175,7 +175,6 @@ const AddSubdistrictsModal = ({ onClose }) => {
           إلغاء
         </button>
       </div>
-      <Toaster />
     </div>
   );
 };

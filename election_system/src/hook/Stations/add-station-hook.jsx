@@ -14,7 +14,8 @@ const AddStationHook = (onClose) => {
 
   const onChangeCode = (e) => setCode(e.target.value);
   const onChangeName = (e) => setName(e.target.value);
-  const onChangeElectionCenterId = (e) => setElectionCenterId(Number(e.target.value));
+  const onChangeElectionCenterId = (e) =>
+    setElectionCenterId(Number(e.target.value));
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -37,13 +38,13 @@ const AddStationHook = (onClose) => {
       );
 
       if (res.type === "place/addStation/fulfilled") {
-             await dispatch(getStationsByCenterId(electionCenterId));
+        await dispatch(getStationsByCenterId(electionCenterId));
 
         notify("تمت إضافة المحطة بنجاح", "success");
         setCode("");
         setName("");
         setElectionCenterId("");
-        
+
         // إغلاق المودال بعد الإضافة الناجحة
         if (onClose) onClose();
       } else {

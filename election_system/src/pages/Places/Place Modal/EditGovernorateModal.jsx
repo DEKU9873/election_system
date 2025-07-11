@@ -106,7 +106,6 @@ const EditGovernorateModal = ({ onClose, governate }) => {
           إلغاء
         </button>
       </div>
-      <Toaster />
     </div>
   );
 };

@@ -9,7 +9,8 @@ const MainLayout = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      setSidebarOpen(window.innerWidth >= 768);
+      // السايد بار ستكون مغلقة دائمًا في البداية بغض النظر عن حجم الشاشة
+      setSidebarOpen(false);
     };
 
     handleResize();

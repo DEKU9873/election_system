@@ -98,7 +98,6 @@ const AddGovernorateModal = ({ onClose }) => {
           إلغاء
         </button>
       </div>
-      <Toaster />
     </div>
   );
 };

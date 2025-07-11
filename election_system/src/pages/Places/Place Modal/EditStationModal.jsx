@@ -162,7 +162,6 @@ const EditStationModal = ({ onClose, station }) => {
           إلغاء
         </button>
       </div>
-      <Toaster />
     </div>
   );
 };

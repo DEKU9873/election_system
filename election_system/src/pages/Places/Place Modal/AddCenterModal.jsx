@@ -263,7 +263,6 @@ const AddCenterModal = ({ onClose }) => {
           </button>
         </div>
       </div>
-      <Toaster />
     </div>
   );
 };

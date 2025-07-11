@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { addCoordinator } from "../../redux/authSlice";
 import notify from "../useNotification";
 
-const DistrictManagerRegisterHook = () => {
+const DistrictManagerRegisterHook = (onClose) => {
   const dispatch = useDispatch();
   const [firstName, setFirstName] = useState("");
   const [fatherName, setFatherName] = useState("");
@@ -75,6 +75,11 @@ const DistrictManagerRegisterHook = () => {
     try {
       const response = await dispatch(addCoordinator(formData)).unwrap();
       notify("تم التسجيل بنجاح", "success");
+      
+      // إغلاق المودال بعد التسجيل الناجح
+      if (typeof onClose === 'function') {
+        onClose();
+      }
     } catch (error) {
       notify(error.message || "حدث خطأ أثناء التسجيل", "error");
     }

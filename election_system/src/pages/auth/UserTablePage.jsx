@@ -168,7 +168,6 @@ const UserTablePage = () => {
 
   return (
     <div className="min-h-screen">
-      {/* <Sidebar /> */}
       <div
         className="w-full max-w-[1440px] mx-auto p-2 sm:p-4 md:p-6 bg-white"
         dir="rtl"
@@ -176,27 +175,8 @@ const UserTablePage = () => {
         <div className="mb-6">
           <UserTableTitle title="المستخدمين" subtitle="قائمة المستخدمين" />
 
-          {/* خريطة المستخدمين */}
-          <div className="mb-4">
-            <button
-              onClick={() => setShowMap(!showMap)}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 focus:ring-2 focus:ring-gray-300 mb-2"
-            >
-              {showMap ? "إخفاء الخريطة" : "إظهار الخريطة"}
-            </button>
-            {showMap && (
-              <UsersMap
-                data={allUsers}
-                selectedRows={selectedRows}
-                handleSelectRow={handleSelectRow}
-                mapCenter={mapCenter}
-                mapZoom={mapZoom}
-              />
-            )}
-          </div>
-
           <UserTableToolbar
-            title="اضافة موظف "
+            title="اضافة مستخدم "
             filterText={filterText}
             setFilterText={setFilterText}
             showColumnMenu={showColumnMenu}
@@ -207,7 +187,7 @@ const UserTablePage = () => {
             className="flex-wrap"
           />
 
-          <UserTableStats data={allUsers} title="اجمالي السمتخدمين" />
+          <UserTableStats data={allUsers} title="اجمالي المستخدمين" />
         </div>
 
         {/* الجدول */}

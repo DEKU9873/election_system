@@ -177,7 +177,7 @@ const MonitorsTablePage = () => {
       {/* <Sidebar /> */}
       <div className="w-full max-w-[1440px] mx-auto p-3 sm:p-6 bg-white min-h-screen" dir="rtl">
         <div className="mb-6">
-          <UserTableTitle title="المشرفين" subtitle="قائمة المشرفين" />
+          <UserTableTitle title="المراقبين" subtitle="قائمة المراقبين" />
 
           {/* خريطة المشرفين */}
           <div className="mb-4">
@@ -199,7 +199,7 @@ const MonitorsTablePage = () => {
           </div>
 
           <UserTableToolbar
-            title="اضافة مشرف"
+            title="اضافة مراقب"
             filterText={filterText}
             setFilterText={setFilterText}
             showColumnMenu={showColumnMenu}
@@ -209,7 +209,7 @@ const MonitorsTablePage = () => {
             onOpen={handleOpenModal}
           />
 
-          <UserTableStats data={observer} title="اجمالي المشرفين" />
+          <UserTableStats data={observer} title="اجمالي المراقبين" />
         </div>
 
         {/* الجدول */}

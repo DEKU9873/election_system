@@ -50,7 +50,7 @@ const UserTablePagination = ({
                 onClick={() => setCurrentPage(page)}
                 className={`px-2 sm:px-3 py-1 text-xs sm:text-sm rounded transition-colors ${
                   currentPage === page
-                    ? "bg-blue-600 text-white"
+                    ? "bg-sky-700 text-white"
                     : "hover:bg-gray-100 text-gray-700"
                 }`}
               >

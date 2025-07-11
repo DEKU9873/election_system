@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import notify from "../useNotification";
-import { addTape } from "../../redux/electoralStripsSlice";
+import { addTape, getAllTapes } from "../../redux/electoralStripsSlice";
 
 const AddTapesHook = (onClose) => {
   const dispatch = useDispatch();
@@ -70,6 +70,8 @@ const AddTapesHook = (onClose) => {
       const res = await dispatch(addTape(formData));
 
       if (res.type === "tape/add/fulfilled") {
+         await dispatch(getAllTapes());
+
         notify("تمت إضافة الشريط بنجاح", "success");
         setElectionCenterId("");
         setStationId("");
@@ -77,6 +79,7 @@ const AddTapesHook = (onClose) => {
         setTapeImage(null);
         setNotes("");
         setStatus("");
+
         
         // إغلاق النافذة المنبثقة عند نجاح الإرسال
         if (typeof onClose === 'function') {

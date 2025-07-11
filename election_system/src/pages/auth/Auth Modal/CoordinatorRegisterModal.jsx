@@ -39,7 +39,7 @@ const CoordinatorRegisterModal = ({ onClose }) => {
     setIdPhotoPreview,
     setElectionCardPhoto,
     setElectionCardPhotoPreview
-  ] = CoordinatorRegisterHook();
+  ] = CoordinatorRegisterHook(onClose);
 
     const [electionCenters, isLoading] = GetAllCenter();
 

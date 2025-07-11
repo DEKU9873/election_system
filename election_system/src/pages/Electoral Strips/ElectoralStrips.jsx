@@ -16,6 +16,7 @@ import { deleteTape } from "../../redux/electoralStripsSlice";
 import { useDispatch } from "react-redux";
 import AddElectoralStripsModal from "./Electoral Strips Modal/AddElectoralStripsModal";
 import EditElectoralStripsModal from "./Electoral Strips Modal/EditElectoralStripsModal";
+import { Toaster } from 'react-hot-toast';
 
 const ElectoralStrips = () => {
   const dispatch = useDispatch();
@@ -321,7 +322,14 @@ const ElectoralStrips = () => {
       </div>
            {showModal && <AddElectoralStripsModal onClose={handleCloseModal} />}
            {showEditModal && <EditElectoralStripsModal onClose={() => setShowEditModal(false)} tapeData={selectedTape} />}
-
+ <Toaster
+        position="top-center"
+        toastOptions={{
+          style: {
+            marginTop: "55px", 
+          },
+        }}
+      />
     </div>
   );
 };

@@ -169,7 +169,7 @@ const NotificationButton = () => {
               <div className="flex items-center justify-center">
                 <button
                   type="submit"
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+                  className="bg-sky-700 hover:bg-sky-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
                 >
                   إرسال الإشعار
                 </button>

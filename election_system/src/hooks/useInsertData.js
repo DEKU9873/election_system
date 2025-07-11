@@ -2,7 +2,7 @@ import baseUrl from "../Api/baseURL";
 import Cookies from "js-cookie";
 
 const useInsertDataWithImage = async (url, formData) => {
-  try {
+  
     const token = Cookies.get("token"); // جلب التوكن من الكوكيز
 
     const config = {
@@ -13,9 +13,6 @@ const useInsertDataWithImage = async (url, formData) => {
     };
     const res = await baseUrl.post(url, formData, config);
     return res.data;
-  } catch (error) {
-    throw error.response?.data || error.message;
-  }
 };
 
 const useInsertData = async (url, parmas) => {

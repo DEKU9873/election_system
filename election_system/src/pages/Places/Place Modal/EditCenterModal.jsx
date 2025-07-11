@@ -258,7 +258,6 @@ const EditCenterModal = ({ onClose, centerData }) => {
           إلغاء
         </button>
       </div>
-      <Toaster />
     </div>
   );
 };

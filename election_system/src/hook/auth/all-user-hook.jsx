@@ -8,7 +8,7 @@ const AllUserHook = () => {
 
   useEffect(() => {
     dispatch(getAllUsers());
-  }, [dispatch]); // أضف dispatch
+  }, [dispatch]); 
 
   const system_admin = useMemo(
     () => allUsers?.filter((user) => user.role === "system_admin") || [],

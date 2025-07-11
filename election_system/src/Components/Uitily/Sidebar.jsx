@@ -77,8 +77,8 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     },
     { id: "voters", label: "الناخبين", icon: UserCheck, href: "/elected" },
     {
-      id: "supervisors",
-      label: "المشرفين",
+      id: "monitors",
+      label: "المراقبين",
       icon: UserCog,
       href: "/monitors",
     },
@@ -158,7 +158,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         // يمكن إضافة المزيد من أنواع الإحصائيات هنا في المستقبل
       ],
     },
-    { id: "users", label: "الموظفين", icon: Users, href: "/users" },
+    { id: "users", label: "المستخدمين", icon: Users, href: "/users" },
   ];
 
   // تحديد حجم الشاشة
@@ -178,9 +178,8 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   };
 
   const closeSidebar = () => {
-    if (isMobile) {
-      setIsOpen(false);
-    }
+    // إغلاق السايد بار دائمًا بغض النظر عن حجم الشاشة
+    setIsOpen(false);
   };
   
   // تأخير إغلاق السايدبار عند النقر على عنصر القائمة
@@ -190,12 +189,11 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     }, 150);
   };
 
-  // إغلاق الـ sidebar في الموبايل عند تغيير الحجم
+  // إبقاء السايد بار مغلقة عند تغيير الحجم
   React.useEffect(() => {
+    // لا نقوم بفتح السايد بار تلقائيًا في الشاشات الكبيرة
     if (isMobile) {
       setIsOpen(false);
-    } else {
-      setIsOpen(true);
     }
   }, [isMobile]);
   
@@ -218,10 +216,11 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
           <div className="flex items-center gap-4">
             <button
               onClick={toggleSidebar}
-              className="p-2 hover:bg-blue-50 rounded-lg transition-colors duration-200"
-              title={isOpen ? "إغلاق القائمة" : "فتح القائمة"}
+              className="p-2 hover:bg-blue-50 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-sm flex items-center justify-center"
+              title="فتح القائمة"
+              style={{ display: isOpen ? 'none' : 'flex' }}
             >
-              {isOpen ? <X size={22} className="text-blue-600 transition-transform duration-300" /> : <Menu size={22} className="text-blue-600 transition-transform duration-300" />}
+              <Menu size={22} className="text-blue-600 transition-all duration-300 transform hover:rotate-12" />
             </button>
             <h1 className="text-xl font-semibold text-gray-800 font-['Cairo']">
               {menuItems.find((item) => item.id === activeItem)?.label ||
@@ -265,34 +264,45 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       </div>
 
       {/* Overlay للموبايل */}
-      {isMobile && isOpen && (
+      {isMobile && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden transition-all duration-300"
+          className={`fixed inset-0 bg-black z-30 md:hidden transition-all duration-500 ease-in-out ${isOpen ? 'opacity-50' : 'opacity-0 pointer-events-none'}`}
           onClick={closeSidebar}
         />
       )}
 
       {/* Sidebar */}
       <div
-        className={`bg-white border-l border-gray-200 transition-all duration-500 ease-out flex flex-col z-40 shadow-lg ${
+        className={`bg-white border-l border-gray-200 transition-all duration-500 ease-in-out flex flex-col z-40 shadow-lg ${
           isMobile
-            ? `fixed right-0 top-16 h-[calc(100%-4rem)] ${
-                isOpen ? "w-64 translate-x-0" : "w-64 translate-x-full"
+            ? `fixed right-0 top-16 h-[calc(100%-4rem)] w-64 transform ${
+                isOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-90"
               }`
-            : `fixed right-0 top-0 h-full ${
-                isOpen ? "w-64" : "w-0 overflow-hidden"
+            : `fixed right-0 top-0 h-full transform ${
+                isOpen ? "w-64 translate-x-0 opacity-100" : "w-0 translate-x-16 opacity-0 overflow-hidden"
               }`
         }`}
       >
         {/* Header with Logo */}
         <div className="border-b border-gray-200 min-w-64 flex-shrink-0">
           <div className="flex items-center justify-between p-4">
+            <button
+              onClick={closeSidebar}
+              className="absolute left-4 top-4 p-2 hover:bg-blue-50 rounded-lg transition-all duration-300 text-blue-600 hover:scale-105 hover:shadow-sm flex items-center justify-center"
+              title="إغلاق القائمة"
+            >
+              <X size={20} className="transform transition-all duration-300 hover:rotate-90" />
+            </button>
             <div className="flex flex-col items-center gap-2 flex-1 justify-center">
-              <img src={logo} alt="شعار الشركة" className="h-20 w-auto" />
-              <span className="font-bold text-lg text-gray-800">
-                نظام حملتي
-              </span>
-            </div>
+                <img 
+                  src={logo} 
+                  alt="شعار الشركة" 
+                  className="h-20 w-auto transition-all duration-500 hover:scale-105 filter drop-shadow-md" 
+                />
+                <span className="font-bold text-lg text-gray-800 transition-all duration-300 hover:text-blue-600">
+                  نظام حملتي
+                </span>
+              </div>
           </div>
         </div>
 

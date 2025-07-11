@@ -150,7 +150,6 @@ const AddDistrictsModal = ({ onClose }) => {
           إلغاء
         </button>
       </div>
-      <Toaster />
     </div>
   );
 };

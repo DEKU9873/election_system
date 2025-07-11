@@ -10,6 +10,8 @@ import { MoreHorizontal, User } from "lucide-react";
 import UserTablePagination from "../../Components/auth/UserTablePagination";
 import GetallDistricts from "../../hook/Districts/get-all-districts";
 import { useDispatch } from "react-redux";
+import { Toaster } from "react-hot-toast";
+
 import {
   deleteDistrict,
   deleteElectionCenter,
@@ -397,6 +399,14 @@ const CenterPage = () => {
         isOpen={showDeleteModal}
         onCancel={handleDeleteCancel}
         onConfirm={handleDeleteConfirmation}
+      />
+    <Toaster
+        position="top-center"
+        toastOptions={{
+          style: {
+            marginTop: "55px", 
+          },
+        }}
       />
     </div>
   );

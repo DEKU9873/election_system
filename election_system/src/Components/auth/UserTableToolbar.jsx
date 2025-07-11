@@ -30,7 +30,7 @@ const UserTableToolbar = ({
 
       <div className="flex items-center gap-2">
         {/* زر إضافة مستخدم جديد */}
-        <button onClick={onOpen} className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500">
+        <button onClick={onOpen} className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm bg-sky-700 text-white rounded-lg hover:bg-sky-800 focus:ring-2 focus:ring-blue-500">
           {/* <User className="w-3 sm:w-4 h-3 sm:h-4" /> */}
           {title}
         </button>

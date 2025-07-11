@@ -38,7 +38,7 @@ const DistrictManagerRegisterModal = ({ onClose }) => {
     setIdPhotoPreview,
     setElectionCardPhoto,
     setElectionCardPhotoPreview
-  ] = DistrictManagerRegisterHook();
+  ] = DistrictManagerRegisterHook(onClose);
 
   const districts = [
     { value: '1', label: 'منطقة 1' },

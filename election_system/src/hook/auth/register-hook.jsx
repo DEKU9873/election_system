@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addUser, getAllUsers } from "../../redux/authSlice";
 import notify from "../useNotification";
 
-const RegisterHook = () => {
+const RegisterHook = (onClose) => {
   const dispatch = useDispatch();
   const [registrationType, setRegistrationType] = useState("voter");
   const [firstName, setFirstName] = useState("");
@@ -80,7 +80,9 @@ const RegisterHook = () => {
     setNewCenter(Number(e.target.value));
   };
 
-
+ const {user, error} = useSelector((state) => state.auth);
+ console.log("user", user);
+ console.log("error", error);
 
   const validationValues = () => {
     if (!firstName.trim()) {
@@ -186,8 +188,7 @@ const RegisterHook = () => {
 
       if (result && result.data) {
         await dispatch(getAllUsers());
-        notify("تم التسجيل بنجاح", "success");
-        // Reset form
+        notify("تم اضافة ناخب بنجاح", "success");
         setFirstName("");
         setFatherName("");
         setGrandFatherName("");
@@ -204,14 +205,18 @@ const RegisterHook = () => {
         setNewCenter("");
         setHasVotingRight(false);
         setIdUpdated(false);
+        
+        // إغلاق المودال بعد التسجيل الناجح
+        if (typeof onClose === 'function') {
+          onClose();
+        }
       } else {
         throw new Error("لم يتم استلام رد من الخادم");
       }
     } catch (err) {
-      if (err.errors && Array.isArray(err.errors)) {
-        err.errors.forEach((e) => notify(e.msg, "error"));
-      } else if (err.response && err.response.data) {
-        notify(err.response.data.message || "حدث خطأ أثناء التسجيل", "error");
+      if (error && error.message) {
+        notify(error.message, "error");
+     
       } else {
         notify(err.message || "حدث خطأ في الاتصال بالخادم", "error");
       }

@@ -164,7 +164,6 @@ const AddStationModal = ({ onClose }) => {
           إلغاء
         </button>
       </div>
-      <Toaster />
     </div>
   );
 };

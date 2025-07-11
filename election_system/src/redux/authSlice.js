@@ -11,8 +11,8 @@ export const registerUser = createAsyncThunk(
     try {
       const res = await useInsertDataWithImage("/api/register", formData);
       return res;
-    } catch (err) {
-      return thunkAPI.rejectWithValue(err);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
@@ -74,7 +74,7 @@ export const addUser = createAsyncThunk(
       return response;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data || "فشل في إضافة المستخدم"
+        error?.response?.data || "فشل في إضافة المستخدم"
       );
     }
   }
