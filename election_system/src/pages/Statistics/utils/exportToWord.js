@@ -13,6 +13,7 @@ import {
   VerticalAlign,
   BorderStyle,
   TextRun,
+  TextDirection,
 } from "docx";
 
 // وظيفة مساعدة لتحويل البيانات من Base64 إلى Blob
@@ -46,14 +47,19 @@ function createTable(data, hasHeader = false) {
               new TextRun({
                 text: cellText,
                 bold: hasHeader && rowIndex === 0,
-                bidirectional: true, // دعم الاتجاه من اليمين إلى اليسار
+                rightToLeft: true, // تمكين الاتجاه من اليمين إلى اليسار للنص
+                font: {
+                  name: "Arial", // خط يدعم العربية
+                  hint: "eastAsia", // إعداد للغات الشرقية
+                },
               }),
             ],
             alignment: AlignmentType.RIGHT,
-            bidirectional: true, // دعم الاتجاه من اليمين إلى اليسار
+            rightToLeft: true, // تمكين الاتجاه من اليمين إلى اليسار للفقرة
+            textDirection: TextDirection.RIGHT_TO_LEFT, // اتجاه النص من اليمين إلى اليسار
           }),
         ],
-        verticalAlign: VerticalAlign.CENTER, // محاذاة عمودية في المنتصف
+        verticalAlign: VerticalAlign.CENTER,
         shading:
           hasHeader && rowIndex === 0 ? { fill: "#EEEEEE" } : undefined,
         borders: {
@@ -62,24 +68,24 @@ function createTable(data, hasHeader = false) {
           left: { style: BorderStyle.SINGLE, size: 1, color: "#CCCCCC" },
           right: { style: BorderStyle.SINGLE, size: 1, color: "#CCCCCC" },
         },
+        textDirection: TextDirection.RIGHT_TO_LEFT, // اتجاه النص في الخلية
       });
     });
 
     return new TableRow({
       children: cells,
-      tableHeader: hasHeader && rowIndex === 0, // تعيين الصف الأول كرأس للجدول إذا كان هناك رأس
+      tableHeader: hasHeader && rowIndex === 0,
     });
   });
 
   return new Table({
     rows,
-    alignment: AlignmentType.CENTER, // محاذاة الجدول في المنتصف
+    alignment: AlignmentType.CENTER,
     width: {
       size: 100,
-      type: WidthType.PERCENTAGE, // جعل الجدول يأخذ عرض الصفحة كاملة
+      type: WidthType.PERCENTAGE,
     },
-    bidirectional: true, // دعم الاتجاه من اليمين إلى اليسار
-    layout: TableLayoutType.FIXED, // تخطيط ثابت للجدول
+    layout: TableLayoutType.FIXED,
     borders: {
       insideHorizontal: {
         style: BorderStyle.SINGLE,
@@ -96,6 +102,10 @@ function createTable(data, hasHeader = false) {
       left: { style: BorderStyle.SINGLE, size: 2, color: "#000000" },
       right: { style: BorderStyle.SINGLE, size: 2, color: "#000000" },
     },
+    // إضافة إعدادات الاتجاه للجدول
+    tableProperties: {
+      rightToLeft: true, // الجدول من اليمين إلى اليسار
+    },
   });
 }
 
@@ -110,22 +120,56 @@ const exportToWord = async (financialData, callbacks) => {
   setExportSuccess(false);
   setExportError(false);
 
-  // متغير لتخزين المستند خارج نطاق try
   let docInstance;
 
   try {
     // إنشاء مستند Word جديد
     docInstance = new Document({
-      // إعدادات المستند
       styles: {
         paragraphStyles: [
           {
             id: "Normal",
             run: {
-              bidirectional: true, // دعم الاتجاه من اليمين إلى اليسار للنص العادي
+              rightToLeft: true,
+              font: {
+                name: "Arial",
+                hint: "eastAsia",
+              },
             },
             paragraph: {
-              bidirectional: true, // دعم الاتجاه من اليمين إلى اليسار للفقرات
+              rightToLeft: true,
+              alignment: AlignmentType.RIGHT,
+              textDirection: TextDirection.RIGHT_TO_LEFT,
+            },
+          },
+          {
+            id: "Heading1",
+            run: {
+              rightToLeft: true,
+              font: {
+                name: "Arial",
+                hint: "eastAsia",
+              },
+            },
+            paragraph: {
+              rightToLeft: true,
+              alignment: AlignmentType.CENTER,
+              textDirection: TextDirection.RIGHT_TO_LEFT,
+            },
+          },
+          {
+            id: "Heading2",
+            run: {
+              rightToLeft: true,
+              font: {
+                name: "Arial",
+                hint: "eastAsia",
+              },
+            },
+            paragraph: {
+              rightToLeft: true,
+              alignment: AlignmentType.RIGHT,
+              textDirection: TextDirection.RIGHT_TO_LEFT,
             },
           },
         ],
@@ -135,44 +179,77 @@ const exportToWord = async (financialData, callbacks) => {
           properties: {
             page: {
               margin: {
-                top: 1000, // هوامش أعلى
-                right: 1000, // هوامش يمين
-                bottom: 1000, // هوامش أسفل
-                left: 1000, // هوامش يسار
+                top: 1000,
+                right: 1000,
+                bottom: 1000,
+                left: 1000,
               },
             },
-            bidi: true, // تمكين الاتجاه من اليمين إلى اليسار للقسم بأكمله
+            rightToLeft: true, // القسم من اليمين إلى اليسار
+            textDirection: TextDirection.RIGHT_TO_LEFT, // اتجاه النص في القسم
           },
           children: [
             new Paragraph({
-              text: "الإحصائيات المالية",
+              children: [
+                new TextRun({
+                  text: "الإحصائيات المالية",
+                  bold: true,
+                  size: 32,
+                  rightToLeft: true,
+                  font: {
+                    name: "Arial",
+                    hint: "eastAsia",
+                  },
+                }),
+              ],
               heading: HeadingLevel.HEADING_1,
               alignment: AlignmentType.CENTER,
-              bidirectional: true, // دعم الاتجاه من اليمين إلى اليسار
+              rightToLeft: true,
+              textDirection: TextDirection.RIGHT_TO_LEFT,
               spacing: {
-                after: 400, // مسافة بعد العنوان
+                after: 400,
               },
             }),
             new Paragraph({
               children: [
                 new TextRun({
-                  text: `تاريخ التقرير: ${new Date().toLocaleDateString(
-                    "ar-SA"
-                  )}`,
-                  bidirectional: true, // دعم الاتجاه من اليمين إلى اليسار
+                  text: `تاريخ التقرير: ${new Date().toLocaleDateString("ar-SA")}`,
+                  rightToLeft: true,
                   bold: true,
+                  font: {
+                    name: "Arial",
+                    hint: "eastAsia",
+                  },
                 }),
               ],
               alignment: AlignmentType.RIGHT,
-              bidirectional: true, // دعم الاتجاه من اليمين إلى اليسار
+              rightToLeft: true,
+              textDirection: TextDirection.RIGHT_TO_LEFT,
               spacing: {
-                after: 200, // مسافة بعد التاريخ
+                after: 200,
               },
             }),
             new Paragraph({
-              text: "نظرة عامة",
+              children: [
+                new TextRun({
+                  text: "نظرة عامة",
+                  bold: true,
+                  size: 24,
+                  rightToLeft: true,
+                  font: {
+                    name: "Arial",
+                    hint: "eastAsia",
+                  },
+                }),
+              ],
               heading: HeadingLevel.HEADING_2,
               alignment: AlignmentType.RIGHT,
+              rightToLeft: true,
+              textDirection: TextDirection.RIGHT_TO_LEFT,
+              spacing: {
+                before: 200,
+                after: 200,
+              },
             }),
             createTable([
               ["الميزانية الإجمالية", `${financialData.totalBudget}`],
@@ -182,9 +259,26 @@ const exportToWord = async (financialData, callbacks) => {
               ["إجمالي الإيرادات", `${financialData.totalRevenue}`],
             ]),
             new Paragraph({
-              text: "المصروفات حسب الفئة",
+              children: [
+                new TextRun({
+                  text: "المصروفات حسب الفئة",
+                  bold: true,
+                  size: 24,
+                  rightToLeft: true,
+                  font: {
+                    name: "Arial",
+                    hint: "eastAsia",
+                  },
+                }),
+              ],
               heading: HeadingLevel.HEADING_2,
               alignment: AlignmentType.RIGHT,
+              rightToLeft: true,
+              textDirection: TextDirection.RIGHT_TO_LEFT,
+              spacing: {
+                before: 200,
+                after: 200,
+              },
             }),
             createTable(
               [
@@ -198,9 +292,26 @@ const exportToWord = async (financialData, callbacks) => {
               true
             ),
             new Paragraph({
-              text: "الإيرادات حسب المصدر",
+              children: [
+                new TextRun({
+                  text: "الإيرادات حسب المصدر",
+                  bold: true,
+                  size: 24,
+                  rightToLeft: true,
+                  font: {
+                    name: "Arial",
+                    hint: "eastAsia",
+                  },
+                }),
+              ],
               heading: HeadingLevel.HEADING_2,
               alignment: AlignmentType.RIGHT,
+              rightToLeft: true,
+              textDirection: TextDirection.RIGHT_TO_LEFT,
+              spacing: {
+                before: 200,
+                after: 200,
+              },
             }),
             createTable(
               [
@@ -214,9 +325,26 @@ const exportToWord = async (financialData, callbacks) => {
               true
             ),
             new Paragraph({
-              text: "المصروفات الشهرية",
+              children: [
+                new TextRun({
+                  text: "المصروفات الشهرية",
+                  bold: true,
+                  size: 24,
+                  rightToLeft: true,
+                  font: {
+                    name: "Arial",
+                    hint: "eastAsia",
+                  },
+                }),
+              ],
               heading: HeadingLevel.HEADING_2,
               alignment: AlignmentType.RIGHT,
+              rightToLeft: true,
+              textDirection: TextDirection.RIGHT_TO_LEFT,
+              spacing: {
+                before: 200,
+                after: 200,
+              },
             }),
             createTable(
               [
@@ -234,7 +362,6 @@ const exportToWord = async (financialData, callbacks) => {
     });
 
     // تحويل المستند إلى ملف Word وتنزيله
-    // استخدام Packer.toBlob بدلاً من Packer.toBuffer لأنه أكثر توافقاً مع المتصفح
     try {
       if (!docInstance) throw new Error("فشل في إنشاء المستند");
       
@@ -245,7 +372,6 @@ const exportToWord = async (financialData, callbacks) => {
       );
       setExportSuccess(true);
 
-      // إخفاء رسالة النجاح بعد 3 ثوان
       setTimeout(() => {
         setExportSuccess(false);
       }, 3000);
@@ -256,12 +382,10 @@ const exportToWord = async (financialData, callbacks) => {
       );
 
       try {
-        // التحقق من وجود المستند قبل محاولة تبسيطه
         if (!docInstance || !docInstance.document) {
           throw new Error("المستند غير متاح للتصدير");
         }
 
-        // طريقة بديلة باستخدام Packer.toBase64String
         const base64 = await Packer.toBase64String(docInstance);
         const blob = b64toBlob(
           base64,
@@ -273,7 +397,6 @@ const exportToWord = async (financialData, callbacks) => {
         );
         setExportSuccess(true);
 
-        // إخفاء رسالة النجاح بعد 3 ثوان
         setTimeout(() => {
           setExportSuccess(false);
         }, 3000);
@@ -283,12 +406,10 @@ const exportToWord = async (financialData, callbacks) => {
           base64Error
         );
 
-        // التحقق من وجود المستند قبل محاولة تبسيطه
         if (!docInstance || !docInstance.document || !docInstance.document.sections || !docInstance.document.sections[0] || !docInstance.document.sections[0].children) {
           throw new Error("المستند غير متاح للتصدير");
         }
 
-        // طريقة ثالثة باستخدام Packer.save
         Packer.save(docInstance)
           .then((buffer) => {
             const blob = new Blob([buffer], {
@@ -302,20 +423,18 @@ const exportToWord = async (financialData, callbacks) => {
             );
             setExportSuccess(true);
 
-            // إخفاء رسالة النجاح بعد 3 ثوان
             setTimeout(() => {
               setExportSuccess(false);
             }, 3000);
           })
           .catch((saveError) => {
-            throw saveError; // إعادة رمي الخطأ ليتم التقاطه في الـ catch الخارجي
+            throw saveError;
           });
       }
     }
   } catch (error) {
     console.error("خطأ في تصدير ملف Word:", error);
     setExportError(true);
-    // إخفاء رسالة الخطأ بعد 3 ثوان
     setTimeout(() => {
       setExportError(false);
     }, 3000);

@@ -28,6 +28,8 @@ const UserTablePage = () => {
     district_manager,
     finance_auditor,
   ] = AllUserHook();
+
+  console.log(allUsers);
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
@@ -74,7 +76,6 @@ const UserTablePage = () => {
       (item) =>
         item?.full_name?.toLowerCase().includes(filterText.toLowerCase()) ||
         item?.phone_number?.includes(filterText) ||
-        item?.pollingCenter?.toLowerCase().includes(filterText.toLowerCase()) ||
         item?.role?.toLowerCase().includes(filterText.toLowerCase()) ||
         // item.addBy.toLowerCase().includes(filterText.toLowerCase()) ||
         item?.createdAt?.includes(filterText)
