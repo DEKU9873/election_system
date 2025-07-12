@@ -51,7 +51,7 @@ const ElectedTablePage = () => {
     phone_number: true,
     birth_year: true,
     createdAt: true,
-    registrationMethod: true,
+    ElectionCenter: true,
     actions: true,
   });
   const [showColumnMenu, setShowColumnMenu] = useState(false);
@@ -81,6 +81,7 @@ const ElectedTablePage = () => {
     return voter.filter(
       (item) =>
         item?.full_name?.toLowerCase().includes(filterText.toLowerCase()) ||
+        item?.ElectionCenter?.name?.toLowerCase().includes(filterText.toLowerCase()) ||
         item?.phone_number?.includes(filterText) ||
         item?.birth_year?.toString().includes(filterText) ||
         item?.createdAt?.toLowerCase().includes(filterText.toLowerCase())
@@ -313,10 +314,10 @@ const ElectedTablePage = () => {
                           </div>
                         </td>
                       )}
-                      {visibleColumns.registrationMethod && (
+                      {visibleColumns.ElectionCenter && (
                         <td className="px-2 sm:px-4 py-2 sm:py-3">
                           <div className="text-xs sm:text-sm text-gray-900">
-                            {row.registrationMethod}
+                            {row.ElectionCenter?.name}
                           </div>
                         </td>
                       )}

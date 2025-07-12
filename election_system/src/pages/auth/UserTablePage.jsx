@@ -42,7 +42,7 @@ const UserTablePage = () => {
     id: true,
     full_name: true,
     phone_number: true,
-    pollingCenter: true,
+    ElectionCenter: true,
     role: true,
     addBy: true,
     createdAt: true,
@@ -267,10 +267,10 @@ const UserTablePage = () => {
                           </div>
                         </td>
                       )}
-                      {visibleColumns.pollingCenter && (
+                      {visibleColumns.ElectionCenter && (
                         <td className="px-2 sm:px-4 py-2 sm:py-3">
                           <div className="text-xs sm:text-sm text-gray-900">
-                            {row.pollingCenter}
+                            {row?.ElectionCenter?.name}
                           </div>
                         </td>
                       )}

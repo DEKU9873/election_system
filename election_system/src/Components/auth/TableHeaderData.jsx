@@ -43,8 +43,8 @@ export const tableHeaders = [
     icon: null,
   },
   {
-    id: "registrationMethod",
-    label: "طريقة التسجيل",
+    id: "ElectionCenter",
+    label: "المركز الانتخابي",
     shortLabel: "الطريقة",
     sortable: true,
     icon: null,
@@ -87,9 +87,9 @@ export const MonitorsTableHeaders = [
     icon: null,
   },
   {
-    id: "state",
-    label: "الحالة",
-    shortLabel: "الحالة",
+    id: "ElectionCenter",
+    label: "المركز الانتخابي",
+    shortLabel: "المركز الانتخابي",
     sortable: true,
     icon: null,
   },
@@ -182,7 +182,7 @@ export const userTableHeaders = [
     icon: null,
   },
   {
-    id: "pollingCenter",
+    id: "ElectionCenter",
     label: "المركز الانتخابي",
     shortLabel: "المركز",
     sortable: true,
