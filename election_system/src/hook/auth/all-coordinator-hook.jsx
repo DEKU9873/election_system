@@ -9,9 +9,9 @@ const AllCoordinatorHook = () => {
     dispatch(getAllCoordinators());
   }, [dispatch]);
 
-  const { allUsers, loading } = useSelector((state) => state.auth);
+  const { allCoordinators, loading } = useSelector((state) => state.auth);
 
-  return [allUsers, loading];
+  return [allCoordinators, loading];
 };
 
 export default AllCoordinatorHook;

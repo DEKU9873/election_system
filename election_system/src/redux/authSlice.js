@@ -3,6 +3,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { useInsertData, useInsertDataWithImage } from "../hooks/useInsertData";
 import { useGetDataToken } from "../hooks/useGetData";
 import { useDeleteDataWithToken } from "../hooks/useDeleteData";
+import { useUpdateDataWithToken } from "../hooks/useUpdateData";
 
 // Register User
 export const registerUser = createAsyncThunk(
@@ -140,14 +141,63 @@ export const deleteUser = createAsyncThunk(
   }
 );
 
+// Confirm Voting
+export const confirmVoting = createAsyncThunk(
+  "auth/confirmVoting",
+  async (userId, thunkAPI) => {
+    try {
+      const response = await useUpdateDataWithToken(`/api/confirm-voting/${userId}`, {});
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "فشل في تأكيد التصويت"
+      );
+    }
+  }
+);
+
+// Toggle Active Status
+export const toggleActive = createAsyncThunk(
+  "auth/toggleActive",
+  async (userId, thunkAPI) => {
+    try {
+      const response = await useUpdateDataWithToken(`/api/toggle-active/${userId}`, {});
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "فشل في تغيير حالة التفعيل"
+      );
+    }
+  }
+);
+
+// Delete Coordinator
+export const deleteCoordinator = createAsyncThunk(
+  "auth/deleteCoordinator",
+  async (coordinatorId, thunkAPI) => {
+    try {
+      await useDeleteDataWithToken(`/api/coordinator/${coordinatorId}/`);
+      return coordinatorId;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "فشل في حذف المنسق"
+      );
+    }
+  }
+);
+
 // Initial State
 const initialState = {
   user: null,
   singleUser: null,
   allUsers: [],
+  allCoordinators: [],
   loading: false,
   error: null,
   deleteSuccess: false,
+  deleteCoordinatorSuccess: false,
+  confirmVotingSuccess: false,
+  toggleActiveSuccess: false,
 };
 
 // Slice
@@ -272,7 +322,7 @@ const authSlice = createSlice({
       })
       .addCase(getAllCoordinators.fulfilled, (state, action) => {
         state.loading = false;
-        state.allUsers = action.payload; // يمكنك تغيير الاسم إلى state.allCoordinators إذا رغبت بذلك
+        state.allCoordinators = action.payload;
       })
       .addCase(getAllCoordinators.rejected, (state, action) => {
         state.loading = false;
@@ -293,6 +343,59 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         state.singleUser = null; // أو state.singleCoordinator
+      })
+
+      // Confirm Voting
+      .addCase(confirmVoting.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.confirmVotingSuccess = false;
+      })
+      .addCase(confirmVoting.fulfilled, (state, action) => {
+        state.loading = false;
+        state.confirmVotingSuccess = true;
+        state.error = null;
+      })
+      .addCase(confirmVoting.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.confirmVotingSuccess = false;
+      })
+
+      // Toggle Active Status
+      .addCase(toggleActive.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.toggleActiveSuccess = false;
+      })
+      .addCase(toggleActive.fulfilled, (state, action) => {
+        state.loading = false;
+        state.toggleActiveSuccess = true;
+        state.error = null;
+      })
+      .addCase(toggleActive.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.toggleActiveSuccess = false;
+      })
+
+      // Delete Coordinator
+      .addCase(deleteCoordinator.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.deleteCoordinatorSuccess = false;
+      })
+      .addCase(deleteCoordinator.fulfilled, (state, action) => {
+        state.loading = false;
+        state.deleteCoordinatorSuccess = true;
+        state.allCoordinators = state.allCoordinators.filter(
+          (coordinator) => coordinator.User?.id !== action.payload
+        );
+      })
+      .addCase(deleteCoordinator.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.deleteCoordinatorSuccess = false;
       });
   },
 });

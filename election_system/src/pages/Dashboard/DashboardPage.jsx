@@ -1,103 +1,181 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Users, Vote, UserCog, DollarSign, BarChart3, PieChart, TrendingUp } from 'lucide-react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title, PointElement, LineElement } from 'chart.js';
 import { Pie, Bar, Line } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import AllUserHook from '../../hook/auth/all-user-hook';
 
 // تسجيل مكونات Chart.js
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title, PointElement, LineElement, ChartDataLabels);
 
 const DashboardPage = () => {
-  const [stats, setStats] = useState({
-    voters: 12500,
-    supervisors: 450,
-    coordinators: 850,
-    centers: 320,
-    districts: 45,
-    subdistricts: 120
-  });
+  const [
+    allUsers,
+    loading,
+    system_admin,
+    coordinator,
+    observer,
+    center_manager,
+    district_manager,
+    finance_auditor,
+    voter,
+  ] = AllUserHook();
 
-  // بيانات للرسوم البيانية
-  const chartData = {
-    votersByGovernorate: {
-      labels: ['بغداد', 'البصرة', 'نينوى', 'أربيل', 'السليمانية', 'كركوك', 'ديالى'],
-      datasets: [
-        {
-          label: 'عدد الناخبين',
-          data: [4500, 2800, 1900, 1600, 1700, 1200, 1400],
-          backgroundColor: [
-            'rgba(54, 162, 235, 0.7)',
-            'rgba(255, 99, 132, 0.7)',
-            'rgba(255, 206, 86, 0.7)',
-            'rgba(75, 192, 192, 0.7)',
-            'rgba(153, 102, 255, 0.7)',
-            'rgba(255, 159, 64, 0.7)',
-            'rgba(199, 199, 199, 0.7)'
-          ],
-          borderColor: [
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 99, 132, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)',
-            'rgba(199, 199, 199, 1)'
-          ],
-          borderWidth: 1,
-        },
-      ],
-    },
-    voterParticipation: {
-      labels: ['بغداد', 'البصرة', 'نينوى', 'أربيل', 'السليمانية', 'كركوك', 'ديالى'],
-      datasets: [
-        {
-          label: 'نسبة المشاركة',
-          data: [75, 68, 62, 80, 72, 65, 70],
-          backgroundColor: [
-            'rgba(54, 162, 235, 0.7)',
-            'rgba(255, 99, 132, 0.7)',
-            'rgba(255, 206, 86, 0.7)',
-            'rgba(75, 192, 192, 0.7)',
-            'rgba(153, 102, 255, 0.7)',
-            'rgba(255, 159, 64, 0.7)',
-            'rgba(199, 199, 199, 0.7)'
-          ],
-          borderColor: [
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 99, 132, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)',
-            'rgba(199, 199, 199, 1)'
-          ],
-          borderWidth: 1,
-        },
-        {
-          label: 'المتوسط الوطني',
-          data: [70, 70, 70, 70, 70, 70, 70],
-          type: 'line',
-          fill: false,
-          borderColor: 'rgba(255, 99, 132, 1)',
-          borderDash: [5, 5],
-          borderWidth: 2,
-          pointRadius: 0,
-        }
-      ],
-    },
-    votersByAge: {
-      labels: ['18-25', '26-35', '36-45', '46-55', '56-65', '65+'],
-      datasets: [
-        {
-          label: 'عدد الناخبين حسب الفئة العمرية',
-          data: [3200, 4500, 2800, 1900, 1200, 900],
-          backgroundColor: 'rgba(54, 162, 235, 0.7)',
-          borderColor: 'rgba(54, 162, 235, 1)',
-          borderWidth: 1,
-        },
-      ],
-    },
-  };
+  // حساب الإحصائيات من البيانات الحقيقية
+  const stats = useMemo(() => {
+    if (!allUsers || allUsers.length === 0) {
+      return {
+        voters: 0,
+        supervisors: 0,
+        coordinators: 0,
+        centers: 0,
+        districts: 0,
+        subdistricts: 0
+      };
+    }
+
+    // حساب عدد المراكز الانتخابية الفريدة
+    const uniqueCenters = new Set(
+      allUsers
+        .filter(user => user.election_center_id)
+        .map(user => user.election_center_id)
+    ).size;
+
+    // حساب عدد الأقضية الفريدة
+    const uniqueDistricts = new Set(
+      allUsers
+        .filter(user => user.district_id)
+        .map(user => user.district_id)
+    ).size;
+
+    // حساب عدد النواحي الفريدة
+    const uniqueSubdistricts = new Set(
+      allUsers
+        .filter(user => user.subdistrict_id)
+        .map(user => user.subdistrict_id)
+    ).size;
+
+    return {
+      voters: voter.length,
+      supervisors: observer.length,
+      coordinators: coordinator.length,
+      centers: uniqueCenters,
+      districts: uniqueDistricts,
+      subdistricts: uniqueSubdistricts
+    };
+  }, [allUsers, voter, observer, coordinator]);
+
+  // بيانات للرسوم البيانية بناءً على البيانات الحقيقية
+  const chartData = useMemo(() => {
+    if (!allUsers || allUsers.length === 0) {
+      return {
+        votersByGovernorate: { labels: [], datasets: [] },
+        voterParticipation: { labels: [], datasets: [] },
+        votersByAge: { labels: [], datasets: [] },
+        votersByRole: { labels: [], datasets: [] }
+      };
+    }
+
+    // توزيع المستخدمين حسب الأدوار
+    const roleData = {
+      'ناخبين': voter.length,
+      'منسقين': coordinator.length,
+      'مراقبين': observer.length,
+      'مدراء مراكز': center_manager.length,
+      'مدراء أقضية': district_manager.length,
+      'مدققين ماليين': finance_auditor.length,
+      'مدراء نظام': system_admin.length
+    };
+
+    // حساب توزيع الناخبين حسب الفئة العمرية
+    const currentYear = new Date().getFullYear();
+    const ageGroups = {
+      '18-25': 0,
+      '26-35': 0,
+      '36-45': 0,
+      '46-55': 0,
+      '56-65': 0,
+      '65+': 0
+    };
+
+    voter.forEach(user => {
+      if (user.birth_year) {
+        const age = currentYear - user.birth_year;
+        if (age >= 18 && age <= 25) ageGroups['18-25']++;
+        else if (age >= 26 && age <= 35) ageGroups['26-35']++;
+        else if (age >= 36 && age <= 45) ageGroups['36-45']++;
+        else if (age >= 46 && age <= 55) ageGroups['46-55']++;
+        else if (age >= 56 && age <= 65) ageGroups['56-65']++;
+        else if (age > 65) ageGroups['65+']++;
+      }
+    });
+
+    // حساب نسبة المشاركة (الذين صوتوا)
+    const votedUsers = allUsers.filter(user => user.has_voted).length;
+    const totalEligibleVoters = allUsers.filter(user => user.can_vote).length;
+    const participationRate = totalEligibleVoters > 0 ? Math.round((votedUsers / totalEligibleVoters) * 100) : 0;
+
+    return {
+      votersByRole: {
+        labels: Object.keys(roleData),
+        datasets: [
+          {
+            label: 'عدد المستخدمين',
+            data: Object.values(roleData),
+            backgroundColor: [
+              'rgba(54, 162, 235, 0.7)',
+              'rgba(255, 99, 132, 0.7)',
+              'rgba(255, 206, 86, 0.7)',
+              'rgba(75, 192, 192, 0.7)',
+              'rgba(153, 102, 255, 0.7)',
+              'rgba(255, 159, 64, 0.7)',
+              'rgba(199, 199, 199, 0.7)'
+            ],
+            borderColor: [
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 99, 132, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)',
+              'rgba(199, 199, 199, 1)'
+            ],
+            borderWidth: 1,
+          },
+        ],
+      },
+      voterParticipation: {
+        labels: ['نسبة المشاركة', 'لم يشاركوا'],
+        datasets: [
+          {
+            label: 'المشاركة في التصويت',
+            data: [participationRate, 100 - participationRate],
+            backgroundColor: [
+              'rgba(75, 192, 192, 0.7)',
+              'rgba(255, 99, 132, 0.7)'
+            ],
+            borderColor: [
+              'rgba(75, 192, 192, 1)',
+              'rgba(255, 99, 132, 1)'
+            ],
+            borderWidth: 1,
+          },
+        ],
+      },
+      votersByAge: {
+        labels: Object.keys(ageGroups),
+        datasets: [
+          {
+            label: 'عدد الناخبين حسب الفئة العمرية',
+            data: Object.values(ageGroups),
+            backgroundColor: 'rgba(54, 162, 235, 0.7)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1,
+          },
+        ],
+      },
+    };
+  }, [allUsers, voter, coordinator, observer, center_manager, district_manager, finance_auditor, system_admin]);
 
   return (
     <div className="min-h-screen ">
@@ -154,10 +232,15 @@ const DashboardPage = () => {
         {/* الرسوم البيانية */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
           <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm">
-            <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">توزيع الناخبين حسب المحافظة</h2>
+            <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">توزيع المستخدمين حسب الأدوار</h2>
             <div className="h-48 sm:h-64">
-              <Bar 
-                data={chartData.votersByGovernorate}
+              {loading ? (
+                <div className="flex items-center justify-center h-full">
+                  <div className="text-gray-500">جاري تحميل البيانات...</div>
+                </div>
+              ) : (
+                <Bar 
+                  data={chartData.votersByRole}
                 options={{
                   responsive: true,
                   maintainAspectRatio: false,
@@ -214,91 +297,64 @@ const DashboardPage = () => {
                   },
                 }}
               />
-            </div>
+            )}
           </div>
+        </div>
           
           <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm">
-            <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">نسبة المشاركة في الانتخابات حسب المحافظات</h2>
+            <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">نسبة المشاركة في التصويت</h2>
             <div className="flex flex-col items-center mb-3">
-              <div className="text-xs sm:text-sm text-gray-500 mb-1 sm:mb-2 text-center">متوسط نسبة المشاركة الوطنية: 70%</div>
-              <div className="text-xs sm:text-sm text-gray-500 text-center">أعلى نسبة مشاركة: أربيل (80%)</div>
+              <div className="text-xs sm:text-sm text-gray-500 mb-1 sm:mb-2 text-center">
+                إجمالي المؤهلين للتصويت: {allUsers?.filter(user => user.can_vote).length || 0}
+              </div>
+              <div className="text-xs sm:text-sm text-gray-500 text-center">
+                عدد الذين صوتوا: {allUsers?.filter(user => user.has_voted).length || 0}
+              </div>
             </div>
             <div className="h-48 sm:h-64">
-              <Bar 
-                data={chartData.voterParticipation}
-                options={{
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  plugins: {
-                    legend: {
-                      position: 'top',
-                      labels: {
-                        font: {
-                          family: 'Cairo',
-                          size: window.innerWidth < 640 ? 10 : 12,
+              {loading ? (
+                <div className="flex items-center justify-center h-full">
+                  <div className="text-gray-500">جاري تحميل البيانات...</div>
+                </div>
+              ) : (
+                <Pie 
+                  data={chartData.voterParticipation}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                      legend: {
+                        position: 'bottom',
+                        labels: {
+                          font: {
+                            family: 'Cairo',
+                            size: window.innerWidth < 640 ? 10 : 12,
+                          },
+                          padding: window.innerWidth < 640 ? 10 : 20,
                         },
-                        padding: window.innerWidth < 640 ? 10 : 20,
                       },
-                    },
-                    tooltip: {
-                      callbacks: {
-                        label: function(context) {
-                          return `${context.dataset.label}: ${context.raw}%`;
+                      tooltip: {
+                        callbacks: {
+                          label: function(context) {
+                            return `${context.label}: ${context.raw}%`;
+                          }
                         }
-                      }
-                    },
-                    datalabels: {
-                      formatter: (value) => {
-                        return value + '%';
                       },
-                      color: function(context) {
-                        return context.dataset.type === 'line' ? context.dataset.borderColor : '#fff';
-                      },
-                      display: function(context) {
-                        return context.dataset.type !== 'line';
-                      },
-                      font: {
-                        weight: 'bold',
-                        family: 'Cairo',
-                        size: window.innerWidth < 640 ? 10 : 12,
-                      },
-                    }
-                  },
-                  scales: {
-                    y: {
-                      beginAtZero: true,
-                      max: 100,
-                      ticks: {
-                        callback: function(value) {
+                      datalabels: {
+                        formatter: (value) => {
                           return value + '%';
                         },
+                        color: '#fff',
                         font: {
+                          weight: 'bold',
                           family: 'Cairo',
                           size: window.innerWidth < 640 ? 10 : 12,
                         },
-                      },
-                      title: {
-                        display: true,
-                        text: 'نسبة المشاركة',
-                        font: {
-                          family: 'Cairo',
-                          size: window.innerWidth < 640 ? 11 : 14,
-                        },
-                      },
-                    },
-                    x: {
-                      ticks: {
-                        font: {
-                          family: 'Cairo',
-                          size: window.innerWidth < 640 ? 10 : 12,
-                        },
-                        maxRotation: window.innerWidth < 640 ? 45 : 0,
-                        minRotation: window.innerWidth < 640 ? 45 : 0,
-                      },
-                    },
-                  },
-                }}
-              />
+                      }
+                    }
+                  }}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -306,10 +362,17 @@ const DashboardPage = () => {
         {/* رسم بياني إضافي */}
         <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm mb-6 sm:mb-8">
           <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">توزيع الناخبين حسب الفئة العمرية</h2>
-          <p className="text-sm sm:text-base text-gray-600 mb-3">يوضح هذا المخطط توزيع الناخبين المسجلين حسب الفئات العمرية المختلفة</p>
+          <p className="text-sm sm:text-base text-gray-600 mb-3">
+            يوضح هذا المخطط توزيع الناخبين المسجلين حسب الفئات العمرية المختلفة (إجمالي الناخبين: {voter.length})
+          </p>
           <div className="h-48 sm:h-64">
-            <Bar 
-              data={chartData.votersByAge}
+            {loading ? (
+              <div className="flex items-center justify-center h-full">
+                <div className="text-gray-500">جاري تحميل البيانات...</div>
+              </div>
+            ) : (
+              <Bar 
+                data={chartData.votersByAge}
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
@@ -385,34 +448,41 @@ const DashboardPage = () => {
                 },
               }}
             />
+            )}
           </div>
         </div>
 
         {/* آخر النشاطات */}
         <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm">
-          <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">آخر النشاطات</h2>
-          <div className="space-y-3 sm:space-y-4">
-            <ActivityItem 
-              title="تسجيل ناخب جديد" 
-              time="منذ 10 دقائق" 
-              description="تم تسجيل ناخب جديد في محافظة بغداد" 
-            />
-            <ActivityItem 
-              title="تعيين مشرف جديد" 
-              time="منذ 30 دقيقة" 
-              description="تم تعيين مشرف جديد لمركز الكرخ الانتخابي" 
-            />
-            <ActivityItem 
-              title="تحديث بيانات مركز" 
-              time="منذ ساعة" 
-              description="تم تحديث بيانات مركز الرصافة الانتخابي" 
-            />
-            <ActivityItem 
-              title="إضافة ناحية جديدة" 
-              time="منذ 3 ساعات" 
-              description="تمت إضافة ناحية جديدة في محافظة البصرة" 
-            />
-          </div>
+          <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">إحصائيات النظام</h2>
+          {loading ? (
+            <div className="flex items-center justify-center py-8">
+              <div className="text-gray-500">جاري تحميل البيانات...</div>
+            </div>
+          ) : (
+            <div className="space-y-3 sm:space-y-4">
+              <ActivityItem 
+                title="إجمالي المستخدمين المسجلين" 
+                time={`${allUsers?.length || 0} مستخدم`}
+                description={`منهم ${voter.length} ناخب و ${coordinator.length} منسق`}
+              />
+              <ActivityItem 
+                title="المستخدمين النشطين" 
+                time={`${allUsers?.filter(user => user.is_active).length || 0} مستخدم`}
+                description="المستخدمين الذين يمكنهم الوصول للنظام حالياً"
+              />
+              <ActivityItem 
+                title="المستخدمين الذين صوتوا" 
+                time={`${allUsers?.filter(user => user.has_voted).length || 0} مستخدم`}
+                description="من إجمالي المؤهلين للتصويت"
+              />
+              <ActivityItem 
+                title="المستخدمين الذين حدثوا بطاقاتهم" 
+                time={`${allUsers?.filter(user => user.has_updated_card).length || 0} مستخدم`}
+                description="المستخدمين الذين قاموا بتحديث بطاقاتهم الانتخابية"
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>

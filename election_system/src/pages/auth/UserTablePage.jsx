@@ -3,18 +3,19 @@ import Sidebar from "../../Components/Uitily/Sidebar";
 import UserTableTitle from "../../Components/auth/UserTableTitle";
 import UserTableToolbar from "../../Components/auth/UserTableToolbar";
 import UserTableStats from "../../Components/auth/UserTableStats";
-import { MoreHorizontal, User } from "lucide-react";
+import { MoreHorizontal, User, UserCheck, UserX } from "lucide-react";
 import UserTablePagination from "../../Components/auth/UserTablePagination";
 import { userTableHeaders } from "../../Components/auth/TableHeaderData";
 import UsersMap from "../../Components/auth/UsersMap";
 import UserTableHeader from "../../Components/auth/UserTableHeader";
 import AllUserHook from "../../hook/auth/all-user-hook";
 import formatDate from "../../hook/UtilsFunctions/FormatDate";
-import { deleteUser, getAllUsers } from "../../redux/authSlice";
+import { deleteUser, getAllUsers, toggleActive } from "../../redux/authSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import DeleteModal from "../../Components/Uitily/DeleteModal";
 import Loader from "../../Components/Uitily/Loader";
+import { useUpdateData, useUpdateDataWithToken } from "../../hooks/useUpdateData";
 const UserTablePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const UserTablePage = () => {
     finance_auditor,
   ] = AllUserHook();
 
-  console.log(allUsers);
+  console.log("allUsers:", allUsers);
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
@@ -44,7 +45,8 @@ const UserTablePage = () => {
     phone_number: true,
     ElectionCenter: true,
     role: true,
-    addBy: true,
+    // addBy: true,
+    active: true,
     createdAt: true,
     actions: true,
   });
@@ -167,6 +169,13 @@ const UserTablePage = () => {
     }
   };
 
+  const handleToggleActive = async (id) => {
+    if (id) {
+      await dispatch(toggleActive(id));
+      await dispatch(getAllUsers());
+    }
+  };
+
   return (
     <div className="min-h-screen">
       <div
@@ -281,13 +290,41 @@ const UserTablePage = () => {
                           </div>
                         </td>
                       )}
-                      {visibleColumns.addBy && (
+                      {/* {visibleColumns.addBy && (
                         <td className="px-2 sm:px-4 py-2 sm:py-3">
                           <div className="text-xs sm:text-sm text-gray-900">
                             {row.addBy}
                           </div>
                         </td>
+                      )} */}
+                      
+                      {visibleColumns.active && (
+                        <td className="px-2 sm:px-4 py-2 sm:py-3">
+                          <div className="flex items-center justify-center">
+                            <button
+                              onClick={() => handleToggleActive(row.id)}
+                              className="flex items-center gap-1 hover:opacity-80 transition-opacity duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-300 rounded px-2 py-1"
+                              title={row.is_active ? 'نشط - انقر للإلغاء' : 'غير نشط - انقر للتفعيل'}
+                            >
+                              {row.is_active ? (
+                                <UserCheck className="w-4 h-4 text-green-600" />
+                              ) : (
+                                <UserX className="w-4 h-4 text-red-600" />
+                              )}
+                              <span
+                                className={`text-sm font-medium ${
+                                  row.is_active
+                                    ? "text-green-700"
+                                    : "text-red-600"
+                                }`}
+                              >
+                                {row.is_active ? "مفعل" : "غير مفعل"}
+                              </span>
+                            </button>
+                          </div>
+                        </td>
                       )}
+                  
                       {visibleColumns.createdAt && (
                         <td className="px-2 sm:px-4 py-2 sm:py-3">
                           <div className="text-xs sm:text-sm text-gray-900">
@@ -295,6 +332,7 @@ const UserTablePage = () => {
                           </div>
                         </td>
                       )}
+                
 
                       {visibleColumns.actions && (
                         <td className="px-2 sm:px-4 py-2 sm:py-3">
@@ -321,6 +359,7 @@ const UserTablePage = () => {
                                   >
                                     عرض التفاصيل
                                   </button>
+                              
                                   <button
                                     onClick={() =>
                                       handleUserAction("edit", row)

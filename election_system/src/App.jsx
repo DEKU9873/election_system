@@ -23,6 +23,7 @@ import PrivateRoute from "./Components/PrivateRoute";
 import MainLayout from "./Components/Layout/MainLayout";
 import ExpensePage from "./pages/finance/ExpensePage";
 import FinanceCapitalsPage from "./pages/finance/FinanceCapitalsPage";
+import LogPage from "./pages/log/LogPage";
 
 const App = () => {
   return (
@@ -58,6 +59,7 @@ const App = () => {
             <Route path="/" element={<DashboardPage />} />
             <Route path="/expense" element={<ExpensePage />} />
             <Route path="/financeCapitals" element={<FinanceCapitalsPage />} />
+            <Route path="/log" element={<LogPage />} />
           </Route>
         </Route>
       </Routes>

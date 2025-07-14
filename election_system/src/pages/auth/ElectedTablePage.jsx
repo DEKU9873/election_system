@@ -12,7 +12,7 @@ import UsersMap from "../../Components/auth/UsersMap";
 import AllUserHook from "../../hook/auth/all-user-hook";
 import formatDate from "../../hook/UtilsFunctions/FormatDate";
 import { useNavigate } from "react-router-dom";
-import { deleteUser, getAllUsers } from "../../redux/authSlice";
+import { confirmVoting, deleteUser, getAllUsers } from "../../redux/authSlice";
 import { useDispatch } from "react-redux";
 import RegisterModal from "./Auth Modal/RegisterModal";
 import DeleteModal from "../../Components/Uitily/DeleteModal";
@@ -52,6 +52,7 @@ const ElectedTablePage = () => {
     birth_year: true,
     createdAt: true,
     ElectionCenter: true,
+    confirmed_voting: true,
     actions: true,
   });
   const [showColumnMenu, setShowColumnMenu] = useState(false);
@@ -179,6 +180,13 @@ const ElectedTablePage = () => {
   };
   const handleCloseModal = () => {
     setShowModal(false);
+  };
+
+    const handleConfirmVoting = async (id) => {
+    if (id) {
+      await dispatch(confirmVoting(id));
+      await dispatch(getAllUsers());
+    }
   };
 
   return (
@@ -321,6 +329,20 @@ const ElectedTablePage = () => {
                           </div>
                         </td>
                       )}
+
+                          {visibleColumns.confirmed_voting && (
+                        <td className="px-2 sm:px-4 py-2 sm:py-3">
+                          <div className="text-xs sm:text-sm">
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                              row.confirmed_voting 
+                                ? 'bg-green-100 text-green-800' 
+                                : 'bg-red-100 text-red-800'
+                            }`}>
+                              {row.confirmed_voting ? 'تم التصويت' : 'لم يتم التصويت'}
+                            </span>
+                          </div>
+                        </td>
+                      )}
                       {visibleColumns.actions && (
                         <td className="px-2 sm:px-4 py-2 sm:py-3">
                           <div className="relative">
@@ -345,6 +367,14 @@ const ElectedTablePage = () => {
                                     className="block w-full text-right px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                   >
                                     عرض التفاصيل
+                                  </button>
+                                        <button
+                                    onClick={() =>
+                                      handleConfirmVoting(row.id)
+                                    }
+                                    className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                  >
+                                    تأكيد التصويت
                                   </button>
                                   <button
                                     onClick={() =>

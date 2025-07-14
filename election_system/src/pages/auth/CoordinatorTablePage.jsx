@@ -14,7 +14,7 @@ import AllCoordinatorHook from "../../hook/auth/all-coordinator-hook";
 import CoordinatorRegisterModal from "./Auth Modal/CoordinatorRegisterModal";
 import DeleteModal from "../../Components/Uitily/DeleteModal";
 import { useDispatch } from "react-redux";
-import { deleteUser, getAllUsers } from "../../redux/authSlice";
+import { deleteCoordinator, getAllCoordinators } from "../../redux/authSlice";
 import { useNavigate } from "react-router-dom";
 
 const CoordinatorTablePage = () => {
@@ -25,7 +25,7 @@ const CoordinatorTablePage = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [userIdToDelete, setUserIdToDelete] = useState(null);
 
-  const [allUsers, loading] = AllCoordinatorHook();
+  const [allCoordinators, loading] = AllCoordinatorHook();
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
@@ -46,14 +46,14 @@ const CoordinatorTablePage = () => {
 
   // تصفية البيانات
   const filteredData = useMemo(() => {
-    return allUsers.filter(
+    return allCoordinators.filter(
       (item) =>
         item?.User?.full_name
           .toLowerCase()
           .includes(filterText.toLowerCase()) ||
         item?.User?.phone_number.includes(filterText)
     );
-  }, [allUsers, filterText]);
+  }, [allCoordinators, filterText]);
 
   // ترتيب البيانات
   const sortedData = useMemo(() => {
@@ -131,8 +131,8 @@ const CoordinatorTablePage = () => {
 
   const handleDeleteConfirmation = async () => {
     if (userIdToDelete) {
-      await dispatch(deleteUser(userIdToDelete));
-      await dispatch(getAllUsers());
+      await dispatch(deleteCoordinator(userIdToDelete));
+      await dispatch(getAllCoordinators());
 
       setShowDeleteModal(false);
       setUserIdToDelete(null);
@@ -173,7 +173,7 @@ const CoordinatorTablePage = () => {
             onOpen={handleOpenModal}
           />
 
-          <UserTableStats data={allUsers} title="اجمالي المرتكزين" />
+          <UserTableStats data={allCoordinators} title="اجمالي المرتكزين" />
         </div>
 
         {/* الجدول */}
@@ -202,7 +202,7 @@ const CoordinatorTablePage = () => {
             ) : (
               <tbody className="divide-y divide-gray-200">
                 {paginatedData.length > 0 ? (
-                  paginatedData.map((row) => (
+                  paginatedData.map((row, index) => (
                     <tr
                       key={row.id}
                       className={`hover:bg-gray-50 transition-colors ${
@@ -222,7 +222,7 @@ const CoordinatorTablePage = () => {
                       {visibleColumns.id && (
                         <td className="px-2 sm:px-4 py-2 sm:py-3">
                           <div className="text-xs sm:text-sm text-gray-900">
-                            {row.id}
+                            {index + 1}
                           </div>
                         </td>
                       )}
@@ -276,9 +276,7 @@ const CoordinatorTablePage = () => {
                                     عرض التفاصيل
                                   </button>
                                   <button
-                                    onClick={() =>
-                                      handleUserAction("delete", row)
-                                    }
+                                    onClick={() => handleDeleteConfirm(row.id)}
                                     className="block w-full text-right px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-red-700 hover:bg-red-50 transition-colors"
                                   >
                                     حذف

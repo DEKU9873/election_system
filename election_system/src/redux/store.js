@@ -4,6 +4,7 @@ import { placeReducer } from "./placeSlice";
 import { tapeReducer } from "./electoralStripsSlice";
 import { notificationsReducer } from "./notificationSlice";
 import { financeReducer } from "./financeSlice";
+import { logReducer } from "./logSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     tape: tapeReducer,
     notifications: notificationsReducer,
     finance: financeReducer,
+    log:logReducer,
   },
 });
   

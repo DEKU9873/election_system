@@ -50,6 +50,14 @@ export const tableHeaders = [
     icon: null,
   },
   {
+    id: "confirmed_voting",
+    label: "تأكيد التصويت",
+    shortLabel: "تأكيد التصويت",
+    sortable: true,
+    icon: null,
+  },
+
+  {
     id: "actions",
     label: "الإجراءات",
     shortLabel: "الإجراءات",
@@ -195,10 +203,18 @@ export const userTableHeaders = [
     sortable: true,
     icon: null,
   },
+
+    {
+    id: "confirmed_voting",
+    label: "تأكيد التصويت",
+    shortLabel: "تأكيد التصويت",
+    sortable: true,
+    icon: null,
+  },
   {
-    id: "addBy",
-    label: "اضيف بواسطة",
-    shortLabel: "المضيف",
+    id: "active",
+    label: "حالة النشاط",
+    shortLabel: "النشاط",
     sortable: true,
     icon: null,
   },
