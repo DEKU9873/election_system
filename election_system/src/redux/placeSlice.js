@@ -48,9 +48,7 @@ export const deleteGovernate = createAsyncThunk(
   "place/deleteGovernate",
   async (id, thunkAPI) => {
     try {
-      const response = await useDeleteDataWithToken(
-        `/api/governate/${id}`
-      );
+      const response = await useDeleteDataWithToken(`/api/governate/${id}`);
       // إرجاع المعرف مع البيانات لاستخدامه في reducer
       return { id, ...response };
     } catch (error) {
@@ -122,9 +120,7 @@ export const deleteSubdistrict = createAsyncThunk(
   "place/deleteSubdistrict",
   async (id, thunkAPI) => {
     try {
-      const response = await useDeleteDataWithToken(
-        `/api/subdistrict/${id}`
-      );
+      const response = await useDeleteDataWithToken(`/api/subdistrict/${id}`);
       // إرجاع المعرف مع البيانات لاستخدامه في reducer
       return { id, ...response };
     } catch (error) {
@@ -196,9 +192,7 @@ export const deleteDistrict = createAsyncThunk(
   "place/deleteDistrict",
   async (id, thunkAPI) => {
     try {
-      const response = await useDeleteDataWithToken(
-        `/api/district/${id}`
-      );
+      const response = await useDeleteDataWithToken(`/api/district/${id}`);
       // إرجاع المعرف مع البيانات لاستخدامه في reducer
       return { id, ...response };
     } catch (error) {
@@ -342,9 +336,7 @@ export const deleteStation = createAsyncThunk(
   "place/deleteStation",
   async (id, thunkAPI) => {
     try {
-      const response = await useDeleteDataWithToken(
-        `/api/station/${id}`
-      );
+      const response = await useDeleteDataWithToken(`/api/station/${id}`);
       // إرجاع المعرف مع البيانات لاستخدامه في reducer
       return { id, ...response };
     } catch (error) {
