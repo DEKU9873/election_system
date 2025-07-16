@@ -1,24 +1,25 @@
-import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   fetchNotifications,
   addNotification,
   deleteNotification,
   deleteAllNotifications,
   markNotificationRead,
-  resetState
-} from '../../redux/notificationSlice';
-import {
-  subscribeToNotifications
-} from '../../Api/notificationsAPI';
-
-
+  resetState,
+} from "../../redux/notificationSlice";
+import { subscribeToNotifications } from "../../Api/notificationsAPI";
 
 const useNotificationsHook = () => {
   const dispatch = useDispatch();
-  const { items: notifications, loading, error, success } = useSelector((state) => state.notifications);
+  const {
+    items: notifications,
+    loading,
+    error,
+    success,
+  } = useSelector((state) => state.notifications);
   const [unreadCount, setUnreadCount] = useState(0);
-  
+
   // جلب الإشعارات من الخادم عند تحميل المكون
   useEffect(() => {
     const fetchNotificationsFromServer = async () => {
@@ -28,18 +29,19 @@ const useNotificationsHook = () => {
 
     fetchNotificationsFromServer();
   }, [dispatch]);
-  
+
   // حساب عدد الإشعارات غير المقروءة
   useEffect(() => {
     if (notifications) {
-      const count = notifications.filter(notification => 
-        // التحقق من كلا الخاصيتين isRead و read
-        (!notification.isRead && !notification.read)
+      const count = notifications.filter(
+        (notification) =>
+          // التحقق من كلا الخاصيتين isRead و read
+          !notification.isRead && !notification.read
       ).length;
       setUnreadCount(count);
     }
   }, [notifications]);
-  
+
   // الاشتراك في الإشعارات في الوقت الحقيقي
   useEffect(() => {
     const unsubscribe = subscribeToNotifications((newNotifications) => {
@@ -47,7 +49,7 @@ const useNotificationsHook = () => {
       dispatch(resetState());
       dispatch(fetchNotifications());
     });
-    
+
     return () => {
       unsubscribe();
     };
@@ -59,7 +61,7 @@ const useNotificationsHook = () => {
       // إضافة تاريخ للإشعار إذا لم يكن موجودًا
       const now = new Date();
       const newNotification = {
-        time: now.toLocaleString('ar-SA'), 
+        time: now.toLocaleString("ar-SA"),
         read: false,
         isRead: false, // إضافة خاصية isRead لتتوافق مع الباك اند
         // تحويل البيانات لتتوافق مع ما يتوقعه الباك اند
@@ -69,11 +71,14 @@ const useNotificationsHook = () => {
         send_to: notification.send_to || "all",
         // دعم كلا الصيغتين للتاريخ
         created_at: notification.created_at || now.toISOString(),
-        createdAt: notification.createdAt || notification.created_at || now.toISOString(),
+        createdAt:
+          notification.createdAt ||
+          notification.created_at ||
+          now.toISOString(),
         // إضافة معرف مؤقت للإشعار الجديد (سيتم استبداله بالمعرف الفعلي من الخادم)
-        notification_id: notification.notification_id || `temp-${Date.now()}`
+        notification_id: notification.notification_id || `temp-${Date.now()}`,
       };
-      
+
       // إضافة الإشعار مؤقتًا إلى الحالة المحلية قبل الاتصال بالخادم
       // هذا يضمن ظهور الإشعار فورًا للمستخدم
       if (notifications) {
@@ -82,13 +87,13 @@ const useNotificationsHook = () => {
         // يمكن استخدام هذا السطر إذا كنت تريد تحديث الحالة المحلية مباشرة
         // setNotifications(updatedNotifications);
       }
-      
+
       dispatch(resetState());
       const result = await dispatch(addNotification(newNotification));
-      
+
       // بعد الإضافة بنجاح، قم بتحديث الإشعارات من الخادم
       dispatch(fetchNotifications());
-      
+
       return true; // إرجاع نجاح العملية
     } catch (error) {
       return false;
@@ -107,7 +112,7 @@ const useNotificationsHook = () => {
     if (notifications && notifications.length > 0) {
       dispatch(resetState());
       // يمكن تنفيذ هذا بشكل أفضل في الباك اند بإضافة API خاص بتعليم جميع الإشعارات كمقروءة
-      notifications.forEach(notification => {
+      notifications.forEach((notification) => {
         if (!notification.read) {
           dispatch(markNotificationRead(notification.notification_id));
         }
@@ -137,7 +142,7 @@ const useNotificationsHook = () => {
     markAsRead: handleMarkAsRead,
     markAllAsRead: handleMarkAllAsRead,
     deleteNotification: handleDeleteNotification,
-    clearAllNotifications: handleClearAllNotifications
+    clearAllNotifications: handleClearAllNotifications,
   };
 };
 

@@ -24,6 +24,7 @@ import MainLayout from "./Components/Layout/MainLayout";
 import ExpensePage from "./pages/finance/ExpensePage";
 import FinanceCapitalsPage from "./pages/finance/FinanceCapitalsPage";
 import LogPage from "./pages/log/LogPage";
+import AndroidDataReceiver from "./pages/GetLocation";
 
 const App = () => {
   return (
@@ -32,7 +33,11 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route element={<MainLayout />}>
           <Route path="/selfRegister" element={<SelfRegister />} />
-          <Route element={<PrivateRoute allowedRoles={["system_admin", "voter"]} />}>
+          <Route
+            element={
+              <PrivateRoute allowedRoles={["system_admin", "voter", "owner"]} />
+            }
+          >
             <Route path="/elected" element={<ElectedTablePage />} />
             <Route path="/monitors" element={<MonitorsTablePage />} />
             <Route path="/coordinators" element={<CoordinatorTablePage />} />
@@ -60,6 +65,7 @@ const App = () => {
             <Route path="/expense" element={<ExpensePage />} />
             <Route path="/financeCapitals" element={<FinanceCapitalsPage />} />
             <Route path="/log" element={<LogPage />} />
+            <Route path="/location" element={<AndroidDataReceiver />} />
           </Route>
         </Route>
       </Routes>
