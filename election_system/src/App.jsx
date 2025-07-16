@@ -24,7 +24,7 @@ import MainLayout from "./Components/Layout/MainLayout";
 import ExpensePage from "./pages/finance/ExpensePage";
 import FinanceCapitalsPage from "./pages/finance/FinanceCapitalsPage";
 import LogPage from "./pages/log/LogPage";
-import AndroidDataReceiver from "./pages/GetLocation";
+import MonitorUserMap from "./pages/Monitor User/MonitorUserMap";
 
 const App = () => {
   return (
@@ -65,7 +65,7 @@ const App = () => {
             <Route path="/expense" element={<ExpensePage />} />
             <Route path="/financeCapitals" element={<FinanceCapitalsPage />} />
             <Route path="/log" element={<LogPage />} />
-            <Route path="/location" element={<AndroidDataReceiver />} />
+            <Route path="/usersMap" element={<MonitorUserMap />} />
           </Route>
         </Route>
       </Routes>

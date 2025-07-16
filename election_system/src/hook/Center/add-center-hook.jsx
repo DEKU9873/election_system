@@ -11,6 +11,8 @@ const AddCenterHook = (onClose) => {
   const [governorateId, setGovernorateId] = useState("");
   const [districtId, setDistrictId] = useState("");
   const [subdistrictId, setSubdistrictId] = useState("");
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
   const [loading, setLoading] = useState(false);
   const [submitClicked, setSubmitClicked] = useState(false);
 
@@ -21,6 +23,12 @@ const AddCenterHook = (onClose) => {
   const onChangeGovernorateId = (e) => setGovernorateId(Number(e.target.value));
   const onChangeDistrictId = (e) => setDistrictId(Number(e.target.value));
   const onChangeSubdistrictId = (e) => setSubdistrictId(Number(e.target.value));
+  const onChangeLatitude = (e) => setLatitude(e.target.value);
+  const onChangeLongitude = (e) => setLongitude(e.target.value);
+  const onLocationSelect = (lat, lng) => {
+    setLatitude(lat);
+    setLongitude(lng);
+  };
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -34,15 +42,21 @@ const AddCenterHook = (onClose) => {
     }
 
     try {
-      const res = await dispatch(
-        addElectionCenter({
-          name: center,
-          code,
-          governorate_id: governorateId,
-          district_id: districtId,
-          subdistrict_id: subdistrictId,
-        })
-      );
+      const centerData = {
+        name: center,
+        code,
+        governorate_id: governorateId,
+        district_id: districtId,
+        subdistrict_id: subdistrictId,
+      };
+      
+      // إضافة الموقع الجغرافي إذا تم تحديده
+      if (latitude && longitude) {
+        centerData.latitude = parseFloat(latitude);
+        centerData.longitude = parseFloat(longitude);
+      }
+      
+      const res = await dispatch(addElectionCenter(centerData));
 
       if (res.type === "place/addElectionCenter/fulfilled") {
         await dispatch(getElectionCenters());
@@ -53,6 +67,8 @@ const AddCenterHook = (onClose) => {
         setGovernorateId("");
         setDistrictId("");
         setSubdistrictId("");
+        setLatitude("");
+        setLongitude("");
         
         // إغلاق المودال بعد الإضافة الناجحة
         if (onClose) onClose();
@@ -72,6 +88,8 @@ const AddCenterHook = (onClose) => {
     governorateId,
     districtId,
     subdistrictId,
+    latitude,
+    longitude,
     loading,
     submitClicked,
     onChangeCenter,
@@ -79,6 +97,9 @@ const AddCenterHook = (onClose) => {
     onChangeGovernorateId,
     onChangeDistrictId,
     onChangeSubdistrictId,
+    onChangeLatitude,
+    onChangeLongitude,
+    onLocationSelect,
     onSubmit,
   ];
 };

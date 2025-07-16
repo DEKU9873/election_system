@@ -159,6 +159,8 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       ],
     },
     { id: "users", label: "المستخدمين", icon: Users, href: "/users" },
+    { id: "usersMap", label: "خريطة المستخدمين", icon: MapPin, href: "/usersMap" },
+    { id: "log", label: "سجل الاحداث", icon: FileText, href: "/log" },
   ];
 
   // تحديد حجم الشاشة

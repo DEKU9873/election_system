@@ -8,3 +8,50 @@
     font-family: 'Cairo', sans-serif;
   }
 }
+
+@layer utilities {
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+  
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+  
+  /* تحسين z-index للخرائط */
+  .leaflet-container {
+    z-index: 1 !important;
+  }
+  
+  .leaflet-control-container {
+    z-index: 2 !important;
+  }
+  
+  /* تحسينات ملء الشاشة */
+  .leaflet-control-layers {
+    background: white !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  .leaflet-control-layers-toggle {
+    background-color: white !important;
+    border-radius: 4px !important;
+  }
+  
+  .leaflet-control-layers-list {
+    direction: rtl !important;
+    text-align: right !important;
+  }
+  
+  .leaflet-control-layers label {
+    font-size: 14px !important;
+    margin: 4px 0 !important;
+  }
+}
