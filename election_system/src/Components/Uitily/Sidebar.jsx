@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import logo from "../../assets/urlogo.png";
+import logo from "../../assets/logo.png";
 import useNotificationsHook from "../../hook/notifications/use-notifications-hook";
 import Cookies from "js-cookie";
 
@@ -299,7 +299,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                 <img 
                   src={logo} 
                   alt="شعار الشركة" 
-                  className="h-20 w-auto transition-all duration-500 hover:scale-105 filter drop-shadow-md" 
+                  className="h-22 w-auto transition-all duration-500 hover:scale-105 filter drop-shadow-md" 
                 />
                 <span className="font-bold text-lg text-gray-800 transition-all duration-300 hover:text-blue-600">
                   نظام حملتي
