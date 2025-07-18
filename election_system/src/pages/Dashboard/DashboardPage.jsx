@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Users, Vote, UserCog, DollarSign, BarChart3, PieChart, TrendingUp } from 'lucide-react';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title, PointElement, LineElement } from 'chart.js';
-import { Pie, Bar, Line } from 'react-chartjs-2';
+import { useMemo } from 'react';
+import { Users, Vote, UserCog } from 'lucide-react';
+import { Chart as ChartJS, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js';
+import { Bar } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import AllUserHook from '../../hook/auth/all-user-hook';
 
 // تسجيل مكونات Chart.js
-ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title, PointElement, LineElement, ChartDataLabels);
+ChartJS.register(Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title, ChartDataLabels);
 
 const DashboardPage = () => {
   const [
@@ -28,9 +28,7 @@ const DashboardPage = () => {
         voters: 0,
         supervisors: 0,
         coordinators: 0,
-        centers: 0,
-        districts: 0,
-        subdistricts: 0
+        centers: 0
       };
     }
 
@@ -41,27 +39,11 @@ const DashboardPage = () => {
         .map(user => user.election_center_id)
     ).size;
 
-    // حساب عدد الأقضية الفريدة
-    const uniqueDistricts = new Set(
-      allUsers
-        .filter(user => user.district_id)
-        .map(user => user.district_id)
-    ).size;
-
-    // حساب عدد النواحي الفريدة
-    const uniqueSubdistricts = new Set(
-      allUsers
-        .filter(user => user.subdistrict_id)
-        .map(user => user.subdistrict_id)
-    ).size;
-
     return {
       voters: voter.length,
       supervisors: observer.length,
       coordinators: coordinator.length,
-      centers: uniqueCenters,
-      districts: uniqueDistricts,
-      subdistricts: uniqueSubdistricts
+      centers: uniqueCenters
     };
   }, [allUsers, voter, observer, coordinator]);
 
@@ -110,11 +92,6 @@ const DashboardPage = () => {
       }
     });
 
-    // حساب نسبة المشاركة (الذين صوتوا)
-    const votedUsers = allUsers.filter(user => user.has_voted).length;
-    const totalEligibleVoters = allUsers.filter(user => user.can_vote).length;
-    const participationRate = totalEligibleVoters > 0 ? Math.round((votedUsers / totalEligibleVoters) * 100) : 0;
-
     return {
       votersByRole: {
         labels: Object.keys(roleData),
@@ -144,24 +121,6 @@ const DashboardPage = () => {
           },
         ],
       },
-      voterParticipation: {
-        labels: ['نسبة المشاركة', 'لم يشاركوا'],
-        datasets: [
-          {
-            label: 'المشاركة في التصويت',
-            data: [participationRate, 100 - participationRate],
-            backgroundColor: [
-              'rgba(75, 192, 192, 0.7)',
-              'rgba(255, 99, 132, 0.7)'
-            ],
-            borderColor: [
-              'rgba(75, 192, 192, 1)',
-              'rgba(255, 99, 132, 1)'
-            ],
-            borderWidth: 1,
-          },
-        ],
-      },
       votersByAge: {
         labels: Object.keys(ageGroups),
         datasets: [
@@ -178,54 +137,38 @@ const DashboardPage = () => {
   }, [allUsers, voter, coordinator, observer, center_manager, district_manager, finance_auditor, system_admin]);
 
   return (
-    <div className="min-h-screen ">
+    <div className="min-h-screen">
       <div className="w-full px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
         {/* عنوان الصفحة */}
         <div className="mb-4 sm:mb-6">
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800">لوحة التحكم</h1>
         </div>
-        
+
         {/* إحصائيات سريعة */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
-          <StatCard 
-            title="الناخبين" 
-            value={stats.voters} 
-            icon={<Vote size={20} className="sm:w-6 sm:h-6" />} 
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
+          <StatCard
+            title="الناخبين"
+            value={stats.voters}
+            icon={<Vote size={20} className="sm:w-6 sm:h-6" />}
             color="blue"
           />
-          <StatCard 
-            title="المشرفين" 
-            value={stats.supervisors} 
-            icon={<UserCog size={20} className="sm:w-6 sm:h-6" />} 
+          <StatCard
+            title="المشرفين"
+            value={stats.supervisors}
+            icon={<UserCog size={20} className="sm:w-6 sm:h-6" />}
             color="green"
           />
-          <StatCard 
-            title="المرتكزين" 
-            value={stats.coordinators} 
-            icon={<Users size={20} className="sm:w-6 sm:h-6" />} 
+          <StatCard
+            title="المنسقين"
+            value={stats.coordinators}
+            icon={<Users size={20} className="sm:w-6 sm:h-6" />}
             color="purple"
           />
-        </div>
-
-        {/* المراكز والمناطق */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
-          <StatCard 
-            title="المراكز الانتخابية" 
-            value={stats.centers} 
-            icon={<Vote size={20} className="sm:w-6 sm:h-6" />} 
+          <StatCard
+            title="المراكز الانتخابية"
+            value={stats.centers}
+            icon={<Vote size={20} className="sm:w-6 sm:h-6" />}
             color="orange"
-          />
-          <StatCard 
-            title="الأقضية" 
-            value={stats.districts} 
-            icon={<Vote size={20} className="sm:w-6 sm:h-6" />} 
-            color="teal"
-          />
-          <StatCard 
-            title="النواحي" 
-            value={stats.subdistricts} 
-            icon={<Vote size={20} className="sm:w-6 sm:h-6" />} 
-            color="indigo"
           />
         </div>
 
@@ -239,92 +182,14 @@ const DashboardPage = () => {
                   <div className="text-gray-500">جاري تحميل البيانات...</div>
                 </div>
               ) : (
-                <Bar 
+                <Bar
                   data={chartData.votersByRole}
-                options={{
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  plugins: {
-                    legend: {
-                      position: 'top',
-                      labels: {
-                        font: {
-                          family: 'Cairo',
-                          size: window.innerWidth < 640 ? 10 : 12,
-                        },
-                        padding: window.innerWidth < 640 ? 10 : 20,
-                      },
-                    },
-                    tooltip: {
-                      callbacks: {
-                        label: function(context) {
-                          return `${context.dataset.label}: ${context.raw.toLocaleString()} ناخب`;
-                        }
-                      }
-                    }
-                  },
-                  scales: {
-                    y: {
-                      beginAtZero: true,
-                      ticks: {
-                        callback: function(value) {
-                          return value.toLocaleString();
-                        },
-                        font: {
-                          family: 'Cairo',
-                          size: window.innerWidth < 640 ? 10 : 12,
-                        },
-                      },
-                      title: {
-                        display: true,
-                        text: 'عدد الناخبين',
-                        font: {
-                          family: 'Cairo',
-                          size: window.innerWidth < 640 ? 11 : 14,
-                        },
-                      },
-                    },
-                    x: {
-                      ticks: {
-                        font: {
-                          family: 'Cairo',
-                          size: window.innerWidth < 640 ? 10 : 12,
-                        },
-                        maxRotation: window.innerWidth < 640 ? 45 : 0,
-                        minRotation: window.innerWidth < 640 ? 45 : 0,
-                      },
-                    },
-                  },
-                }}
-              />
-            )}
-          </div>
-        </div>
-          
-          <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm">
-            <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">نسبة المشاركة في التصويت</h2>
-            <div className="flex flex-col items-center mb-3">
-              <div className="text-xs sm:text-sm text-gray-500 mb-1 sm:mb-2 text-center">
-                إجمالي المؤهلين للتصويت: {allUsers?.filter(user => user.can_vote).length || 0}
-              </div>
-              <div className="text-xs sm:text-sm text-gray-500 text-center">
-                عدد الذين صوتوا: {allUsers?.filter(user => user.has_voted).length || 0}
-              </div>
-            </div>
-            <div className="h-48 sm:h-64">
-              {loading ? (
-                <div className="flex items-center justify-center h-full">
-                  <div className="text-gray-500">جاري تحميل البيانات...</div>
-                </div>
-              ) : (
-                <Pie 
-                  data={chartData.voterParticipation}
                   options={{
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
                       legend: {
-                        position: 'bottom',
+                        position: 'top',
                         labels: {
                           font: {
                             family: 'Cairo',
@@ -335,154 +200,143 @@ const DashboardPage = () => {
                       },
                       tooltip: {
                         callbacks: {
-                          label: function(context) {
-                            return `${context.label}: ${context.raw}%`;
-                          }
-                        }
+                          label: function (context) {
+                            return `${context.dataset.label}: ${context.raw.toLocaleString()} مستخدم`;
+                          },
+                        },
                       },
-                      datalabels: {
-                        formatter: (value) => {
-                          return value + '%';
+                    },
+                    scales: {
+                      y: {
+                        beginAtZero: true,
+                        ticks: {
+                          callback: function (value) {
+                            return value.toLocaleString();
+                          },
+                          font: {
+                            family: 'Cairo',
+                            size: window.innerWidth < 640 ? 10 : 12,
+                          },
                         },
-                        color: '#fff',
-                        font: {
-                          weight: 'bold',
-                          family: 'Cairo',
-                          size: window.innerWidth < 640 ? 10 : 12,
+                        title: {
+                          display: true,
+                          text: 'عدد المستخدمين',
+                          font: {
+                            family: 'Cairo',
+                            size: window.innerWidth < 640 ? 11 : 14,
+                          },
                         },
-                      }
-                    }
+                      },
+                      x: {
+                        ticks: {
+                          font: {
+                            family: 'Cairo',
+                            size: window.innerWidth < 640 ? 10 : 12,
+                          },
+                          maxRotation: window.innerWidth < 640 ? 45 : 0,
+                          minRotation: window.innerWidth < 640 ? 45 : 0,
+                        },
+                      },
+                    },
                   }}
                 />
               )}
             </div>
           </div>
-        </div>
 
-        {/* رسم بياني إضافي */}
-        <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm mb-6 sm:mb-8">
-          <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">توزيع الناخبين حسب الفئة العمرية</h2>
-          <p className="text-sm sm:text-base text-gray-600 mb-3">
-            يوضح هذا المخطط توزيع الناخبين المسجلين حسب الفئات العمرية المختلفة (إجمالي الناخبين: {voter.length})
-          </p>
-          <div className="h-48 sm:h-64">
-            {loading ? (
-              <div className="flex items-center justify-center h-full">
-                <div className="text-gray-500">جاري تحميل البيانات...</div>
-              </div>
-            ) : (
-              <Bar 
-                data={chartData.votersByAge}
-              options={{
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                  legend: {
-                    position: 'top',
-                    labels: {
-                      font: {
-                        family: 'Cairo',
-                        size: window.innerWidth < 640 ? 10 : 12,
+          <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm">
+            <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">توزيع الناخبين حسب الفئة العمرية</h2>
+            <p className="text-sm sm:text-base text-gray-600 mb-3">
+              يوضح هذا المخطط توزيع الناخبين المسجلين حسب الفئات العمرية المختلفة (إجمالي الناخبين: {voter.length})
+            </p>
+            <div className="h-48 sm:h-64">
+              {loading ? (
+                <div className="flex items-center justify-center h-full">
+                  <div className="text-gray-500">جاري تحميل البيانات...</div>
+                </div>
+              ) : (
+                <Bar
+                  data={chartData.votersByAge}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                      legend: {
+                        position: 'top',
+                        labels: {
+                          font: {
+                            family: 'Cairo',
+                            size: window.innerWidth < 640 ? 10 : 12,
+                          },
+                          padding: window.innerWidth < 640 ? 10 : 20,
+                        },
                       },
-                      padding: window.innerWidth < 640 ? 10 : 20,
-                    },
-                  },
-                  tooltip: {
-                    callbacks: {
-                      label: function(context) {
-                        return `${context.dataset.label}: ${context.raw.toLocaleString()} ناخب`;
-                      }
-                    }
-                  },
-                  datalabels: {
-                    align: 'end',
-                    anchor: 'end',
-                    formatter: (value) => {
-                      return window.innerWidth < 640 ? value.toLocaleString().replace(/,/g, 'ك') : value.toLocaleString();
-                    },
-                    color: '#666',
-                    font: {
-                      weight: 'bold',
-                      family: 'Cairo',
-                      size: window.innerWidth < 640 ? 9 : 11,
-                    },
-                  }
-                },
-                scales: {
-                  y: {
-                    beginAtZero: true,
-                    ticks: {
-                      callback: function(value) {
-                        return value.toLocaleString();
+                      tooltip: {
+                        callbacks: {
+                          label: function (context) {
+                            return `${context.dataset.label}: ${context.raw.toLocaleString()} ناخب`;
+                          },
+                        },
                       },
-                      font: {
-                        family: 'Cairo',
-                        size: window.innerWidth < 640 ? 10 : 12,
+                      datalabels: {
+                        align: 'end',
+                        anchor: 'end',
+                        formatter: (value) => {
+                          return window.innerWidth < 640
+                            ? value.toLocaleString().replace(/,/g, 'ك')
+                            : value.toLocaleString();
+                        },
+                        color: '#666',
+                        font: {
+                          weight: 'bold',
+                          family: 'Cairo',
+                          size: window.innerWidth < 640 ? 9 : 11,
+                        },
                       },
                     },
-                    title: {
-                      display: true,
-                      text: 'عدد الناخبين',
-                      font: {
-                        family: 'Cairo',
-                        size: window.innerWidth < 640 ? 11 : 14,
+                    scales: {
+                      y: {
+                        beginAtZero: true,
+                        ticks: {
+                          callback: function (value) {
+                            return value.toLocaleString();
+                          },
+                          font: {
+                            family: 'Cairo',
+                            size: window.innerWidth < 640 ? 10 : 12,
+                          },
+                        },
+                        title: {
+                          display: true,
+                          text: 'عدد الناخبين',
+                          font: {
+                            family: 'Cairo',
+                            size: window.innerWidth < 640 ? 11 : 14,
+                          },
+                        },
+                      },
+                      x: {
+                        ticks: {
+                          font: {
+                            family: 'Cairo',
+                            size: window.innerWidth < 640 ? 10 : 12,
+                          },
+                        },
+                        title: {
+                          display: true,
+                          text: 'الفئة العمرية',
+                          font: {
+                            family: 'Cairo',
+                            size: window.innerWidth < 640 ? 11 : 14,
+                          },
+                        },
                       },
                     },
-                  },
-                  x: {
-                    ticks: {
-                      font: {
-                        family: 'Cairo',
-                        size: window.innerWidth < 640 ? 10 : 12,
-                      },
-                    },
-                    title: {
-                      display: true,
-                      text: 'الفئة العمرية',
-                      font: {
-                        family: 'Cairo',
-                        size: window.innerWidth < 640 ? 11 : 14,
-                      },
-                    },
-                  },
-                },
-              }}
-            />
-            )}
+                  }}
+                />
+              )}
+            </div>
           </div>
-        </div>
-
-        {/* آخر النشاطات */}
-        <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm">
-          <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">إحصائيات النظام</h2>
-          {loading ? (
-            <div className="flex items-center justify-center py-8">
-              <div className="text-gray-500">جاري تحميل البيانات...</div>
-            </div>
-          ) : (
-            <div className="space-y-3 sm:space-y-4">
-              <ActivityItem 
-                title="إجمالي المستخدمين المسجلين" 
-                time={`${allUsers?.length || 0} مستخدم`}
-                description={`منهم ${voter.length} ناخب و ${coordinator.length} منسق`}
-              />
-              <ActivityItem 
-                title="المستخدمين النشطين" 
-                time={`${allUsers?.filter(user => user.is_active).length || 0} مستخدم`}
-                description="المستخدمين الذين يمكنهم الوصول للنظام حالياً"
-              />
-              <ActivityItem 
-                title="المستخدمين الذين صوتوا" 
-                time={`${allUsers?.filter(user => user.has_voted).length || 0} مستخدم`}
-                description="من إجمالي المؤهلين للتصويت"
-              />
-              <ActivityItem 
-                title="المستخدمين الذين حدثوا بطاقاتهم" 
-                time={`${allUsers?.filter(user => user.has_updated_card).length || 0} مستخدم`}
-                description="المستخدمين الذين قاموا بتحديث بطاقاتهم الانتخابية"
-              />
-            </div>
-          )}
         </div>
       </div>
     </div>
@@ -497,7 +351,7 @@ const StatCard = ({ title, value, icon, color }) => {
     purple: 'bg-purple-50 text-purple-600',
     orange: 'bg-orange-50 text-orange-600',
     teal: 'bg-teal-50 text-teal-600',
-    indigo: 'bg-indigo-50 text-indigo-600',
+    indigo: 'bg-indigo-50 text-indigo-600'
   };
 
   return (
@@ -511,19 +365,6 @@ const StatCard = ({ title, value, icon, color }) => {
           {icon}
         </div>
       </div>
-    </div>
-  );
-};
-
-// مكون عنصر النشاط
-const ActivityItem = ({ title, time, description }) => {
-  return (
-    <div className="border-b border-gray-100 pb-3 sm:pb-4 last:border-0 last:pb-0">
-      <div className="flex justify-between items-start gap-2">
-        <h4 className="font-medium text-gray-800 text-sm sm:text-base flex-1">{title}</h4>
-        <span className="text-xs sm:text-sm text-gray-500 flex-shrink-0">{time}</span>
-      </div>
-      <p className="text-gray-600 mt-1 text-sm sm:text-base">{description}</p>
     </div>
   );
 };

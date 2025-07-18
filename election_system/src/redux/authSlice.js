@@ -171,6 +171,24 @@ export const toggleActive = createAsyncThunk(
   }
 );
 
+// Change Password
+export const changePassword = createAsyncThunk(
+  "auth/changePassword",
+  async (passwordData, thunkAPI) => {
+    try {
+      const response = await useUpdateDataWithToken(
+        "/api/change-password/",
+        passwordData
+      );
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "فشل في تغيير كلمة المرور"
+      );
+    }
+  }
+);
+
 // Delete Coordinator
 export const deleteCoordinator = createAsyncThunk(
   "auth/deleteCoordinator",
@@ -186,18 +204,84 @@ export const deleteCoordinator = createAsyncThunk(
   }
 );
 
+// Add District Manager
+export const addDistrictManager = createAsyncThunk(
+  "auth/addDistrictManager",
+  async (formData, thunkAPI) => {
+    try {
+      const response = await useInsertDataWithImage(
+        "/api/district-manager/",
+        formData
+      );
+      return response;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "فشل في إضافة مدير المنطقة"
+      );
+    }
+  }
+);
+
+// Get All District Managers
+export const getAllDistrictManagers = createAsyncThunk(
+  "auth/getAllDistrictManagers",
+  async (_, thunkAPI) => {
+    try {
+      const response = await useGetDataToken("api/district-manager/");
+      return response.data.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "حدث خطأ غير متوقع"
+      );
+    }
+  }
+);
+
+// Get One District Manager
+export const getDistrictManager = createAsyncThunk(
+  "auth/getDistrictManager",
+  async (userId, thunkAPI) => {
+    try {
+      const response = await useGetDataToken(`/api/district-manager/${userId}/`);
+      return response.data.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "فشل في جلب بيانات مدير المنطقة"
+      );
+    }
+  }
+);
+
+// Delete District Manager
+export const deleteDistrictManager = createAsyncThunk(
+  "auth/deleteDistrictManager",
+  async (districtManagerId, thunkAPI) => {
+    try {
+      await useDeleteDataWithToken(`/api/district-manager/${districtManagerId}/`);
+      return districtManagerId;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "فشل في حذف مدير المنطقة"
+      );
+    }
+  }
+);
+
 // Initial State
 const initialState = {
   user: null,
   singleUser: null,
   allUsers: [],
   allCoordinators: [],
+  allDistrictManagers: [],
   loading: false,
   error: null,
   deleteSuccess: false,
   deleteCoordinatorSuccess: false,
+  deleteDistrictManagerSuccess: false,
   confirmVotingSuccess: false,
   toggleActiveSuccess: false,
+  changePasswordSuccess: false,
 };
 
 // Slice
@@ -396,6 +480,86 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         state.deleteCoordinatorSuccess = false;
+      })
+
+      // Change Password
+      .addCase(changePassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.changePasswordSuccess = false;
+      })
+      .addCase(changePassword.fulfilled, (state) => {
+        state.loading = false;
+        state.changePasswordSuccess = true;
+      })
+      .addCase(changePassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.changePasswordSuccess = false;
+      })
+
+      // Add District Manager
+      .addCase(addDistrictManager.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addDistrictManager.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+        state.error = null;
+      })
+      .addCase(addDistrictManager.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Get All District Managers
+      .addCase(getAllDistrictManagers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAllDistrictManagers.fulfilled, (state, action) => {
+        state.loading = false;
+        state.allDistrictManagers = action.payload;
+      })
+      .addCase(getAllDistrictManagers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Get One District Manager
+      .addCase(getDistrictManager.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.singleUser = null;
+      })
+      .addCase(getDistrictManager.fulfilled, (state, action) => {
+        state.loading = false;
+        state.singleUser = action.payload;
+      })
+      .addCase(getDistrictManager.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.singleUser = null;
+      })
+
+      // Delete District Manager
+      .addCase(deleteDistrictManager.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.deleteDistrictManagerSuccess = false;
+      })
+      .addCase(deleteDistrictManager.fulfilled, (state, action) => {
+        state.loading = false;
+        state.deleteDistrictManagerSuccess = true;
+        state.allDistrictManagers = state.allDistrictManagers.filter(
+          (districtManager) => districtManager.User?.id !== action.payload
+        );
+      })
+      .addCase(deleteDistrictManager.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.deleteDistrictManagerSuccess = false;
       });
   },
 });

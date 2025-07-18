@@ -5,18 +5,18 @@ import EditStationHook from "../../../hook/Stations/edit-station-hook";
 import GetAllCenter from "../../../hook/Center/get-all-center";
 import Select from "react-select";
 
-const EditStationModal = ({ onClose, station }) => {
+const EditStationModal = ({ onClose, station, electionCenterId }) => {
   const [
     code,
     name,
-    electionCenterId,
+    // electionCenterId,
     loading,
     submitClicked,
     onChangeCode,
     onChangeName,
-    onChangeElectionCenterId,
+    // onChangeElectionCenterId,
     onSubmit,
-  ] = EditStationHook(onClose, station);
+  ] = EditStationHook(onClose, station, electionCenterId);
 
   const [electionCenters, isLoading] = GetAllCenter();
 
@@ -25,9 +25,9 @@ const EditStationModal = ({ onClose, station }) => {
     label: center.name
   }));
 
-  const handleCenterChange = (selectedOption) => {
-    onChangeElectionCenterId({ target: { value: selectedOption.value } });
-  };
+  // const handleCenterChange = (selectedOption) => {
+  //   onChangeElectionCenterId({ target: { value: selectedOption.value } });
+  // };
 
   const selectStyles = {
     control: (base) => ({
@@ -115,7 +115,7 @@ const EditStationModal = ({ onClose, station }) => {
             </div>
           </div>
 
-          <div>
+          {/* <div>
             <label className="block text-gray-700 font-medium mb-2 text-right">
               المركز الانتخابي
             </label>
@@ -135,7 +135,7 @@ const EditStationModal = ({ onClose, station }) => {
                 size={20}
               />
             </div>
-          </div>
+          </div> */}
         </div>
 
         <button

@@ -20,8 +20,19 @@ const AddCenterHook = (onClose) => {
     setCenter(e.target.value);
   };
   const onChangeCode = (e) => setCode(e.target.value);
-  const onChangeGovernorateId = (e) => setGovernorateId(Number(e.target.value));
-  const onChangeDistrictId = (e) => setDistrictId(Number(e.target.value));
+  const onChangeGovernorateId = (e) => {
+    setGovernorateId(Number(e.target.value));
+    // إعادة تعيين قيم القضاء والناحية عند تغيير المحافظة
+    setDistrictId("");
+    setSubdistrictId("");
+  };
+  
+  const onChangeDistrictId = (e) => {
+    setDistrictId(Number(e.target.value));
+    // إعادة تعيين قيمة الناحية عند تغيير القضاء
+    setSubdistrictId("");
+  };
+  
   const onChangeSubdistrictId = (e) => setSubdistrictId(Number(e.target.value));
   const onChangeLatitude = (e) => setLatitude(e.target.value);
   const onChangeLongitude = (e) => setLongitude(e.target.value);

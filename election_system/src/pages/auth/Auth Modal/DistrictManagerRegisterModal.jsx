@@ -5,6 +5,7 @@ import logo from "../../../assets/urlogo.png";
 import DistrictManagerRegisterHook from '../../../hook/auth/district-manager-register-hook';
 import { Link } from 'react-router-dom';
 import Select from 'react-select';
+import GetallDistricts from '../../../hook/Districts/get-all-districts';
 
 const DistrictManagerRegisterModal = ({ onClose }) => {
   const [
@@ -39,13 +40,7 @@ const DistrictManagerRegisterModal = ({ onClose }) => {
     setElectionCardPhoto,
     setElectionCardPhotoPreview
   ] = DistrictManagerRegisterHook(onClose);
-
-  const districts = [
-    { value: '1', label: 'منطقة 1' },
-    { value: '2', label: 'منطقة 2' },
-    { value: '3', label: 'منطقة 3' },
-    // يمكن إضافة المزيد من المناطق هنا
-  ];
+  const [districts, loadingDistricts] = GetallDistricts();
 
   return (
     <div
@@ -271,11 +266,12 @@ const DistrictManagerRegisterModal = ({ onClose }) => {
               <MapPin className="absolute right-3 top-2 text-gray-400" size={18} />
               <Select
                 isMulti
-                options={districts}
+                options={districts?.map(district => ({ value: district.id.toString(), label: district.name }))}
                 value={selectedDistricts}
                 onChange={handleSelectedDistrictsChange}
                 placeholder="اختر المناطق"
                 className="text-right"
+                isLoading={loadingDistricts}
                 styles={{
                   control: (base) => ({
                     ...base,

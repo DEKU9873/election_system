@@ -17,7 +17,7 @@ import { useDispatch } from "react-redux";
 import RegisterModal from "./Auth Modal/RegisterModal";
 import DeleteModal from "../../Components/Uitily/DeleteModal";
 import Loader from "../../Components/Uitily/Loader";
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
 
 const ElectedTablePage = () => {
   const dispatch = useDispatch();
@@ -82,7 +82,9 @@ const ElectedTablePage = () => {
     return voter.filter(
       (item) =>
         item?.full_name?.toLowerCase().includes(filterText.toLowerCase()) ||
-        item?.ElectionCenter?.name?.toLowerCase().includes(filterText.toLowerCase()) ||
+        item?.ElectionCenter?.name
+          ?.toLowerCase()
+          .includes(filterText.toLowerCase()) ||
         item?.phone_number?.includes(filterText) ||
         item?.birth_year?.toString().includes(filterText) ||
         item?.createdAt?.toLowerCase().includes(filterText.toLowerCase())
@@ -182,7 +184,7 @@ const ElectedTablePage = () => {
     setShowModal(false);
   };
 
-    const handleConfirmVoting = async (id) => {
+  const handleConfirmVoting = async (id) => {
     if (id) {
       await dispatch(confirmVoting(id));
       await dispatch(getAllUsers());
@@ -198,25 +200,6 @@ const ElectedTablePage = () => {
       >
         <div className="mb-6">
           <UserTableTitle title="الناخبين" subtitle="قائمة الناخبين" />
-
-          {/* خريطة المستخدمين */}
-          <div className="mb-4">
-            <button
-              onClick={() => setShowMap(!showMap)}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 focus:ring-2 focus:ring-gray-300 mb-2"
-            >
-              {showMap ? "إخفاء الخريطة" : "إظهار الخريطة"}
-            </button>
-            {showMap && (
-              <UsersMap
-                data={voter}
-                selectedRows={selectedRows}
-                handleSelectRow={handleSelectRow}
-                mapCenter={mapCenter}
-                mapZoom={mapZoom}
-              />
-            )}
-          </div>
 
           <UserTableToolbar
             title="اضافة ناخب"
@@ -282,20 +265,7 @@ const ElectedTablePage = () => {
                       {visibleColumns.full_name && (
                         <td className="px-2 sm:px-4 py-2 sm:py-3">
                           <div className="flex items-center gap-1 sm:gap-2">
-                            <div
-                              className="font-medium text-xs sm:text-sm text-gray-900 cursor-pointer hover:text-blue-600 transition-colors"
-                              onClick={() => {
-                                const marker = document.querySelector(
-                                  `[data-marker-id="${row.id}"]`
-                                );
-                                if (marker) {
-                                  marker.click();
-                                }
-                                setSelectedRows(new Set([row.id]));
-                                setMapCenter(row.location);
-                                setMapZoom(12);
-                              }}
-                            >
+                            <div className="font-medium text-xs sm:text-sm text-gray-900">
                               {row.full_name}
                             </div>
                           </div>
@@ -330,15 +300,19 @@ const ElectedTablePage = () => {
                         </td>
                       )}
 
-                          {visibleColumns.confirmed_voting && (
+                      {visibleColumns.confirmed_voting && (
                         <td className="px-2 sm:px-4 py-2 sm:py-3">
                           <div className="text-xs sm:text-sm">
-                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                              row.confirmed_voting 
-                                ? 'bg-green-100 text-green-800' 
-                                : 'bg-red-100 text-red-800'
-                            }`}>
-                              {row.confirmed_voting ? 'تم التصويت' : 'لم يتم التصويت'}
+                            <span
+                              className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                row.confirmed_voting
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-red-100 text-red-800"
+                              }`}
+                            >
+                              {row.confirmed_voting
+                                ? "تم التصويت"
+                                : "لم يتم التصويت"}
                             </span>
                           </div>
                         </td>
@@ -368,22 +342,20 @@ const ElectedTablePage = () => {
                                   >
                                     عرض التفاصيل
                                   </button>
-                                        <button
-                                    onClick={() =>
-                                      handleConfirmVoting(row.id)
-                                    }
+                                  <button
+                                    onClick={() => handleConfirmVoting(row.id)}
                                     className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                   >
                                     تأكيد التصويت
                                   </button>
-                                  <button
+                                  {/* <button
                                     onClick={() =>
                                       handleUserAction("edit", row)
                                     }
                                     className="block w-full text-right px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                   >
                                     تعديل
-                                  </button>
+                                  </button> */}
                                   <button
                                     onClick={() => handleDeleteConfirm(row.id)}
                                     className="block w-full text-right px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-red-700 hover:bg-red-50 transition-colors"
@@ -446,13 +418,12 @@ const ElectedTablePage = () => {
           />
         )}
       </div>
-       {showModal && <RegisterModal onClose={handleCloseModal} />}
+      {showModal && <RegisterModal onClose={handleCloseModal} />}
       <DeleteModal
         isOpen={showDeleteModal}
         onCancel={handleDeleteCancel}
         onConfirm={handleDeleteConfirmation}
       />
-
     </div>
   );
 };

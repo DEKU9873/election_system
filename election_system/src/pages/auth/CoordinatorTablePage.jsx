@@ -289,15 +289,6 @@ const CoordinatorTablePage = () => {
                                   >
                                     إدارة الصلاحيات
                                   </button>
-                                  <hr className="my-1" />
-                                  <button
-                                    onClick={() =>
-                                      handleUserAction("delete", row)
-                                    }
-                                    className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
-                                  >
-                                    حذف المستخدم
-                                  </button>
                                 </div>
                               </div>
                             )}

@@ -3,26 +3,26 @@ import { useDispatch } from "react-redux";
 import notify from "../useNotification";
 import { addStation, getStationsByCenterId } from "../../redux/placeSlice"; // تأكد من أن هذا هو المسار الصحيح
 
-const AddStationHook = (onClose) => {
+const AddStationHook = (onClose, electionCenterId) => {
   const dispatch = useDispatch();
 
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
-  const [electionCenterId, setElectionCenterId] = useState("");
+  // const [electionCenterId, setElectionCenterId] = useState("");
   const [loading, setLoading] = useState(false);
   const [submitClicked, setSubmitClicked] = useState(false);
 
   const onChangeCode = (e) => setCode(e.target.value);
   const onChangeName = (e) => setName(e.target.value);
-  const onChangeElectionCenterId = (e) =>
-    setElectionCenterId(Number(e.target.value));
+  // const onChangeElectionCenterId = (e) =>
+  //   setElectionCenterId(Number(e.target.value));
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setSubmitClicked(true);
     setLoading(true);
 
-    if (!code || !name || !electionCenterId) {
+    if (!code || !name ) {
       notify("يرجى إدخال جميع الحقول", "warning");
       setLoading(false);
       return;
@@ -43,7 +43,7 @@ const AddStationHook = (onClose) => {
         notify("تمت إضافة المحطة بنجاح", "success");
         setCode("");
         setName("");
-        setElectionCenterId("");
+        // setElectionCenterId("");
 
         // إغلاق المودال بعد الإضافة الناجحة
         if (onClose) onClose();
@@ -60,12 +60,12 @@ const AddStationHook = (onClose) => {
   return [
     code,
     name,
-    electionCenterId,
+    // electionCenterId,
     loading,
     submitClicked,
     onChangeCode,
     onChangeName,
-    onChangeElectionCenterId,
+    // onChangeElectionCenterId,
     onSubmit,
   ];
 };

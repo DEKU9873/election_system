@@ -3,12 +3,12 @@ import { useDispatch } from "react-redux";
 import notify from "../useNotification";
 import { updateStation, getStationsByCenterId } from "../../redux/placeSlice";
 
-const EditStationHook = (onClose, station) => {
+const EditStationHook = (onClose, station, electionCenterId) => {
   const dispatch = useDispatch();
 
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
-  const [electionCenterId, setElectionCenterId] = useState("");
+  // const [electionCenterId, setElectionCenterId] = useState("");
   const [loading, setLoading] = useState(false);
   const [submitClicked, setSubmitClicked] = useState(false);
   const [stationId, setStationId] = useState(null);
@@ -17,21 +17,21 @@ const EditStationHook = (onClose, station) => {
     if (station) {
       setCode(station.code || "");
       setName(station.name || "");
-      setElectionCenterId(station.election_center_id || "");
+      // setElectionCenterId(station.election_center_id || "");
       setStationId(station.id);
     }
   }, [station]);
 
   const onChangeCode = (e) => setCode(e.target.value);
   const onChangeName = (e) => setName(e.target.value);
-  const onChangeElectionCenterId = (e) => setElectionCenterId(Number(e.target.value));
+  // const onChangeElectionCenterId = (e) => setElectionCenterId(Number(e.target.value));
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setSubmitClicked(true);
     setLoading(true);
 
-    if (!code || !name || !electionCenterId) {
+    if (!code || !name ) {
       notify("يرجى إدخال جميع الحقول", "warning");
       setLoading(false);
       return;
@@ -66,12 +66,12 @@ const EditStationHook = (onClose, station) => {
   return [
     code,
     name,
-    electionCenterId,
+    // electionCenterId,
     loading,
     submitClicked,
     onChangeCode,
     onChangeName,
-    onChangeElectionCenterId,
+    // onChangeElectionCenterId,
     onSubmit,
   ];
 };

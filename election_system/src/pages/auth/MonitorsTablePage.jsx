@@ -185,25 +185,6 @@ const MonitorsTablePage = () => {
         <div className="mb-6">
           <UserTableTitle title="المراقبين" subtitle="قائمة المراقبين" />
 
-          {/* خريطة المشرفين */}
-          <div className="mb-4">
-            <button
-              onClick={() => setShowMap(!showMap)}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 focus:ring-2 focus:ring-gray-300 mb-2"
-            >
-              {showMap ? "إخفاء الخريطة" : "إظهار الخريطة"}
-            </button>
-            {showMap && (
-              <UsersMap
-                data={observer}
-                selectedRows={selectedRows}
-                handleSelectRow={handleSelectRow}
-                mapCenter={mapCenter}
-                mapZoom={mapZoom}
-              />
-            )}
-          </div>
-
           <UserTableToolbar
             title="اضافة مراقب"
             filterText={filterText}
@@ -324,14 +305,14 @@ const MonitorsTablePage = () => {
                                   >
                                     عرض التفاصيل
                                   </button>
-                                  <button
+                                  {/* <button
                                     onClick={() =>
                                       handleUserAction("edit", row)
                                     }
                                     className="block w-full text-right px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                   >
                                     تعديل
-                                  </button>
+                                  </button> */}
                                   <button
                                     onClick={() => handleDeleteConfirm(row.id)}
                                     className="block w-full text-right px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-red-700 hover:bg-red-50 transition-colors"
@@ -346,7 +327,6 @@ const MonitorsTablePage = () => {
                                   >
                                     إدارة الصلاحيات
                                   </button>
-                                  <hr className="my-1" />
                                 </div>
                               </div>
                             )}

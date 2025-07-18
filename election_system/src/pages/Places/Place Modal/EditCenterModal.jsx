@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Toaster } from "react-hot-toast";
 import GetAllGovernorate from "../../../hook/Governate/get-all-governorate";
-import { Building2, Hash, MapPin, Map, Landmark, Save, X } from "lucide-react";
+import { Building2, Hash, MapPin, Map, Landmark, Save, X, Navigation } from "lucide-react";
 import GetallDistricts from "../../../hook/Districts/get-all-districts";
 import GetAllSubdistricts from "../../../hook/Subdistricts/get-all-subdistricts";
 import EditCenterHook from "../../../hook/Center/edit-center-hook";
 import Select from "react-select";
+import MapLocationPicker from "../../../Components/MapLocationPicker";
 
 const EditCenterModal = ({ onClose, centerData }) => {
   const [
@@ -14,6 +15,8 @@ const EditCenterModal = ({ onClose, centerData }) => {
     governorateId,
     districtId,
     subdistrictId,
+    latitude,
+    longitude,
     loading,
     submitClicked,
     onChangeCenter,
@@ -21,8 +24,13 @@ const EditCenterModal = ({ onClose, centerData }) => {
     onChangeGovernorateId,
     onChangeDistrictId,
     onChangeSubdistrictId,
+    onChangeLatitude,
+    onChangeLongitude,
+    onLocationSelect,
     onSubmit,
   ] = EditCenterHook(centerData, onClose);
+  
+  const [showMap, setShowMap] = useState(false);
 
   const [governates, isLoading] = GetAllGovernorate();
   const [districts] = GetallDistricts();
@@ -33,12 +41,22 @@ const EditCenterModal = ({ onClose, centerData }) => {
     label: governorate.name,
   }));
 
-  const districtOptions = districts?.map((district) => ({
+  // فلترة الأقضية حسب المحافظة المختارة
+  const filteredDistricts = districts?.filter(district => 
+    governorateId ? district.governorate?.id === governorateId : true
+  );
+
+  const districtOptions = filteredDistricts?.map((district) => ({
     value: district.id,
     label: district.name,
   }));
 
-  const subdistrictOptions = subdistricts?.map((subdistrict) => ({
+  // فلترة النواحي حسب القضاء المختار
+  const filteredSubdistricts = subdistricts?.filter(subdistrict => 
+    districtId ? subdistrict.district?.id === districtId : true
+  );
+
+  const subdistrictOptions = filteredSubdistricts?.map((subdistrict) => ({
     value: subdistrict.id,
     label: subdistrict.name,
   }));
@@ -123,7 +141,7 @@ const EditCenterModal = ({ onClose, centerData }) => {
         <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">
           تعديل المركز
         </h1>
-        <div dir="rtl" className="w-full grid grid-cols-1 gap-4 sm:gap-6">
+        <div dir="rtl" className="w-full grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-x-6 md:gap-y-4">
           <div>
             <label className="block text-gray-700 font-medium mb-2 text-right">
               اسم المركز
@@ -229,6 +247,66 @@ const EditCenterModal = ({ onClose, centerData }) => {
                 className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-600"
                 size={20}
               />
+            </div>
+          </div>
+
+          {/* قسم تحديد الموقع الجغرافي */}
+          <div className="md:col-span-2">
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-gray-700 font-medium text-right text-sm">
+                الموقع الجغرافي (اختياري)
+              </label>
+              <button
+                type="button"
+                onClick={() => setShowMap(!showMap)}
+                className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center gap-1"
+              >
+                <Navigation size={16} />
+                {showMap ? 'إخفاء الخريطة' : 'تحديد الموقع على الخريطة'}
+              </button>
+            </div>
+            
+            {showMap && (
+              <div className="mb-4">
+                <MapLocationPicker
+                  onLocationSelect={onLocationSelect}
+                  initialPosition={latitude && longitude ? [parseFloat(latitude), parseFloat(longitude)] : null}
+                />
+                <p className="text-xs text-gray-500 mt-2 text-right">
+                  انقر على الخريطة لتحديد موقع المركز
+                </p>
+              </div>
+            )}
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-gray-700 font-medium mb-1 text-right text-xs">
+                  خط العرض
+                </label>
+                <input
+                  type="number"
+                  step="any"
+                  className="w-full pr-3 py-1.5 text-sm border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
+                  value={latitude}
+                  onChange={onChangeLatitude}
+                  dir="rtl"
+                  placeholder="33.3152"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700 font-medium mb-1 text-right text-xs">
+                  خط الطول
+                </label>
+                <input
+                  type="number"
+                  step="any"
+                  className="w-full pr-3 py-1.5 text-sm border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
+                  value={longitude}
+                  onChange={onChangeLongitude}
+                  dir="rtl"
+                  placeholder="44.3661"
+                />
+              </div>
             </div>
           </div>
         </div>

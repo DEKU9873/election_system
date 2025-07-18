@@ -41,12 +41,22 @@ const AddCenterModal = ({ onClose }) => {
     label: governorate.name,
   }));
 
-  const districtOptions = districts?.map((district) => ({
+  // فلترة الأقضية حسب المحافظة المختارة
+  const filteredDistricts = districts?.filter(district => 
+    governorateId ? district.governorate?.id === governorateId : true
+  );
+
+  const districtOptions = filteredDistricts?.map((district) => ({
     value: district.id,
     label: district.name,
   }));
 
-  const subdistrictOptions = subdistricts?.map((subdistrict) => ({
+  // فلترة النواحي حسب القضاء المختار
+  const filteredSubdistricts = subdistricts?.filter(subdistrict => 
+    districtId ? subdistrict.district?.id === districtId : true
+  );
+
+  const subdistrictOptions = filteredSubdistricts?.map((subdistrict) => ({
     value: subdistrict.id,
     label: subdistrict.name,
   }));

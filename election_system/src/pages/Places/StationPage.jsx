@@ -207,7 +207,7 @@ const StationPage = () => {
             ) : (
               <tbody className="divide-y divide-gray-200">
                 {paginatedData.length > 0 ? (
-                  paginatedData.map((row) => (
+                  paginatedData.map((row, index) => (
                     <tr
                       key={row.id}
                       className={`hover:bg-gray-50 transition-colors ${
@@ -227,7 +227,7 @@ const StationPage = () => {
                       {visibleColumns.id && (
                         <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
                           <div className="text-xs sm:text-sm text-gray-900">
-                            {row.id}
+                            {index + 1}
                           </div>
                         </td>
                       )}
@@ -344,11 +344,12 @@ const StationPage = () => {
           />
         )}
       </div>
-      {showModal && <AddStationModal onClose={handleCloseModal} />}
+      {showModal && <AddStationModal onClose={handleCloseModal} electionCenterId={id} />}
       {showEditModal && (
         <EditStationModal
           onClose={handleCloseEditModal}
           station={selectedStation}
+          electionCenterId={id}
         />
       )}
 

@@ -7,18 +7,18 @@ import AddStationHook from "../../../hook/Stations/add-station-hook";
 import GetAllCenter from "../../../hook/Center/get-all-center";
 import Select from "react-select";
 
-const AddStationModal = ({ onClose }) => {
+const AddStationModal = ({ onClose, electionCenterId }) => {
   const [
     code,
     name,
-    electionCenterId,
+    // electionCenterId,
     loading,
     submitClicked,
     onChangeCode,
     onChangeName,
-    onChangeElectionCenterId,
+    // onChangeElectionCenterId,
     onSubmit,
-  ] = AddStationHook(onClose);
+  ] = AddStationHook(onClose, electionCenterId);
 
   const [electionCenters, isLoading] = GetAllCenter();
 
@@ -27,9 +27,9 @@ const AddStationModal = ({ onClose }) => {
     label: center.name
   }));
 
-  const handleCenterChange = (selectedOption) => {
-    onChangeElectionCenterId({ target: { value: selectedOption.value } });
-  };
+  // const handleCenterChange = (selectedOption) => {
+  //   onChangeElectionCenterId({ target: { value: selectedOption.value } });
+  // };
 
   const selectStyles = {
     control: (base) => ({
@@ -117,7 +117,7 @@ const AddStationModal = ({ onClose }) => {
             </div>
           </div>
 
-          <div>
+          {/* <div>
             <label className="block text-gray-700 font-medium mb-2 text-right">
               المركز الانتخابي
             </label>
@@ -137,7 +137,7 @@ const AddStationModal = ({ onClose }) => {
                 size={20}
               />
             </div>
-          </div>
+          </div> */}
         </div>
 
         <button

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addCoordinator } from "../../redux/authSlice";
+import { addDistrictManager } from "../../redux/authSlice";
 import notify from "../useNotification";
 
 const DistrictManagerRegisterHook = (onClose) => {
@@ -73,15 +73,15 @@ const DistrictManagerRegisterHook = (onClose) => {
     });
 
     try {
-      const response = await dispatch(addCoordinator(formData)).unwrap();
-      notify("تم التسجيل بنجاح", "success");
+      const response = await dispatch(addDistrictManager(formData)).unwrap();
+      notify("تم تسجيل مدير المنطقة بنجاح", "success");
       
       // إغلاق المودال بعد التسجيل الناجح
       if (typeof onClose === 'function') {
         onClose();
       }
     } catch (error) {
-      notify(error.message || "حدث خطأ أثناء التسجيل", "error");
+      notify(error.message || "حدث خطأ أثناء تسجيل مدير المنطقة", "error");
     }
   };
 

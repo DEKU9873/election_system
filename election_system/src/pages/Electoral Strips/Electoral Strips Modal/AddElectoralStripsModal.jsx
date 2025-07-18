@@ -68,20 +68,23 @@ const AddElectoralStripsModal = ({ onClose }) => {
     onChangeNotes,
     onChangeStatus,
     onSubmit,
+    stationsByCenter, // استلام المحطات المرتبطة بالمركز
   ] = AddTapesHook(onClose);
 
   const [centers] = GetAllCenter();
-  const [stations] = GetAllStation();
+  // لم نعد بحاجة إلى جلب جميع المحطات لأننا سنستخدم المحطات المرتبطة بالمركز فقط
+  // const [stations] = GetAllStation();
 
   const centerOptions = centers?.map((center) => ({
     value: center.id,
     label: center.name,
   }));
 
-  const stationOptions = stations?.map((station) => ({
+  // استخدام المحطات المرتبطة بالمركز المختار
+  const stationOptions = stationsByCenter?.map((station) => ({
     value: station.id,
     label: station.name,
-  }));
+  })) || [];
 
   const handleCenterChange = (selectedOption) => {
     onChangeElectionCenterId({ target: { value: selectedOption.value } });
@@ -90,38 +93,52 @@ const AddElectoralStripsModal = ({ onClose }) => {
   const handleStationChange = (selectedOption) => {
     onChangeStationId({ target: { value: selectedOption.value } });
   };
-  
+
   const handleStatusChange = (selectedOption) => {
     onChangeStatus({ target: { value: selectedOption.value } });
   };
-  
+
   // خيارات الحالة
   const statusOptions = [
-    { value: "مقبول", label: "مقبول", icon: <Check size={14} className="text-green-500" /> },
-    { value: "مرفوض", label: "مرفوض", icon: <AlertCircle size={14} className="text-red-500" /> },
-    { value: "قيد المراجعة", label: "قيد المراجعة", icon: <Clock size={14} className="text-yellow-500" /> },
+    {
+      value: "مقبول",
+      label: "مقبول",
+      icon: <Check size={14} className="text-green-500" />,
+    },
+    {
+      value: "مرفوض",
+      label: "مرفوض",
+      icon: <AlertCircle size={14} className="text-red-500" />,
+    },
+    {
+      value: "قيد المراجعة",
+      label: "قيد المراجعة",
+      icon: <Clock size={14} className="text-yellow-500" />,
+    },
   ];
-  
+
   // معالج تغيير التاريخ مع تأثير بصري
   const handleDateChange = (date) => {
     // إضافة تأثير بصري عند اختيار التاريخ
-    const datePickerInput = document.querySelector('.react-datepicker__input-container input');
+    const datePickerInput = document.querySelector(
+      ".react-datepicker__input-container input"
+    );
     if (datePickerInput) {
-      datePickerInput.classList.add('date-selected-effect');
+      datePickerInput.classList.add("date-selected-effect");
       setTimeout(() => {
-        datePickerInput.classList.remove('date-selected-effect');
+        datePickerInput.classList.remove("date-selected-effect");
       }, 500);
     }
-    
+
     // استدعاء معالج التغيير الأصلي
-    onChangeDate({ target: { value: date ? date.toISOString().split('T')[0] : '' } });
+    onChangeDate({
+      target: { value: date ? date.toISOString().split("T")[0] : "" },
+    });
   };
 
   // أنماط مخصصة للتقويم
 
-
-
-const selectStyles = {
+  const selectStyles = {
     control: (base) => ({
       ...base,
       paddingRight: "10px",
@@ -156,9 +173,15 @@ const selectStyles = {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 min-h-screen flex items-center justify-center p-4" onClick={onClose}>
+    <div
+      className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 min-h-screen flex items-center justify-center p-4"
+      onClick={onClose}
+    >
       <div className="absolute inset-0" />
-      <div className="bg-white backdrop-blur-sm p-6 rounded-2xl shadow-2xl w-full max-w-3xl flex flex-col items-center relative max-h-[90vh] overflow-y-auto modal-scrollbar" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="bg-white backdrop-blur-sm p-6 rounded-2xl shadow-2xl w-full max-w-3xl flex flex-col items-center relative max-h-[90vh] overflow-y-auto modal-scrollbar"
+        onClick={(e) => e.stopPropagation()}
+      >
         <style>{scrollbarStyles}</style>
         <button
           onClick={onClose}
@@ -204,8 +227,9 @@ const selectStyles = {
                   (option) => option.value === stationId
                 )}
                 onChange={handleStationChange}
-                placeholder="اختر المحطة"
+                placeholder={electionCenterId ? "اختر المحطة" : "اختر المركز أولاً"}
                 isSearchable={true}
+                isDisabled={!electionCenterId} // تعطيل الاختيار إذا لم يتم اختيار مركز
                 className="text-right"
                 styles={selectStyles}
               />
@@ -224,7 +248,7 @@ const selectStyles = {
               <div className="relative image-upload-container">
                 <DatePicker
                   selected={date ? new Date(date) : null}
-                  onChange={handleDateChange} 
+                  onChange={handleDateChange}
                   dateFormat="dd/MM/yyyy"
                   placeholderText="اختر التاريخ"
                   todayButton="اليوم"
@@ -254,14 +278,14 @@ const selectStyles = {
                       },
                     },
                   ]}
-                  renderCustomHeader={({ 
-                    date, 
-                    changeYear, 
-                    changeMonth, 
-                    decreaseMonth, 
-                    increaseMonth, 
-                    prevMonthButtonDisabled, 
-                    nextMonthButtonDisabled 
+                  renderCustomHeader={({
+                    date,
+                    changeYear,
+                    changeMonth,
+                    decreaseMonth,
+                    increaseMonth,
+                    prevMonthButtonDisabled,
+                    nextMonthButtonDisabled,
                   }) => (
                     <div className="custom-datepicker-header flex justify-between items-center px-2 py-2 bg-blue-50 rounded-t-lg">
                       <div className="flex">
@@ -271,7 +295,17 @@ const selectStyles = {
                           disabled={prevMonthButtonDisabled}
                           className="prev-month-btn p-1 rounded-full hover:bg-blue-100 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
                             <polyline points="15 18 9 12 15 6"></polyline>
                           </svg>
                         </button>
@@ -281,7 +315,17 @@ const selectStyles = {
                           disabled={nextMonthButtonDisabled}
                           className="next-month-btn p-1 rounded-full hover:bg-blue-100 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
                             <polyline points="9 18 15 12 9 6"></polyline>
                           </svg>
                         </button>
@@ -289,38 +333,60 @@ const selectStyles = {
                       <div className="flex space-x-2 rtl:space-x-reverse">
                         <select
                           value={date.getFullYear()}
-                          onChange={({ target: { value } }) => changeYear(value)}
+                          onChange={({ target: { value } }) =>
+                            changeYear(value)
+                          }
                           className="year-select text-sm bg-white border border-gray-200 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-400"
                         >
-                          {Array.from({ length: 20 }, (_, i) => date.getFullYear() - 10 + i).map(year => (
-                            <option key={year} value={year}>{year}</option>
+                          {Array.from(
+                            { length: 20 },
+                            (_, i) => date.getFullYear() - 10 + i
+                          ).map((year) => (
+                            <option key={year} value={year}>
+                              {year}
+                            </option>
                           ))}
                         </select>
                         <select
                           value={date.getMonth()}
-                          onChange={({ target: { value } }) => changeMonth(value)}
+                          onChange={({ target: { value } }) =>
+                            changeMonth(value)
+                          }
                           className="month-select text-sm bg-white border border-gray-200 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-400"
                         >
                           {[
-                            "يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو",
-                            "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"
+                            "يناير",
+                            "فبراير",
+                            "مارس",
+                            "أبريل",
+                            "مايو",
+                            "يونيو",
+                            "يوليو",
+                            "أغسطس",
+                            "سبتمبر",
+                            "أكتوبر",
+                            "نوفمبر",
+                            "ديسمبر",
                           ].map((month, i) => (
-                            <option key={month} value={i}>{month}</option>
+                            <option key={month} value={i}>
+                              {month}
+                            </option>
                           ))}
                         </select>
                       </div>
                     </div>
                   )}
-                  dayClassName={date => {
-                     const today = new Date();
-                     const isToday = date.getDate() === today.getDate() && 
-                                    date.getMonth() === today.getMonth() && 
-                                    date.getFullYear() === today.getFullYear();
-                     
-                     if (isToday) return "today-highlight";
-                     if (date.getDay() === 5) return "friday-highlight";
-                     return undefined;
-                   }}
+                  dayClassName={(date) => {
+                    const today = new Date();
+                    const isToday =
+                      date.getDate() === today.getDate() &&
+                      date.getMonth() === today.getMonth() &&
+                      date.getFullYear() === today.getFullYear();
+
+                    if (isToday) return "today-highlight";
+                    if (date.getDay() === 5) return "friday-highlight";
+                    return undefined;
+                  }}
                 />
                 <CalendarDays
                   className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-600 pointer-events-none"
@@ -347,55 +413,69 @@ const selectStyles = {
                     const file = e.target.files[0];
                     if (file) {
                       // إظهار مؤشر التحميل
-                      const previewElement = document.getElementById('image-preview');
+                      const previewElement =
+                        document.getElementById("image-preview");
                       if (previewElement) {
-                        previewElement.classList.add('upload-pulse');
-                        document.getElementById('upload-text').innerHTML = '<div class="flex items-center"><div class="w-3 h-3 border-2 border-blue-600 border-t-transparent rounded-full animate-spin ml-2"></div>جاري التحميل...</div>';
+                        previewElement.classList.add("upload-pulse");
+                        document.getElementById("upload-text").innerHTML =
+                          '<div class="flex items-center"><div class="w-3 h-3 border-2 border-blue-600 border-t-transparent rounded-full animate-spin ml-2"></div>جاري التحميل...</div>';
                       }
-                      
+
                       // إظهار المعاينة الكبيرة مع تأثير التحميل
-                      const largePreviewElement = document.getElementById('large-image-preview');
+                      const largePreviewElement = document.getElementById(
+                        "large-image-preview"
+                      );
                       if (largePreviewElement) {
                         // استخدام setTimeout لإضافة تأثير انتقالي سلس
                         setTimeout(() => {
-                          largePreviewElement.classList.remove('hidden');
-                          largePreviewElement.classList.add('opacity-100');
+                          largePreviewElement.classList.remove("hidden");
+                          largePreviewElement.classList.add("opacity-100");
                         }, 10);
-                        const imageContainer = largePreviewElement.querySelector('.h-24');
+                        const imageContainer =
+                          largePreviewElement.querySelector(".h-24");
                         if (imageContainer) {
-                          imageContainer.classList.add('image-loading');
+                          imageContainer.classList.add("image-loading");
                         }
                       }
-                      
+
                       const reader = new FileReader();
                       reader.onload = (e) => {
-                        const previewElement = document.getElementById('image-preview');
-                        const largePreviewElement = document.getElementById('large-image-preview');
+                        const previewElement =
+                          document.getElementById("image-preview");
+                        const largePreviewElement = document.getElementById(
+                          "large-image-preview"
+                        );
                         if (previewElement) {
                           // إزالة مؤشر التحميل
-                          previewElement.classList.remove('upload-pulse');
-                          
+                          previewElement.classList.remove("upload-pulse");
+
                           // تعيين الصورة كخلفية
                           previewElement.style.backgroundImage = `url(${e.target.result})`;
-                          previewElement.classList.add('has-image');
-                          document.getElementById('upload-text').style.display = 'none';
-                          document.getElementById('change-text').style.display = 'block';
+                          previewElement.classList.add("has-image");
+                          document.getElementById("upload-text").style.display =
+                            "none";
+                          document.getElementById("change-text").style.display =
+                            "block";
                         }
                         if (largePreviewElement) {
                           // إزالة تأثير التحميل
-                          const imageContainer = largePreviewElement.querySelector('.h-24');
+                          const imageContainer =
+                            largePreviewElement.querySelector(".h-24");
                           if (imageContainer) {
-                            imageContainer.classList.remove('image-loading');
+                            imageContainer.classList.remove("image-loading");
                             imageContainer.style.backgroundImage = `url(${e.target.result})`;
                           }
-                          
+
                           // إضافة اسم الملف
-                          document.getElementById('file-name').textContent = file.name;
-                          document.getElementById('file-size').textContent = 
-                            (file.size < 1024 * 1024) 
-                              ? `${(file.size / 1024).toFixed(1)} كيلوبايت` 
-                              : `${(file.size / (1024 * 1024)).toFixed(1)} ميجابايت`;
-                          
+                          document.getElementById("file-name").textContent =
+                            file.name;
+                          document.getElementById("file-size").textContent =
+                            file.size < 1024 * 1024
+                              ? `${(file.size / 1024).toFixed(1)} كيلوبايت`
+                              : `${(file.size / (1024 * 1024)).toFixed(
+                                  1
+                                )} ميجابايت`;
+
                           // تخزين URL الصورة للعرض
                           window.imagePreviewUrl = e.target.result;
                         }
@@ -404,69 +484,84 @@ const selectStyles = {
                     }
                   }}
                 />
-                <label 
-                  htmlFor="tape-image-upload" 
+                <label
+                  htmlFor="tape-image-upload"
                   id="image-preview"
                   className="w-full h-[34px] flex items-center justify-center border border-dashed border-blue-400 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-all duration-200 bg-center bg-no-repeat bg-cover"
                   onDragOver={(e) => {
                     e.preventDefault();
-                    e.currentTarget.classList.add('border-blue-600');
+                    e.currentTarget.classList.add("border-blue-600");
                   }}
                   onDragLeave={(e) => {
                     e.preventDefault();
-                    e.currentTarget.classList.remove('border-blue-600');
+                    e.currentTarget.classList.remove("border-blue-600");
                   }}
                   onDrop={(e) => {
                     e.preventDefault();
-                    e.currentTarget.classList.remove('border-blue-600');
+                    e.currentTarget.classList.remove("border-blue-600");
                     const file = e.dataTransfer.files[0];
-                    if (file && file.type.startsWith('image/')) {
+                    if (file && file.type.startsWith("image/")) {
                       // إنشاء حدث مزيف لتمرير الملف إلى onChangeTapeImage
                       const dataTransfer = new DataTransfer();
                       dataTransfer.items.add(file);
-                      const fileInputElement = document.getElementById('tape-image-upload');
+                      const fileInputElement =
+                        document.getElementById("tape-image-upload");
                       fileInputElement.files = dataTransfer.files;
-                      
+
                       // إطلاق حدث تغيير لتحديث الحالة
-                      const changeEvent = new Event('change', { bubbles: true });
+                      const changeEvent = new Event("change", {
+                        bubbles: true,
+                      });
                       fileInputElement.dispatchEvent(changeEvent);
                     }
                   }}
                 >
-                  <span id="upload-text" className="text-sm text-gray-600 flex items-center">
+                  <span
+                    id="upload-text"
+                    className="text-sm text-gray-600 flex items-center"
+                  >
                     <ImagePlus size={16} className="ml-2 text-blue-600" />
                     اسحب الصورة أو انقر للاختيار
                   </span>
-                  <span id="change-text" className="text-sm text-gray-600 hidden">
+                  <span
+                    id="change-text"
+                    className="text-sm text-gray-600 hidden"
+                  >
                     تغيير الصورة
                   </span>
                 </label>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-red-500 transition-colors z-10 bg-white rounded-full p-1"
                   onClick={(e) => {
                     e.preventDefault();
                     // إعادة تعيين حقل الإدخال
-                    const fileInput = document.getElementById('tape-image-upload');
-                    fileInput.value = '';
-                    
+                    const fileInput =
+                      document.getElementById("tape-image-upload");
+                    fileInput.value = "";
+
                     // إعادة تعيين المعاينة
-                    const previewElement = document.getElementById('image-preview');
-                    previewElement.style.backgroundImage = '';
-                    previewElement.classList.remove('has-image');
-                    document.getElementById('upload-text').style.display = 'block';
-                    document.getElementById('change-text').style.display = 'none';
-                    
+                    const previewElement =
+                      document.getElementById("image-preview");
+                    previewElement.style.backgroundImage = "";
+                    previewElement.classList.remove("has-image");
+                    document.getElementById("upload-text").style.display =
+                      "block";
+                    document.getElementById("change-text").style.display =
+                      "none";
+
                     // إخفاء المعاينة الكبيرة مع تأثير انتقالي
-                    const largePreviewElement = document.getElementById('large-image-preview');
+                    const largePreviewElement = document.getElementById(
+                      "large-image-preview"
+                    );
                     if (largePreviewElement) {
-                      largePreviewElement.classList.remove('opacity-100');
+                      largePreviewElement.classList.remove("opacity-100");
                       // انتظار انتهاء التأثير الانتقالي قبل إخفاء العنصر
                       setTimeout(() => {
-                        largePreviewElement.classList.add('hidden');
+                        largePreviewElement.classList.add("hidden");
                       }, 300);
                     }
-                    
+
                     // استدعاء onChangeTapeImage مع حدث فارغ
                     const emptyEvent = { target: { value: null, files: [] } };
                     onChangeTapeImage(emptyEvent);
@@ -474,15 +569,21 @@ const selectStyles = {
                 >
                   <X size={14} />
                 </button>
-                
+
                 {/* معاينة كبيرة للصورة */}
-                <div id="large-image-preview" className="hidden mt-2 rounded-lg overflow-hidden border border-gray-200 shadow-sm cursor-pointer max-h-[200px] transition-all duration-300 ease-in-out" onClick={(e) => {
-                  // منع انتشار الحدث للأزرار داخل المعاينة
-                  if (e.target === e.currentTarget || e.target.classList.contains('h-24')) {
-                    // فتح الصورة في نافذة جديدة
-                    if (window.imagePreviewUrl) {
-                      const newWindow = window.open();
-                      newWindow.document.write(`
+                <div
+                  id="large-image-preview"
+                  className="hidden mt-2 rounded-lg overflow-hidden border border-gray-200 shadow-sm cursor-pointer max-h-[200px] transition-all duration-300 ease-in-out"
+                  onClick={(e) => {
+                    // منع انتشار الحدث للأزرار داخل المعاينة
+                    if (
+                      e.target === e.currentTarget ||
+                      e.target.classList.contains("h-24")
+                    ) {
+                      // فتح الصورة في نافذة جديدة
+                      if (window.imagePreviewUrl) {
+                        const newWindow = window.open();
+                        newWindow.document.write(`
                         <html>
                           <head>
                             <title>معاينة الصورة</title>
@@ -543,9 +644,10 @@ const selectStyles = {
                           </body>
                         </html>
                       `);
+                      }
                     }
-                  }
-                }}>
+                  }}
+                >
                   <div className="relative">
                     <div className="h-24 bg-center bg-no-repeat bg-cover w-full bg-contain overflow-hidden"></div>
                     <div className="absolute top-0 right-0 bg-black bg-opacity-50 text-white p-1 text-xs rounded-bl-lg">
@@ -553,40 +655,52 @@ const selectStyles = {
                     </div>
                     <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-1 text-xs flex justify-between items-center">
                       <div className="flex items-center space-x-1">
-                        <button 
+                        <button
                           type="button"
                           className="text-white hover:text-red-300 transition-colors p-1 rounded-full"
                           onClick={(e) => {
                             e.preventDefault();
                             // إعادة تعيين حقل الإدخال
-                            const fileInput = document.getElementById('tape-image-upload');
-                            fileInput.value = '';
-                            
+                            const fileInput =
+                              document.getElementById("tape-image-upload");
+                            fileInput.value = "";
+
                             // إعادة تعيين المعاينة
-                            const previewElement = document.getElementById('image-preview');
-                            previewElement.style.backgroundImage = '';
-                            previewElement.classList.remove('has-image');
-                            document.getElementById('upload-text').style.display = 'block';
-                            document.getElementById('change-text').style.display = 'none';
-                            
+                            const previewElement =
+                              document.getElementById("image-preview");
+                            previewElement.style.backgroundImage = "";
+                            previewElement.classList.remove("has-image");
+                            document.getElementById(
+                              "upload-text"
+                            ).style.display = "block";
+                            document.getElementById(
+                              "change-text"
+                            ).style.display = "none";
+
                             // إخفاء المعاينة الكبيرة مع تأثير انتقالي
-                            const largePreviewElement = document.getElementById('large-image-preview');
+                            const largePreviewElement = document.getElementById(
+                              "large-image-preview"
+                            );
                             if (largePreviewElement) {
-                              largePreviewElement.classList.remove('opacity-100');
+                              largePreviewElement.classList.remove(
+                                "opacity-100"
+                              );
                               // انتظار انتهاء التأثير الانتقالي قبل إخفاء العنصر
                               setTimeout(() => {
-                                largePreviewElement.classList.add('hidden');
+                                largePreviewElement.classList.add("hidden");
                               }, 300);
                             }
-                            
+
                             // استدعاء onChangeTapeImage مع حدث فارغ
-                            const emptyEvent = { target: { value: null, files: [] } };
+                            const emptyEvent = {
+                              target: { value: null, files: [] },
+                            };
                             onChangeTapeImage(emptyEvent);
                           }}
                         >
                           <X size={14} />
                         </button>
-                        <button 
+                        <button
                           type="button"
                           className="text-white hover:text-blue-300 transition-colors p-1 rounded-full"
                           onClick={(e) => {
@@ -658,7 +772,17 @@ const selectStyles = {
                             }
                           }}
                         >
-                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
                             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                             <polyline points="15 3 21 3 21 9"></polyline>
                             <line x1="10" y1="14" x2="21" y2="3"></line>
@@ -666,8 +790,14 @@ const selectStyles = {
                         </button>
                       </div>
                       <div className="flex flex-col items-end">
-                        <span id="file-name" className="truncate max-w-[150px] text-right"></span>
-                        <span id="file-size" className="text-gray-300 text-xs"></span>
+                        <span
+                          id="file-name"
+                          className="truncate max-w-[150px] text-right"
+                        ></span>
+                        <span
+                          id="file-size"
+                          className="text-gray-300 text-xs"
+                        ></span>
                       </div>
                     </div>
                   </div>
@@ -703,7 +833,7 @@ const selectStyles = {
             <div className="relative">
               <Select
                 options={statusOptions}
-                value={statusOptions.find(option => option.value === status)}
+                value={statusOptions.find((option) => option.value === status)}
                 onChange={handleStatusChange}
                 placeholder="اختر الحالة"
                 isSearchable={false}
@@ -717,13 +847,17 @@ const selectStyles = {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "flex-end",
-                    backgroundColor: state.isSelected ? "#dbeafe" : state.isFocused ? "#f0f7ff" : "white",
+                    backgroundColor: state.isSelected
+                      ? "#dbeafe"
+                      : state.isFocused
+                      ? "#f0f7ff"
+                      : "white",
                     color: state.isSelected ? "#1e40af" : "#374151",
                     fontWeight: state.isSelected ? 500 : 400,
                     padding: "8px 12px",
-                    '&:hover': {
+                    "&:hover": {
                       backgroundColor: "#f0f7ff",
-                    }
+                    },
                   }),
                   singleValue: (base) => ({
                     ...base,

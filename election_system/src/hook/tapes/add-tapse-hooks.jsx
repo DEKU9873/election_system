@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import notify from "../useNotification";
 import { addTape, getAllTapes } from "../../redux/electoralStripsSlice";
+import { getStationsByCenterId } from "../../redux/placeSlice";
 
 const AddTapesHook = (onClose) => {
   const dispatch = useDispatch();
@@ -17,7 +18,14 @@ const AddTapesHook = (onClose) => {
   const [submitClicked, setSubmitClicked] = useState(false);
 
   const onChangeElectionCenterId = (e) => {
-    setElectionCenterId(Number(e.target.value));
+    const centerId = Number(e.target.value);
+    setElectionCenterId(centerId);
+    // عند تغيير المركز، نقوم بجلب المحطات المرتبطة به
+    if (centerId) {
+      dispatch(getStationsByCenterId(centerId));
+      // إعادة تعيين المحطة المختارة
+      setStationId("");
+    }
   };
 
   const onChangeStationId = (e) => {
@@ -95,6 +103,9 @@ const AddTapesHook = (onClose) => {
     setLoading(false);
   };
 
+  // استخراج المحطات من حالة Redux
+  const { stations } = useSelector((state) => state.place);
+
   return [
     electionCenterId,
     stationId,
@@ -111,6 +122,7 @@ const AddTapesHook = (onClose) => {
     onChangeNotes,
     onChangeStatus,
     onSubmit,
+    stations, // إضافة المحطات إلى القيم المرجعة
   ];
 };
 
