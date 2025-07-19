@@ -15,7 +15,7 @@ import AddSubdistrictsModal from "./Place Modal/AddSubdistrictsModal";
 import EditSubdistrictsModal from "./Place Modal/EditSubdistrictsModal";
 import DeleteModal from "../../Components/Uitily/DeleteModal";
 import Loader from "../../Components/Uitily/Loader";
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
 
 const SubdistrictPage = () => {
   const dispatch = useDispatch();
@@ -176,6 +176,8 @@ const SubdistrictPage = () => {
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
             onOpen={handleOpenModal}
+                          allowedRoles={["system_admin"]}
+
           />
 
           <UserTableStats data={subdistricts} title="اجمالي النواحي" />
@@ -396,11 +398,11 @@ const SubdistrictPage = () => {
         onCancel={handleDeleteCancel}
         onConfirm={handleDeleteConfirmation}
       />
-       <Toaster
+      <Toaster
         position="top-center"
         toastOptions={{
           style: {
-            marginTop: "55px", 
+            marginTop: "55px",
           },
         }}
       />

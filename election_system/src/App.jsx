@@ -33,41 +33,70 @@ const App = () => {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route element={<MainLayout />}>
-          <Route path="/selfRegister" element={<SelfRegister />} />
+          {/* <Route path="/selfRegister" element={<SelfRegister />} /> */}
+
+          {/* المسارات المشتركة بين جميع الأدوار المصرح لها */}
           <Route
             element={
-              <PrivateRoute allowedRoles={["system_admin", "voter", "owner"]} />
+              <PrivateRoute
+                allowedRoles={[
+                  "system_admin",
+                  "owner",
+                  "observer",
+                  "coordinator",
+                ]}
+              />
             }
           >
             <Route path="/elected" element={<ElectedTablePage />} />
-            <Route path="/monitors" element={<MonitorsTablePage />} />
-            <Route path="/coordinators" element={<CoordinatorTablePage />} />
-            <Route path="/users" element={<UserTablePage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/" element={<DashboardPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
+            <Route path="/userDetails/:id" element={<UserDetailsPage />} />
             <Route path="/governorate" element={<GovernoratePage />} />
             <Route path="/districts" element={<DistrictsPage />} />
             <Route path="/subdistricts" element={<SubdistrictPage />} />
-            <Route path="/centerManagers" element={<CenterManagers />} />
-            <Route path="/districtsManagers" element={<DistrictsManagers />} />
+            <Route path="/centers/" element={<CenterPage />} />
+            <Route path="/stations/:id/" element={<StationPage />} />
             <Route path="/electoralStrips" element={<ElectoralStrips />} />
             <Route
               path="/electoralStrips/:id"
               element={<ElectoralStripsDetails />}
             />
-            <Route path="/userDetails/:id" element={<UserDetailsPage />} />
-            <Route path="/centers/" element={<CenterPage />} />
-            <Route path="/stations/:id/" element={<StationPage />} />
+          </Route>
+
+          {/* المسارات المتاحة للمنسقين والاونر والادمن */}
+
+          <Route
+            element={
+              <PrivateRoute
+                allowedRoles={["system_admin", "owner", "coordinator"]}
+              />
+            }
+          >
+            <Route path="/monitors" element={<MonitorsTablePage />} />
+          </Route>
+
+          {/* المسارات المتاحة للمسؤول ومالك النظام - يمكنهم الوصول لكل المسارات */}
+          <Route
+            element={<PrivateRoute allowedRoles={["system_admin", "owner"]} />}
+          >
+            <Route path="/coordinators" element={<CoordinatorTablePage />} />
+            <Route path="/users" element={<UserTablePage />} />
+
+            <Route path="/centerManagers" element={<CenterManagers />} />
+            <Route path="/districtsManagers" element={<DistrictsManagers />} />
+            <Route path="/electoralStrips" element={<ElectoralStrips />} />
+
             <Route
               path="/financial-statistics"
               element={<FinancialStatistics />}
             />
-            <Route path="/notifications" element={<NotificationsPage />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/" element={<DashboardPage />} />
             <Route path="/expense" element={<ExpensePage />} />
             <Route path="/financeCapitals" element={<FinanceCapitalsPage />} />
             <Route path="/log" element={<LogPage />} />
             <Route path="/usersMap" element={<MonitorUserMap />} />
-            <Route path="/profile" element={<ProfilePage />} />
           </Route>
         </Route>
       </Routes>

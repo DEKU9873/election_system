@@ -190,6 +190,8 @@ const CenterPage = () => {
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
             onOpen={handleOpenModal}
+                          allowedRoles={["system_admin"]}
+
           />
 
           <UserTableStats data={electionCenters} title="اجمالي المراكز" />
@@ -400,11 +402,11 @@ const CenterPage = () => {
         onCancel={handleDeleteCancel}
         onConfirm={handleDeleteConfirmation}
       />
-    <Toaster
+      <Toaster
         position="top-center"
         toastOptions={{
           style: {
-            marginTop: "55px", 
+            marginTop: "55px",
           },
         }}
       />

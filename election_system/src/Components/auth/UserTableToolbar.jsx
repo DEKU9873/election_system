@@ -1,6 +1,7 @@
 import React from "react";
 import { Search, User, ChevronDown, Menu } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const UserTableToolbar = ({
   title,
@@ -12,11 +13,23 @@ const UserTableToolbar = ({
   setVisibleColumns,
   onOpen,
   className,
+  allowedRoles = [], // إضافة خاصية للأدوار المسموح لها برؤية الزر
 }) => {
+  const userCookie = Cookies.get("user");
+  const user = userCookie ? JSON.parse(userCookie) : null;
+  
+  // التحقق مما إذا كان المستخدم لديه الصلاحية لرؤية الزر
+  const hasPermission = () => {
+    if (!user || !user.role) return false;
+    if (allowedRoles.length === 0) return true; // إذا لم يتم تحديد أدوار، يظهر الزر للجميع
+    return allowedRoles.includes(user.role);
+  };
 
 
   return (
-    <div className={`flex flex-wrap items-center justify-between gap-2 sm:gap-4 mb-3 sm:mb-4 ${className}`}>
+    <div
+      className={`flex flex-wrap items-center justify-between gap-2 sm:gap-4 mb-3 sm:mb-4 ${className}`}
+    >
       <div className="relative flex-1 min-w-[200px] w-full sm:w-auto sm:max-w-md mb-2 sm:mb-0">
         <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
         <input
@@ -29,11 +42,15 @@ const UserTableToolbar = ({
       </div>
 
       <div className="flex items-center gap-2">
-        {/* زر إضافة مستخدم جديد */}
-        <button onClick={onOpen} className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm bg-sky-700 text-white rounded-lg hover:bg-sky-800 focus:ring-2 focus:ring-blue-500">
-          {/* <User className="w-3 sm:w-4 h-3 sm:h-4" /> */}
-          {title}
-        </button>
+        {hasPermission() && (
+          <button
+            onClick={onOpen}
+            className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm bg-sky-700 text-white rounded-lg hover:bg-sky-800 focus:ring-2 focus:ring-blue-500"
+          >
+            {title}
+          </button>
+        )}
+        
 
         {/* قائمة الأعمدة */}
         <div className="relative">
@@ -106,9 +123,19 @@ const UserTableToolbar = ({
                             ? "المحافظات"
                             : key === "subdistricts_count"
                             ? "عدد النواحي"
-                            : key === "district" ? "الاقضية": key === "station" ? "المحطة" 
-                            :key === "electionDayDate" ? "تاريخ اليوم الانتخابي": key === "electionDayTime" ? "وقت اليوم الانتخابي"
-                            :key === "uploadedBy" ? "تم الرفع بواسطة":key === "uploadDate" ? "تاريخ الرفع":key}
+                            : key === "district"
+                            ? "الاقضية"
+                            : key === "station"
+                            ? "المحطة"
+                            : key === "electionDayDate"
+                            ? "تاريخ اليوم الانتخابي"
+                            : key === "electionDayTime"
+                            ? "وقت اليوم الانتخابي"
+                            : key === "uploadedBy"
+                            ? "تم الرفع بواسطة"
+                            : key === "uploadDate"
+                            ? "تاريخ الرفع"
+                            : key}
                         </span>
                       </label>
                     )

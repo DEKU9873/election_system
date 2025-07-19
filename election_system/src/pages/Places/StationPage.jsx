@@ -179,6 +179,8 @@ const StationPage = () => {
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
             onOpen={handleOpenModal}
+                                                allowedRoles={['system_admin','owner','observer','coordinator']} 
+
           />
 
           <UserTableStats data={stations} title="اجمالي المحطات" />
@@ -331,6 +333,7 @@ const StationPage = () => {
           totalPages={totalPages}
           selectedRows={selectedRows}
           sortedData={sortedData}
+
         />
 
         {/* إغلاق القوائم عند النقر خارجها */}

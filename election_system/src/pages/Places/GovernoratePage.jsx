@@ -181,6 +181,8 @@ const GovernoratePage = () => {
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
             onOpen={handleOpenModal}
+                                                    allowedRoles={['system_admin']} 
+
           />
 
           <UserTableStats data={governates} title="اجمالي المحافظات" />
@@ -196,6 +198,7 @@ const GovernoratePage = () => {
               paginatedData={paginatedData}
               handleSelectAll={handleSelectAll}
               handleSort={handleSort}
+
             />
 
             {loading ? (

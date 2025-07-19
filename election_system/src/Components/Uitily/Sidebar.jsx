@@ -40,7 +40,6 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
 
-
   React.useEffect(() => {
     const currentPath = location.pathname;
     const currentItem = menuItems.find((item) => item.href === currentPath);
@@ -74,55 +73,76 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       label: "لوحة التحكم",
       icon: LayoutDashboard,
       href: "/dashboard",
+      roles: ["system_admin", "owner", "coordinator", "observer"],
     },
-    { id: "voters", label: "الناخبين", icon: UserCheck, href: "/elected" },
+    {
+      id: "voters",
+      label: "الناخبين",
+      icon: UserCheck,
+      href: "/elected",
+      roles: ["system_admin", "owner", "coordinator", "observer"],
+    },
     {
       id: "monitors",
       label: "المراقبين",
       icon: UserCog,
       href: "/monitors",
+      roles: ["system_admin", "owner", "coordinator"],
     },
     {
       id: "coordinators",
       label: "المرتكزين",
       icon: Briefcase,
       href: "/coordinators",
+      roles: ["system_admin", "owner"],
     },
     {
       id: "centers",
       label: "إدارة المراكز",
       icon: Building,
+      roles: ["system_admin", "owner", "observer", "coordinator"],
       submenu: [
         {
           id: "centers",
           label: "المراكز الانتخابية",
           href: "/centers",
           icon: Landmark,
+          roles: ["system_admin", "owner", "observer", "coordinator"],
         },
         {
           id: "governorates",
           label: "المحافظات",
           href: "/governorate",
           icon: Map,
+          roles: ["system_admin", "owner", "observer", "coordinator"],
         },
-        { id: "districts", label: "الأقضية", href: "/districts", icon: MapPin },
+        {
+          id: "districts",
+          label: "الأقضية",
+          href: "/districts",
+          icon: MapPin,
+          roles: ["system_admin", "owner", "observer", "coordinator"],
+        },
         {
           id: "sub-districts",
           label: "النواحي",
           href: "/subdistricts",
           icon: MapPin,
+          roles: ["system_admin", "owner", "observer", "coordinator"],
         },
         {
           id: "center-managers",
           label: "مدراء المراكز",
           href: "/centerManagers",
           icon: UserCog,
+          roles: ["system_admin", "owner"],
         },
         {
           id: "district-managers",
           label: "مدراء الأقضية",
           href: "/districtsManagers",
           icon: UserCog,
+          roles: ["system_admin", "owner"],
         },
       ],
     },
@@ -131,37 +151,66 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       label: "الاشرطة الانتخابية",
       icon: FileText,
       href: "/electoralStrips",
+      roles: ["system_admin", "owner", "observer"],
     },
     {
       id: "financial",
       label: "الحسابات",
       icon: DollarSign,
+      roles: ["system_admin", "owner"],
       submenu: [
         {
           id: "FinanceCapitals",
           label: "رؤوس الاموال",
           href: "/financeCapitals",
           icon: PieChart,
+          roles: ["system_admin", "owner"],
         },
         {
           id: "Expenses",
           label: "المصروفات",
           href: "/expense",
           icon: PieChart,
+          roles: ["system_admin", "owner"],
         },
         {
           id: "financial-statistics",
           label: "الإحصائيات المالية",
           href: "/financial-statistics",
           icon: PieChart,
+          roles: ["system_admin", "owner"],
         },
-        // يمكن إضافة المزيد من أنواع الإحصائيات هنا في المستقبل
       ],
     },
-    { id: "users", label: "المستخدمين", icon: Users, href: "/users" },
-    { id: "usersMap", label: "خريطة المستخدمين", icon: MapPin, href: "/usersMap" },
-    { id: "log", label: "سجل الاحداث", icon: FileText, href: "/log" },
+    {
+      id: "users",
+      label: "المستخدمين",
+      icon: Users,
+      href: "/users",
+      roles: ["system_admin", "owner"],
+    },
+    {
+      id: "usersMap",
+      label: "خريطة المستخدمين",
+      icon: MapPin,
+      href: "/usersMap",
+      roles: ["system_admin", "owner"],
+    },
+    {
+      id: "log",
+      label: "سجل الاحداث",
+      icon: FileText,
+      href: "/log",
+      roles: ["system_admin", "owner"],
+    },
   ];
+
+  // فلترة العناصر حسب الدور
+  const filteredMenuItems = menuItems.filter((item) => {
+    if (!item.roles) return true;
+    if (!userData?.role) return false;
+    return item.roles.includes(userData.role);
+  });
 
   // تحديد حجم الشاشة
   React.useEffect(() => {
@@ -180,26 +229,21 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   };
 
   const closeSidebar = () => {
-    // إغلاق السايد بار دائمًا بغض النظر عن حجم الشاشة
     setIsOpen(false);
   };
-  
-  // تأخير إغلاق السايدبار عند النقر على عنصر القائمة
+
   const handleMenuItemClick = () => {
     setTimeout(() => {
       closeSidebar();
     }, 150);
   };
 
-  // إبقاء السايد بار مغلقة عند تغيير الحجم
   React.useEffect(() => {
-    // لا نقوم بفتح السايد بار تلقائيًا في الشاشات الكبيرة
     if (isMobile) {
       setIsOpen(false);
     }
   }, [isMobile]);
-  
-  // إغلاق السايدبار عند تغيير المسار في وضع الموبايل
+
   React.useEffect(() => {
     if (isMobile) {
       closeSidebar();
@@ -208,11 +252,14 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
 
   return (
     <div dir="rtl" className="font-['Cairo',_'Segoe_UI',_Tahoma,_sans-serif]">
-
       {/* Navbar */}
       <div
         className="fixed top-0 left-0 bg-white border-b border-gray-200 z-50 py-3 transition-all duration-500 "
-        style={{ right: isOpen && !isMobile ? '16rem' : '0', width: 'auto', left: '0' }}
+        style={{
+          right: isOpen && !isMobile ? "16rem" : "0",
+          width: "auto",
+          left: "0",
+        }}
       >
         <div className="flex items-center justify-between px-6">
           <div className="flex items-center gap-4">
@@ -220,12 +267,15 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
               onClick={toggleSidebar}
               className="p-2 hover:bg-blue-50 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-sm flex items-center justify-center"
               title="فتح القائمة"
-              style={{ display: isOpen ? 'none' : 'flex' }}
+              style={{ display: isOpen ? "none" : "flex" }}
             >
-              <Menu size={22} className="text-blue-600 transition-all duration-300 transform hover:rotate-12" />
+              <Menu
+                size={22}
+                className="text-blue-600 transition-all duration-300 transform hover:rotate-12"
+              />
             </button>
             <h1 className="text-xl font-semibold text-gray-800 font-['Cairo']">
-              {menuItems.find((item) => item.id === activeItem)?.label ||
+              {filteredMenuItems.find((item) => item.id === activeItem)?.label ||
                 "لوحة التحكم"}
             </h1>
           </div>
@@ -268,7 +318,9 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       {/* Overlay للموبايل */}
       {isMobile && (
         <div
-          className={`fixed inset-0 bg-black z-30 md:hidden transition-all duration-500 ease-in-out ${isOpen ? 'opacity-50' : 'opacity-0 pointer-events-none'}`}
+          className={`fixed inset-0 bg-black z-30 md:hidden transition-all duration-500 ease-in-out ${
+            isOpen ? "opacity-50" : "opacity-0 pointer-events-none"
+          }`}
           onClick={closeSidebar}
         />
       )}
@@ -296,24 +348,37 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
               <X size={20} className="transform transition-all duration-300 hover:rotate-90" />
             </button>
             <div className="flex flex-col items-center gap-2 flex-1 justify-center">
-                <img 
-                  src={logo} 
-                  alt="شعار الشركة" 
-                  className="h-22 w-auto transition-all duration-500 hover:scale-105 filter drop-shadow-md" 
-                />
-                <span className="font-bold text-lg text-gray-800 transition-all duration-300 hover:text-blue-600">
-                  نظام حملتي
-                </span>
-              </div>
+              <img
+                src={logo}
+                alt="شعار الشركة"
+                className="h-22 w-auto transition-all duration-500 hover:scale-105 filter drop-shadow-md"
+              />
+              <span className="font-bold text-lg text-gray-800 transition-all duration-300 hover:text-blue-600">
+                نظام حملتي
+              </span>
+            </div>
           </div>
         </div>
 
         {/* Navigation with scroll */}
         <nav className="flex-1 min-w-64 overflow-y-auto pt-4">
           <div className="px-4 space-y-1">
-            {menuItems.map((item) => {
+            {filteredMenuItems.map((item) => {
               const Icon = item.icon;
-              if (item.submenu) {
+
+              // فلترة العناصر الفرعية حسب الدور
+              const filteredSubmenu =
+                item.submenu?.filter(
+                  (subItem) =>
+                    !subItem.roles ||
+                    (userData?.role && subItem.roles.includes(userData.role))
+                ) || [];
+
+              if (filteredSubmenu.length === 0 && item.submenu) {
+                return null; // إذا لم يكن هناك عناصر فرعية مناسبة لا نعرضه
+              }
+
+              if (item.submenu && filteredSubmenu.length > 0) {
                 return (
                   <div key={item.id}>
                     <button
@@ -343,7 +408,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                     </button>
                     {openSubmenu === item.id && (
                       <div className="mt-1 mr-4 space-y-1">
-                        {item.submenu.map((subItem) => {
+                        {filteredSubmenu.map((subItem) => {
                           const SubIcon = subItem.icon || null;
                           return (
                             <Link
@@ -377,6 +442,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                   </div>
                 );
               }
+
               return (
                 <Link
                   key={item.id}
@@ -417,7 +483,6 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
               </div>
               <button
                 onClick={() => {
-                  // Handle logout
                   Cookies.remove("token");
                   Cookies.remove("user");
                   setIsLoggedIn(false);

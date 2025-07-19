@@ -193,7 +193,8 @@ const UserTablePage = () => {
             setShowColumnMenu={setShowColumnMenu}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
-            link="/register"
+            onOpen={() => navigate('/register')}
+            allowedRoles={['system_admin', 'coordinator']} // تحديد الأدوار المسموح لها برؤية زر الإضافة
             className="flex-wrap"
           />
 

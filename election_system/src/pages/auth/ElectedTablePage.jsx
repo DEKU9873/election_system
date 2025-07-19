@@ -210,6 +210,7 @@ const ElectedTablePage = () => {
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
             onOpen={handleOpenModal}
+            allowedRoles={['system_admin', 'coordinator',  'owner', 'observer']} 
           />
 
           <UserTableStats data={voter} title="اجمالي الناخبين" />

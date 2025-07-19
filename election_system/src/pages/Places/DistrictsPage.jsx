@@ -172,6 +172,8 @@ const DistrictsPage = () => {
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
             onOpen={handleOpenModal}
+                          allowedRoles={["system_admin"]}
+
           />
 
           <UserTableStats data={districts} title="اجمالي الاقضية" />
@@ -392,11 +394,11 @@ const DistrictsPage = () => {
         onCancel={handleDeleteCancel}
         onConfirm={handleDeleteConfirmation}
       />
-       <Toaster
+      <Toaster
         position="top-center"
         toastOptions={{
           style: {
-            marginTop: "55px", 
+            marginTop: "55px",
           },
         }}
       />

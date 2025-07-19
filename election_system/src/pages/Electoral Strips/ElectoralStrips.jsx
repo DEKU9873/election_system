@@ -16,7 +16,7 @@ import { deleteTape } from "../../redux/electoralStripsSlice";
 import { useDispatch } from "react-redux";
 import AddElectoralStripsModal from "./Electoral Strips Modal/AddElectoralStripsModal";
 import EditElectoralStripsModal from "./Electoral Strips Modal/EditElectoralStripsModal";
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
 
 const ElectoralStrips = () => {
   const dispatch = useDispatch();
@@ -115,7 +115,7 @@ const ElectoralStrips = () => {
   // إجراءات المستخدمين
   const handleUserAction = (action, tape) => {
     setShowActionMenu(null);
-    
+
     if (action === "edit") {
       setSelectedTape(tape);
       setShowEditModal(true);
@@ -142,7 +142,10 @@ const ElectoralStrips = () => {
   return (
     <div>
       {/* <Sidebar /> */}
-      <div className="w-full max-w-[1440px] mx-auto p-3 sm:p-4 md:p-6 bg-white min-h-screen" dir="rtl">
+      <div
+        className="w-full max-w-[1440px] mx-auto p-3 sm:p-4 md:p-6 bg-white min-h-screen"
+        dir="rtl"
+      >
         <div className="mb-3 sm:mb-4 md:mb-6">
           <UserTableTitle
             title="الاشرطة الانتخابية"
@@ -158,6 +161,7 @@ const ElectoralStrips = () => {
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
             onOpen={handleOpenModal}
+            allowedRoles={["system_admin",  "owner", "observer"]}
           />
 
           <UserTableStats data={tapes} title="اجمالي الاشرطة" />
@@ -196,20 +200,22 @@ const ElectoralStrips = () => {
                     )}
                     {visibleColumns.id && (
                       <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
-                        <div className="text-xs sm:text-sm text-gray-900">{row.id}</div>
+                        <div className="text-xs sm:text-sm text-gray-900">
+                          {row.id}
+                        </div>
                       </td>
                     )}
                     {visibleColumns.ElectionCenter && (
                       <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
                         <div className="text-xs sm:text-sm text-gray-900">
-                          {row.ElectionCenter?.name || 'غير متوفر'}
+                          {row.ElectionCenter?.name || "غير متوفر"}
                         </div>
                       </td>
                     )}
                     {visibleColumns.Station && (
                       <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
                         <div className="text-xs sm:text-sm text-gray-900">
-                          {row.Station?.name || 'غير متوفر'}
+                          {row.Station?.name || "غير متوفر"}
                         </div>
                       </td>
                     )}
@@ -292,8 +298,12 @@ const ElectoralStrips = () => {
                     className="px-2 sm:px-4 py-8 sm:py-12 text-center text-gray-500"
                   >
                     <User className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-gray-300 mx-auto mb-2 sm:mb-4" />
-                    <p className="text-base sm:text-lg font-medium">لا توجد نتائج</p>
-                    <p className="text-xs sm:text-sm">جرب تغيير مصطلحات البحث</p>
+                    <p className="text-base sm:text-lg font-medium">
+                      لا توجد نتائج
+                    </p>
+                    <p className="text-xs sm:text-sm">
+                      جرب تغيير مصطلحات البحث
+                    </p>
                   </td>
                 </tr>
               )}
@@ -320,13 +330,18 @@ const ElectoralStrips = () => {
           />
         )}
       </div>
-           {showModal && <AddElectoralStripsModal onClose={handleCloseModal} />}
-           {showEditModal && <EditElectoralStripsModal onClose={() => setShowEditModal(false)} tapeData={selectedTape} />}
- <Toaster
+      {showModal && <AddElectoralStripsModal onClose={handleCloseModal} />}
+      {showEditModal && (
+        <EditElectoralStripsModal
+          onClose={() => setShowEditModal(false)}
+          tapeData={selectedTape}
+        />
+      )}
+      <Toaster
         position="top-center"
         toastOptions={{
           style: {
-            marginTop: "55px", 
+            marginTop: "55px",
           },
         }}
       />

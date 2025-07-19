@@ -194,6 +194,7 @@ const MonitorsTablePage = () => {
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
             onOpen={handleOpenModal}
+            allowedRoles={['system_admin', 'coordinator', 'owner']} // تحديد الأدوار المسموح لها برؤية زر الإضافة
           />
 
           <UserTableStats data={observer} title="اجمالي المراقبين" />

@@ -171,6 +171,7 @@ const CoordinatorTablePage = () => {
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
             onOpen={handleOpenModal}
+            allowedRoles={["system_admin", "owner"]}
           />
 
           <UserTableStats data={allCoordinators} title="اجمالي المرتكزين" />
