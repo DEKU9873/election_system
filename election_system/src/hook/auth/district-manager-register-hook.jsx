@@ -18,7 +18,7 @@ const DistrictManagerRegisterHook = (onClose) => {
   const [idPhotoPreview, setIdPhotoPreview] = useState(null);
   const [electionCardPhoto, setElectionCardPhoto] = useState(null);
   const [electionCardPhotoPreview, setElectionCardPhotoPreview] = useState(null);
-  const [selectedDistricts, setSelectedDistricts] = useState([]);
+  const [selectedCenters, setSelectedCenters] = useState([]);
 
   const handleFirstNameChange = (e) => setFirstName(e.target.value);
   const handleFatherNameChange = (e) => setFatherName(e.target.value);
@@ -27,7 +27,7 @@ const DistrictManagerRegisterHook = (onClose) => {
   const handleBirthYearChange = (e) => setBirthYear(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
   const handleConfirmPasswordChange = (e) => setConfirmPassword(e.target.value);
-  const handleSelectedDistrictsChange = (districts) => setSelectedDistricts(districts);
+  const handleSelectedCentersChange = (centers) => setSelectedCenters(centers);
 
   const handleFileChange = (e, setFile, setPreview) => {
     const file = e.target.files[0];
@@ -52,8 +52,8 @@ const DistrictManagerRegisterHook = (onClose) => {
       return;
     }
 
-    if (selectedDistricts.length === 0) {
-      notify("يرجى اختيار منطقة واحدة على الأقل", "error");
+    if (selectedCenters.length === 0) {
+      notify("يرجى اختيار مركز انتخابي واحد على الأقل", "error");
       return;
     }
 
@@ -68,8 +68,8 @@ const DistrictManagerRegisterHook = (onClose) => {
     formData.append("profile_image", personalPhoto);
     formData.append("identity_image", idPhoto);
     formData.append("voting_card_image", electionCardPhoto);
-    selectedDistricts.forEach(district => {
-      formData.append("districts_id[]", district.value);
+    selectedCenters.forEach(center => {
+      formData.append("election_centers_id[]", center.value);
     });
 
     try {
@@ -107,8 +107,8 @@ const DistrictManagerRegisterHook = (onClose) => {
     idPhotoPreview,
     electionCardPhoto,
     electionCardPhotoPreview,
-    selectedDistricts,
-    handleSelectedDistrictsChange,
+    selectedCenters,
+    handleSelectedCentersChange,
     handleSubmit,
     setPersonalPhoto,
     setPersonalPhotoPreview,

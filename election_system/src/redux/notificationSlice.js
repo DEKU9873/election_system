@@ -3,7 +3,7 @@ import axios from "axios";
 import { useGetDataToken } from "../hooks/useGetData";
 import { useInsertDataWithToken } from "../hooks/useInsertData";
 import { useDeleteDataWithToken } from "../hooks/useDeleteData";
-import { usePatchDataWithToken } from "../hooks/useUpdateData";
+import { usePatchDataWithToken, useUpdateDataWithToken } from "../hooks/useUpdateData";
 
 // جلب كل الإشعارات
 export const fetchNotifications = createAsyncThunk(
@@ -88,7 +88,7 @@ export const markNotificationRead = createAsyncThunk(
   "notifications/markNotificationRead",
   async (notification_id, thunkAPI) => {
     try {
-      const response = await usePatchDataWithToken(`/api/notifications/mark-read/${notification_id}`);
+      const response = await useUpdateDataWithToken(`/api/notifications/mark-read/${notification_id}`);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(

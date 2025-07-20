@@ -5,7 +5,7 @@ import logo from "../../../assets/urlogo.png";
 import DistrictManagerRegisterHook from '../../../hook/auth/district-manager-register-hook';
 import { Link } from 'react-router-dom';
 import Select from 'react-select';
-import GetallDistricts from '../../../hook/Districts/get-all-districts';
+import GetAllCenter from '../../../hook/Center/get-all-center';
 
 const DistrictManagerRegisterModal = ({ onClose }) => {
   const [
@@ -30,8 +30,8 @@ const DistrictManagerRegisterModal = ({ onClose }) => {
     idPhotoPreview,
     electionCardPhoto,
     electionCardPhotoPreview,
-    selectedDistricts,
-    handleSelectedDistrictsChange,
+    selectedCenters,
+    handleSelectedCentersChange,
     handleSubmit,
     setPersonalPhoto,
     setPersonalPhotoPreview,
@@ -40,7 +40,7 @@ const DistrictManagerRegisterModal = ({ onClose }) => {
     setElectionCardPhoto,
     setElectionCardPhotoPreview
   ] = DistrictManagerRegisterHook(onClose);
-  const [districts, loadingDistricts] = GetallDistricts();
+  const [electionCenters, isLoading] = GetAllCenter();
 
   return (
     <div
@@ -261,17 +261,17 @@ const DistrictManagerRegisterModal = ({ onClose }) => {
           </div>
 
           <div className="space-y-3 w-full">
-            <h3 className="text-lg font-semibold text-gray-700 mb-2 text-right">المناطق</h3>
+            <h3 className="text-lg font-semibold text-gray-700 mb-2 text-right">المراكز الانتخابية</h3>
             <div className="relative">
               <MapPin className="absolute right-3 top-2 text-gray-400" size={18} />
               <Select
                 isMulti
-                options={districts?.map(district => ({ value: district.id.toString(), label: district.name }))}
-                value={selectedDistricts}
-                onChange={handleSelectedDistrictsChange}
-                placeholder="اختر المناطق"
+                options={electionCenters?.map(center => ({ value: center.id, label: center.name }))}
+                value={selectedCenters}
+                onChange={handleSelectedCentersChange}
+                placeholder="اختر المراكز الانتخابية"
                 className="text-right"
-                isLoading={loadingDistricts}
+                isLoading={isLoading}
                 styles={{
                   control: (base) => ({
                     ...base,
