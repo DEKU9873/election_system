@@ -16,6 +16,13 @@ const AddCenterHook = (onClose) => {
   const [loading, setLoading] = useState(false);
   const [submitClicked, setSubmitClicked] = useState(false);
 
+  const [supply_name, setSupply_name] = useState("");
+  const [supply_code, setSupply_code] = useState("");
+
+  const [registration_center_name, setRegistration_center_name] = useState("");
+  const [registration_center_code, setRegistration_center_code] = useState("");
+
+
   const onChangeCenter = (e) => {
     setCenter(e.target.value);
   };
@@ -32,6 +39,11 @@ const AddCenterHook = (onClose) => {
     // إعادة تعيين قيمة الناحية عند تغيير القضاء
     setSubdistrictId("");
   };
+
+  const onChangeSupply_name = (e) => setSupply_name(e.target.value);
+  const onChangeSupply_code = (e) => setSupply_code(e.target.value);
+  const onChangeRegistration_center_name = (e) => setRegistration_center_name(e.target.value);
+  const onChangeRegistration_center_code = (e) => setRegistration_center_code(e.target.value);
   
   const onChangeSubdistrictId = (e) => setSubdistrictId(Number(e.target.value));
   const onChangeLatitude = (e) => setLatitude(e.target.value);
@@ -59,6 +71,10 @@ const AddCenterHook = (onClose) => {
         governorate_id: governorateId,
         district_id: districtId,
         subdistrict_id: subdistrictId,
+        supply_name,
+        supply_code,
+        registration_center_name,
+        registration_center_code
       };
       
       // إضافة الموقع الجغرافي إذا تم تحديده
@@ -112,6 +128,14 @@ const AddCenterHook = (onClose) => {
     onChangeLongitude,
     onLocationSelect,
     onSubmit,
+    supply_name,
+    supply_code,
+    registration_center_name,
+    registration_center_code,
+    onChangeSupply_name,
+    onChangeSupply_code,
+    onChangeRegistration_center_name,
+    onChangeRegistration_center_code
   ];
 };
 

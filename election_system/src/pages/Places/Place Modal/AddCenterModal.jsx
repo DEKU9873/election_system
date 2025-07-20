@@ -28,6 +28,14 @@ const AddCenterModal = ({ onClose }) => {
     onChangeLongitude,
     onLocationSelect,
     onSubmit,
+    supply_name,
+    supply_code,
+    registration_center_name,
+    registration_center_code,
+    onChangeSupply_name,
+    onChangeSupply_code,
+    onChangeRegistration_center_name,
+    onChangeRegistration_center_code
   ] = AddCenterHook(onClose);
 
   const [showMap, setShowMap] = useState(false);
@@ -145,6 +153,82 @@ const AddCenterModal = ({ onClose }) => {
           dir="rtl"
           className="w-full grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-x-6 md:gap-y-4"
         >
+          <div>
+            <label className="block text-gray-700 font-medium mb-1 text-right text-sm">
+              اسم مركز التموين
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                className="w-full pr-10 py-1.5 text-sm border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
+                value={supply_name}
+                onChange={onChangeSupply_name}
+                dir="rtl"
+                placeholder="أدخل اسم مركز التموين"
+              />
+              <Building2
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-600"
+                size={18}
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-gray-700 font-medium mb-1 text-right text-sm">
+              رمز مركز التموين
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                className="w-full pr-10 py-1.5 text-sm border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
+                value={supply_code}
+                onChange={onChangeSupply_code}
+                dir="rtl"
+                placeholder="أدخل رمز مركز التموين"
+              />
+              <Hash
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-600"
+                size={18}
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-gray-700 font-medium mb-1 text-right text-sm">
+              اسم مركز التسجيل
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                className="w-full pr-10 py-1.5 text-sm border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
+                value={registration_center_name}
+                onChange={onChangeRegistration_center_name}
+                dir="rtl"
+                placeholder="أدخل اسم مركز التسجيل"
+              />
+              <Building2
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-600"
+                size={18}
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-gray-700 font-medium mb-1 text-right text-sm">
+              رمز مركز التسجيل
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                className="w-full pr-10 py-1.5 text-sm border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
+                value={registration_center_code}
+                onChange={onChangeRegistration_center_code}
+                dir="rtl"
+                placeholder="أدخل رمز مركز التسجيل"
+              />
+              <Hash
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-600"
+                size={18}
+              />
+            </div>
+          </div>
           <div>
             <label className="block text-gray-700 font-medium mb-1 text-right text-sm">
               اسم المركز

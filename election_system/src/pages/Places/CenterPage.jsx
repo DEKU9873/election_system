@@ -44,6 +44,10 @@ const CenterPage = () => {
     id: true,
     code: true,
     name: true,
+    supply_name: true,
+    supply_code: true,
+    registration_center_name: true,
+    registration_center_code: true,
     governorate: true,
     district: true,
     subdistrict: true,
@@ -245,6 +249,42 @@ const CenterPage = () => {
                         </td>
                       )}
 
+                      {visibleColumns.supply_code && (
+                        <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                          <div className="flex items-center gap-2">
+                            <div className="text-xs sm:text-sm font-medium text-gray-900">
+                              {row.supply_code}
+                            </div>
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.supply_name && (
+                        <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                          <div className="flex items-center gap-2">
+                            <div className="text-xs sm:text-sm font-medium text-gray-900">
+                              {row.supply_name}
+                            </div>
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.registration_center_code && (
+                        <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                          <div className="flex items-center gap-2">
+                            <div className="text-xs sm:text-sm font-medium text-gray-900">
+                              {row.registration_center_code}
+                            </div>
+                          </div>
+                        </td>
+                      )}
+                      {visibleColumns.registration_center_name && (
+                        <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                          <div className="flex items-center gap-2">
+                            <div className="text-xs sm:text-sm font-medium text-gray-900">
+                              {row.registration_center_name}
+                            </div>
+                          </div>
+                        </td>
+                      )}
                       {visibleColumns.code && (
                         <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
                           <div className="flex items-center gap-2">

@@ -26,6 +26,7 @@ import FinanceCapitalsPage from "./pages/finance/FinanceCapitalsPage";
 import LogPage from "./pages/log/LogPage";
 import MonitorUserMap from "./pages/Monitor User/MonitorUserMap";
 import ProfilePage from "./pages/auth/ProfilePage";
+import ERPSuccessDashboard from "./pages/ERP";
 
 const App = () => {
   return (
@@ -97,6 +98,7 @@ const App = () => {
             <Route path="/financeCapitals" element={<FinanceCapitalsPage />} />
             <Route path="/log" element={<LogPage />} />
             <Route path="/usersMap" element={<MonitorUserMap />} />
+            <Route path="/erp" element={<ERPSuccessDashboard/>} />
           </Route>
         </Route>
       </Routes>

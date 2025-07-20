@@ -597,6 +597,30 @@ export const CenterHeader = [
     icon: null,
   },
   {
+    id: "supply_code",
+    label: "رمز مركز التموين",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "supply_name",
+    label: "اسم مركز التموين",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "registration_center_code",
+    label: "رمز مركز التسجيل",
+    sortable: true,
+    icon: null,
+  },
+  {
+    id: "registration_center_name",
+    label: "اسم مركز التسجيل",
+    sortable: true,
+    icon: null,
+  },
+  {
     id: "code",
     label: "رمز المركز",
     sortable: true,
