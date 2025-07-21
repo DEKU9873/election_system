@@ -267,6 +267,21 @@ export const deleteDistrictManager = createAsyncThunk(
   }
 );
 
+// Change User Role
+export const changeUserRole = createAsyncThunk(
+  "auth/changeUserRole",
+  async ({ userId, roleData }, thunkAPI) => {
+    try {
+      const response = await useUpdateDataWithToken(`/api/change-role/${userId}`, roleData);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "فشل في تغيير دور المستخدم"
+      );
+    }
+  }
+);
+
 // Initial State
 const initialState = {
   user: null,
@@ -282,13 +297,18 @@ const initialState = {
   confirmVotingSuccess: false,
   toggleActiveSuccess: false,
   changePasswordSuccess: false,
+  changeRoleSuccess: false,
 };
 
 // Slice
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    resetChangeRoleSuccess: (state) => {
+      state.changeRoleSuccess = false;
+    },
+  },
   extraReducers: (builder) => {
     builder
       // Register
@@ -560,8 +580,36 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         state.deleteDistrictManagerSuccess = false;
+      })
+      
+      // Change User Role
+      .addCase(changeUserRole.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.changeRoleSuccess = false;
+      })
+      .addCase(changeUserRole.fulfilled, (state, action) => {
+        state.loading = false;
+        state.changeRoleSuccess = true;
+        state.error = null;
+        // تحديث المستخدم في القائمة إذا كان موجودًا
+        if (state.allUsers.length > 0) {
+          state.allUsers = state.allUsers.map(user => 
+            user.id === action.meta.arg.userId ? { ...user, role: action.meta.arg.roleData.newRole } : user
+          );
+        }
+        // تحديث المستخدم الحالي إذا كان هو المستخدم المحدد
+        if (state.singleUser && state.singleUser.id === action.meta.arg.userId) {
+          state.singleUser = { ...state.singleUser, role: action.meta.arg.roleData.newRole };
+        }
+      })
+      .addCase(changeUserRole.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.changeRoleSuccess = false;
       });
   },
 });
 
+export const { resetChangeRoleSuccess } = authSlice.actions;
 export const authReducer = authSlice.reducer;

@@ -3,19 +3,23 @@ import Sidebar from "../../Components/Uitily/Sidebar";
 import UserTableTitle from "../../Components/auth/UserTableTitle";
 import UserTableToolbar from "../../Components/auth/UserTableToolbar";
 import UserTableStats from "../../Components/auth/UserTableStats";
-import { MoreHorizontal, User, UserCheck, UserX } from "lucide-react";
+import { MoreHorizontal, User, UserCheck, UserX, UserCog } from "lucide-react";
 import UserTablePagination from "../../Components/auth/UserTablePagination";
 import { userTableHeaders } from "../../Components/auth/TableHeaderData";
 import UsersMap from "../../Components/auth/UsersMap";
 import UserTableHeader from "../../Components/auth/UserTableHeader";
 import AllUserHook from "../../hook/auth/all-user-hook";
 import formatDate from "../../hook/UtilsFunctions/FormatDate";
-import { deleteUser, getAllUsers, toggleActive } from "../../redux/authSlice";
+import { deleteUser, getAllUsers, toggleActive, resetChangeRoleSuccess } from "../../redux/authSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import DeleteModal from "../../Components/Uitily/DeleteModal";
 import Loader from "../../Components/Uitily/Loader";
-import { useUpdateData, useUpdateDataWithToken } from "../../hooks/useUpdateData";
+import {
+  useUpdateData,
+  useUpdateDataWithToken,
+} from "../../hooks/useUpdateData";
+import ChangeUserRoleModal from "./Auth Modal/ChangeUserRoleModal";
 const UserTablePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -37,7 +41,9 @@ const UserTablePage = () => {
   const [filterText, setFilterText] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showRoleModal, setShowRoleModal] = useState(false);
   const [userIdToDelete, setUserIdToDelete] = useState(null);
+  const [userIdToChangeRole, setUserIdToChangeRole] = useState(null);
   const [visibleColumns, setVisibleColumns] = useState({
     select: true,
     id: true,
@@ -143,6 +149,11 @@ const UserTablePage = () => {
   // إجراءات المستخدمين
   const handleUserAction = (action, user) => {
     setShowActionMenu(null);
+
+    if (action === "changeRole") {
+      setUserIdToChangeRole(user.id);
+      setShowRoleModal(true);
+    }
   };
 
   const handleDeleteConfirm = (id) => {
@@ -182,6 +193,15 @@ const UserTablePage = () => {
         className="w-full max-w-[1440px] mx-auto p-2 sm:p-4 md:p-6 bg-white"
         dir="rtl"
       >
+        {/* نافذة تغيير الدور */}
+        <ChangeUserRoleModal
+          isOpen={showRoleModal}
+          onClose={() => {
+            dispatch(resetChangeRoleSuccess());
+            setShowRoleModal(false);
+          }}
+          userId={userIdToChangeRole}
+        />
         <div className="mb-6">
           <UserTableTitle title="المستخدمين" subtitle="قائمة المستخدمين" />
 
@@ -193,8 +213,8 @@ const UserTablePage = () => {
             setShowColumnMenu={setShowColumnMenu}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
-            onOpen={() => navigate('/register')}
-            allowedRoles={['system_admin', 'coordinator']} // تحديد الأدوار المسموح لها برؤية زر الإضافة
+            onOpen={() => navigate("/register")}
+            allowedRoles={["system_admin", "coordinator"]} // تحديد الأدوار المسموح لها برؤية زر الإضافة
             className="flex-wrap"
           />
 
@@ -298,14 +318,18 @@ const UserTablePage = () => {
                           </div>
                         </td>
                       )} */}
-                      
+
                       {visibleColumns.active && (
                         <td className="px-2 sm:px-4 py-2 sm:py-3">
                           <div className="flex items-center justify-center">
                             <button
                               onClick={() => handleToggleActive(row.id)}
                               className="flex items-center gap-1 hover:opacity-80 transition-opacity duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-300 rounded px-2 py-1"
-                              title={row.is_active ? 'نشط - انقر للإلغاء' : 'غير نشط - انقر للتفعيل'}
+                              title={
+                                row.is_active
+                                  ? "نشط - انقر للإلغاء"
+                                  : "غير نشط - انقر للتفعيل"
+                              }
                             >
                               {row.is_active ? (
                                 <UserCheck className="w-4 h-4 text-green-600" />
@@ -325,7 +349,7 @@ const UserTablePage = () => {
                           </div>
                         </td>
                       )}
-                  
+
                       {visibleColumns.createdAt && (
                         <td className="px-2 sm:px-4 py-2 sm:py-3">
                           <div className="text-xs sm:text-sm text-gray-900">
@@ -333,7 +357,6 @@ const UserTablePage = () => {
                           </div>
                         </td>
                       )}
-                
 
                       {visibleColumns.actions && (
                         <td className="px-2 sm:px-4 py-2 sm:py-3">
@@ -360,7 +383,7 @@ const UserTablePage = () => {
                                   >
                                     عرض التفاصيل
                                   </button>
-                              
+
                                   <button
                                     onClick={() =>
                                       handleUserAction("edit", row)
@@ -375,20 +398,17 @@ const UserTablePage = () => {
                                   >
                                     حذف
                                   </button>
+
                                   <button
                                     onClick={() =>
-                                      handleUserAction("permissions", row)
+                                      handleUserAction("changeRole", row)
                                     }
                                     className="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                   >
-                                    إدارة الصلاحيات
-                                  </button>
-                                  <hr className="my-1" />
-                                  <button
-                                    onClick={() => handleDeleteConfirm(row.id)}
-                                    className="block w-full text-right px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
-                                  >
-                                    حذف المستخدم
+                                    <span className="flex items-center">
+                                      <UserCog className="w-4 h-4 ml-2" />
+                                      تغيير الدور
+                                    </span>
                                   </button>
                                 </div>
                               </div>
