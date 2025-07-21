@@ -4,6 +4,8 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Users, MapPin, Eye, RefreshCw } from "lucide-react";
 import io from "socket.io-client";
+import Cookies from "js-cookie";
+
 
 // إصلاح أيقونات Leaflet الافتراضية
 delete L.Icon.Default.prototype._getIconUrl;
@@ -36,6 +38,8 @@ const MonitorUserMap = () => {
   const [serverStats, setServerStats] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
+  const token = Cookies.get("token");
+
   // الاتصال بـ Socket.IO
   useEffect(() => {
     const newSocket = io("http://192.168.100.201:5000/", {
@@ -48,10 +52,11 @@ const MonitorUserMap = () => {
       console.log("✅ Connected to server");
       setConnected(true);
 
-      // إرسال بيانات تعريفية للسيرفر
+      // ✅ إرسال بيانات تعريفية للسيرفر مع التوكن
       newSocket.emit("register", {
         userId: "web_client_" + Date.now(),
         deviceType: "web",
+        token: token, 
         deviceInfo: {
           userAgent: navigator.userAgent,
           platform: navigator.platform,
@@ -88,13 +93,27 @@ const MonitorUserMap = () => {
     return () => {
       newSocket.close();
     };
-  }, []);
+  }, [token]);
 
   const refreshData = () => {
     if (socket) {
       setIsLoading(true);
-      socket.emit("get_connected_users"); // طلب تحديث بيانات المستخدمين
+      // ✅ إرسال التوكن عند طلب المستخدمين
+      socket.emit("get_connected_users", { token: token });
       setTimeout(() => setIsLoading(false), 1000);
+    }
+  };
+
+  const sendLocationUpdate = (latitude, longitude) => {
+    if (socket) {
+      // ✅ إرسال التوكن مع location_update
+      socket.emit("location_update", {
+        latitude: latitude,
+        longitude: longitude,
+        timestamp: new Date().toISOString(),
+        userId: "web_client_" + Date.now(),
+        token: token, // ✅ التوكن هنا
+      });
     }
   };
 
@@ -115,7 +134,7 @@ const MonitorUserMap = () => {
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900 mb-2 flex items-center gap-3">
           <MapPin className="text-blue-600" size={32} />
-          خريطة مراقبة المستخدمين (Socket.IO)
+          خريطة مراقبة المستخدمين
         </h1>
         <p className="text-gray-600">
           {connected ? "🟢 متصل بالسيرفر" : "🔴 غير متصل بالسيرفر"}
