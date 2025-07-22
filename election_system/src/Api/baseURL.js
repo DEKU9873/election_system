@@ -9,7 +9,8 @@ const baseURL = axios.create({
   // baseURL: "http://192.168.100.201:5000/",
   // baseURL: "http://192.168.100.79:5000/",
   // baseURL: "http://192.168.0.105:5000/",
-  baseURL: "http://localhost:5000/",
+  // baseURL: "http://localhost:5000/",
+  baseURL: "http://185.129.7.139:2020/",
 });
 
 export default baseURL;

@@ -100,50 +100,50 @@ export const subscribeToNotifications = (callback) => {
   // هذه الدالة ستكون مسؤولة عن إعداد اتصال WebSocket في المستقبل
   // حاليًا، يمكن استخدام استطلاع دوري للإشعارات الجديدة
 
-  let lastFetchTime = 0; // تخزين وقت آخر استطلاع
-  let isFirstFetch = true; // علامة للاستطلاع الأول
+  // let lastFetchTime = 0; // تخزين وقت آخر استطلاع
+  // let isFirstFetch = true; // علامة للاستطلاع الأول
 
-  // استطلاع فوري عند بدء الاشتراك
-  const fetchImmediately = async () => {
-    try {
-      // console.log('بدء الاشتراك في الإشعارات - استطلاع فوري');
-      const notifications = await fetchNotifications();
-      lastFetchTime = Date.now();
-      isFirstFetch = false;
-      callback(notifications);
-    } catch (error) {
-      // console.error('خطأ في استطلاع الإشعارات الفوري:', error);
-    }
-  };
+  // // استطلاع فوري عند بدء الاشتراك
+  // const fetchImmediately = async () => {
+  //   try {
+  //     // console.log('بدء الاشتراك في الإشعارات - استطلاع فوري');
+  //     const notifications = await fetchNotifications();
+  //     lastFetchTime = Date.now();
+  //     isFirstFetch = false;
+  //     callback(notifications);
+  //   } catch (error) {
+  //     // console.error('خطأ في استطلاع الإشعارات الفوري:', error);
+  //   }
+  // };
 
-  // تنفيذ استطلاع فوري
-  fetchImmediately();
+  // // تنفيذ استطلاع فوري
+  // fetchImmediately();
 
-  // ثم إعداد استطلاع دوري بفترات أقصر
-  const intervalId = setInterval(async () => {
-    try {
-      // تجنب الاستطلاعات المتكررة بشكل سريع جدًا
-      const now = Date.now();
-      const timeSinceLastFetch = now - lastFetchTime;
+  // // ثم إعداد استطلاع دوري بفترات أقصر
+  // const intervalId = setInterval(async () => {
+  //   try {
+  //     // تجنب الاستطلاعات المتكررة بشكل سريع جدًا
+  //     const now = Date.now();
+  //     const timeSinceLastFetch = now - lastFetchTime;
 
-      // إذا كان الوقت منذ آخر استطلاع أقل من 2 ثانية، تخطي هذا الاستطلاع
-      if (!isFirstFetch && timeSinceLastFetch < 2000) {
-        // console.log('تخطي استطلاع الإشعارات - تم الاستطلاع مؤخرًا');
-        return;
-      }
+  //     // إذا كان الوقت منذ آخر استطلاع أقل من 2 ثانية، تخطي هذا الاستطلاع
+  //     if (!isFirstFetch && timeSinceLastFetch < 2000) {
+  //       // console.log('تخطي استطلاع الإشعارات - تم الاستطلاع مؤخرًا');
+  //       return;
+  //     }
 
-      // console.log('استطلاع دوري للإشعارات');
-      const notifications = await fetchNotifications();
-      lastFetchTime = now;
-      callback(notifications);
-    } catch (error) {
-      // console.error('خطأ في استطلاع الإشعارات الدوري:', error);
-    }
-  }, 5000); // استطلاع كل 5 ثوانٍ بدلاً من 10 ثوانٍ
+  //     // console.log('استطلاع دوري للإشعارات');
+  //     const notifications = await fetchNotifications();
+  //     lastFetchTime = now;
+  //     callback(notifications);
+  //   } catch (error) {
+  //     // console.error('خطأ في استطلاع الإشعارات الدوري:', error);
+  //   }
+  // }, 5000); // استطلاع كل 5 ثوانٍ بدلاً من 10 ثوانٍ
 
-  // إرجاع دالة لإلغاء الاشتراك
-  return () => {
-    // console.log('إلغاء الاشتراك في الإشعارات');
-    clearInterval(intervalId);
-  };
+  // // إرجاع دالة لإلغاء الاشتراك
+  // return () => {
+  //   // console.log('إلغاء الاشتراك في الإشعارات');
+  //   clearInterval(intervalId);
+  // };
 };

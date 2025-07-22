@@ -36,7 +36,6 @@ const AddGovernorateHook = (onClose) => {
       );
 
       if (res.type === "place/addGovernate/fulfilled") {
-        console.log("hello");
         await dispatch(getGovernates());
 
         notify("تمت إضافة المحافظة بنجاح", "success");
