@@ -1,68 +1,12 @@
-# نظام الانتخابات
+# React + Vite
 
-نظام إدارة الانتخابات مبني باستخدام React و Vite مع Tailwind CSS.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## المميزات
+Currently, two official plugins are available:
 
-- واجهة مستخدم حديثة وسهلة الاستخدام
-- إدارة العمليات الانتخابية
-- عرض النتائج والإحصائيات
-- خرائط تفاعلية باستخدام Leaflet
-- رسوم بيانية باستخدام Chart.js
-- إدارة الحالة باستخدام Redux Toolkit
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## متطلبات النظام
+## Expanding the ESLint configuration
 
-- Node.js (الإصدار 18 أو أحدث)
-- npm أو yarn
-
-## تثبيت وتشغيل المشروع محليًا
-
-1. قم بتنزيل أو استنساخ المشروع
-
-```bash
-git clone <رابط-المستودع>
-cd election_system
-```
-
-2. قم بتثبيت الاعتماديات
-
-```bash
-npm install
-# أو
-yarn install
-```
-
-3. قم بإنشاء ملف `.env` بناءً على `.env.example`
-
-4. قم بتشغيل خادم التطوير
-
-```bash
-npm run dev
-# أو
-yarn dev
-```
-
-## بناء المشروع للإنتاج
-
-```bash
-npm run build
-# أو
-yarn build
-```
-
-## نشر المشروع على Vercel
-
-لنشر المشروع على منصة Vercel، يرجى الاطلاع على [دليل النشر على Vercel](./VERCEL_DEPLOYMENT.md).
-
-## التقنيات المستخدمة
-
-- React 19
-- Vite 6
-- Tailwind CSS 4
-- Redux Toolkit
-- React Router
-- Chart.js / Recharts
-- Leaflet
-- Axios
-- Socket.io-client
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
