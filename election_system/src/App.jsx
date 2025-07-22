@@ -17,7 +17,7 @@ import CenterPage from "./pages/Places/CenterPage";
 import StationPage from "./pages/Places/StationPage";
 import ElectoralStripsDetails from "./pages/Electoral Strips/ElectoralStripsDetails";
 import FinancialStatistics from "./pages/Statistics/FinancialStatistics";
-import NotificationsPage from "./pages/Notifications/NotificationsPage";
+// import NotificationsPage from "./pages/Notifications/NotificationsPage";
 import DashboardPage from "./pages/Dashboard/DashboardPage";
 import PrivateRoute from "./Components/PrivateRoute";
 import MainLayout from "./Components/Layout/MainLayout";
@@ -52,7 +52,7 @@ const App = () => {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/" element={<DashboardPage />} />
             <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/notifications" element={<NotificationsPage />} />
+            {/* <Route path="/notifications" element={<NotificationsPage />} /> */}
             <Route path="/userDetails/:id" element={<UserDetailsPage />} />
             <Route path="/governorate" element={<GovernoratePage />} />
             <Route path="/districts" element={<DistrictsPage />} />

@@ -10,7 +10,12 @@ import UsersMap from "../../Components/auth/UsersMap";
 import UserTableHeader from "../../Components/auth/UserTableHeader";
 import AllUserHook from "../../hook/auth/all-user-hook";
 import formatDate from "../../hook/UtilsFunctions/FormatDate";
-import { deleteUser, getAllUsers, toggleActive, resetChangeRoleSuccess } from "../../redux/authSlice";
+import {
+  deleteUser,
+  getAllUsers,
+  toggleActive,
+  resetChangeRoleSuccess,
+} from "../../redux/authSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import DeleteModal from "../../Components/Uitily/DeleteModal";
@@ -20,6 +25,7 @@ import {
   useUpdateDataWithToken,
 } from "../../hooks/useUpdateData";
 import ChangeUserRoleModal from "./Auth Modal/ChangeUserRoleModal";
+import RegisterModal from "./Auth Modal/RegisterModal";
 const UserTablePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -34,7 +40,8 @@ const UserTablePage = () => {
     finance_auditor,
   ] = AllUserHook();
 
-  console.log("allUsers:", allUsers);
+  const [showModal, setShowModal] = useState(false);
+
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
@@ -187,6 +194,13 @@ const UserTablePage = () => {
     }
   };
 
+  const handleOpenModal = () => {
+    setShowModal(true);
+  };
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   return (
     <div className="min-h-screen">
       <div
@@ -213,7 +227,7 @@ const UserTablePage = () => {
             setShowColumnMenu={setShowColumnMenu}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
-            onOpen={() => navigate("/register")}
+            onOpen={handleOpenModal}
             allowedRoles={["system_admin", "coordinator"]} // تحديد الأدوار المسموح لها برؤية زر الإضافة
             className="flex-wrap"
           />
@@ -453,6 +467,8 @@ const UserTablePage = () => {
             }}
           />
         )}
+
+        {showModal && <RegisterModal onClose={handleCloseModal} />}
 
         {/* نافذة تأكيد الحذف */}
         <DeleteModal

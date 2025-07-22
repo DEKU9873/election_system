@@ -42,7 +42,7 @@ const MonitorUserMap = () => {
 
   // الاتصال بـ Socket.IO
   useEffect(() => {
-    const newSocket = io("http://192.168.100.201:5000/", {
+    const newSocket = io("http://185.129.7.139:2025/", {
       transports: ["websocket"],
       upgrade: true,
     });
@@ -164,10 +164,12 @@ const MonitorUserMap = () => {
             zoom={6}
             style={{ height: "100%", width: "100%" }}
           >
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
+           <TileLayer
+                   attribution='&copy; <a href="https://www.google.com/maps">Google Maps</a>'
+                   url="https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
+                 />
+
+            
 
             {locationData.map((user) => (
               <Marker

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
-import useNotificationsHook from "../../hook/notifications/use-notifications-hook";
+// import useNotificationsHook from "../../hook/notifications/use-notifications-hook";
 import Cookies from "js-cookie";
 
 import {
@@ -36,7 +36,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
   const [activeItem, setActiveItem] = useState("");
-  const { unreadCount } = useNotificationsHook();
+  // const { unreadCount } = useNotificationsHook();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
 
@@ -281,7 +281,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
           </div>
           <div className="flex items-center space-x-4 rtl:space-x-reverse min-w-min ">
             <div className="flex items-center gap-4">
-              <Link
+              {/* <Link
                 to="/notifications"
                 className="p-2 hover:bg-blue-50 rounded-full relative transition-colors duration-200"
                 title="الإشعارات"
@@ -292,7 +292,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                     {unreadCount > 9 ? "9+" : unreadCount}
                   </span>
                 )}
-              </Link>
+              </Link> */}
               {isLoggedIn ? (
                 <Link
                   to="/profile"

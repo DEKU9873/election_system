@@ -18,6 +18,7 @@ import RegisterModal from "./Auth Modal/RegisterModal";
 import DeleteModal from "../../Components/Uitily/DeleteModal";
 import Loader from "../../Components/Uitily/Loader";
 import { Toaster } from "react-hot-toast";
+import VoterRegisterModal from "./Auth Modal/VoterRegisterModal";
 
 const ElectedTablePage = () => {
   const dispatch = useDispatch();
@@ -419,7 +420,7 @@ const ElectedTablePage = () => {
           />
         )}
       </div>
-      {showModal && <RegisterModal onClose={handleCloseModal} />}
+      {showModal && <VoterRegisterModal onClose={handleCloseModal} />}
       <DeleteModal
         isOpen={showDeleteModal}
         onCancel={handleDeleteCancel}

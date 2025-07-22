@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../Uitily/Sidebar";
-import NotificationToast from "../Notifications/NotificationToast";
-import NotificationButton from "../Notifications/NotificationButton";
+// import NotificationToast from "../Notifications/NotificationToast";
+// import NotificationButton from "../Notifications/NotificationButton";
 
 const MainLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -24,8 +24,8 @@ const MainLayout = () => {
 
   return (
     <div className="font-cairo">
-      <NotificationToast />
-      <NotificationButton />
+      {/* <NotificationToast />
+      <NotificationButton /> */}
       <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
 
       <div

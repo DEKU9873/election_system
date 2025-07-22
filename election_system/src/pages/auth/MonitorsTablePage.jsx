@@ -15,6 +15,7 @@ import RegisterModal from "./Auth Modal/RegisterModal";
 import DeleteModal from "../../Components/Uitily/DeleteModal";
 import Loader from "../../Components/Uitily/Loader";
 import UsersMap from "../../Components/auth/UsersMap";
+import ObserverRegisterModal from "./Auth Modal/ObserverRegisterModal";
 const MonitorsTablePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -376,7 +377,7 @@ const MonitorsTablePage = () => {
           />
         )}
       </div>
-      {showModal && <RegisterModal onClose={handleCloseModal} />}
+      {showModal && <ObserverRegisterModal onClose={handleCloseModal} />}
       <DeleteModal
         isOpen={showDeleteModal}
         onCancel={handleDeleteCancel}

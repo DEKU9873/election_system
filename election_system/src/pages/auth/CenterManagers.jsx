@@ -15,6 +15,7 @@ import DeleteModal from "../../Components/Uitily/DeleteModal";
 import { useDispatch } from "react-redux";
 import { deleteUser, getAllUsers } from "../../redux/authSlice";
 import RegisterModal from "./Auth Modal/RegisterModal";
+import CenterManagerRegisterModal from "./Auth Modal/CenterManagerRegisterModal";
 const CenterManagers = () => {
   const dispatch = useDispatch();
   const [
@@ -378,7 +379,7 @@ const CenterManagers = () => {
         )}
 
         {/* نافذة تأكيد الحذف */}
-        {showModal && <RegisterModal onClose={handleCloseModal} />}
+        {showModal && <CenterManagerRegisterModal onClose={handleCloseModal} />}
         <DeleteModal
           isOpen={showDeleteModal}
           onCancel={handleDeleteCancel}
