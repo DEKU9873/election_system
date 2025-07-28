@@ -19,6 +19,7 @@ import DeleteModal from "../../Components/Uitily/DeleteModal";
 import Loader from "../../Components/Uitily/Loader";
 import { Toaster } from "react-hot-toast";
 import VoterRegisterModal from "./Auth Modal/VoterRegisterModal";
+import VoterEditModal from "./Auth Modal/VoterEditModal";
 
 const ElectedTablePage = () => {
   const dispatch = useDispatch();
@@ -39,6 +40,8 @@ const ElectedTablePage = () => {
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [userIdToDelete, setUserIdToDelete] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -151,6 +154,12 @@ const ElectedTablePage = () => {
   // إجراءات المستخدمين
   const handleUserAction = (action, user) => {
     setShowActionMenu(null);
+    if (action === "permissions") {
+      // تنفيذ إجراء إدارة الصلاحيات
+    } else if (action === "edit") {
+      setSelectedUser(user);
+      setShowEditModal(true);
+    }
   };
 
   const handleDeleteConfirm = (id) => {
@@ -181,8 +190,14 @@ const ElectedTablePage = () => {
   const handleOpenModal = () => {
     setShowModal(true);
   };
+
   const handleCloseModal = () => {
     setShowModal(false);
+  };
+
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
+    setSelectedUser(null);
   };
 
   const handleConfirmVoting = async (id) => {
@@ -350,14 +365,14 @@ const ElectedTablePage = () => {
                                   >
                                     تأكيد التصويت
                                   </button>
-                                  {/* <button
+                                  <button
                                     onClick={() =>
                                       handleUserAction("edit", row)
                                     }
                                     className="block w-full text-right px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                   >
                                     تعديل
-                                  </button> */}
+                                  </button>
                                   <button
                                     onClick={() => handleDeleteConfirm(row.id)}
                                     className="block w-full text-right px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-red-700 hover:bg-red-50 transition-colors"
@@ -426,6 +441,13 @@ const ElectedTablePage = () => {
         onCancel={handleDeleteCancel}
         onConfirm={handleDeleteConfirmation}
       />
+      {showEditModal && selectedUser && (
+        <VoterEditModal 
+          onClose={handleCloseEditModal} 
+          userData={selectedUser} 
+        />
+      )}
+      <Toaster position="top-center" />
     </div>
   );
 };

@@ -44,9 +44,7 @@ const FinancialStatistics = () => {
   const [expenses, expensesLoading] = GetAllExpenseHook();
   const [financeCapitals, financeCapitalsLoading] = GetAllFinanceCapitalsHook();
 
-  console.log("Budgets:", budgets);
-  console.log("Expenses:", expenses);
-  console.log("Finance Capitals:", financeCapitals);
+
 
   // حالة البيانات المالية المعالجة
   const [financialData, setFinancialData] = useState(null);
@@ -70,9 +68,7 @@ const FinancialStatistics = () => {
       ? [financeCapitals]
       : [];
 
-    console.log("Budgets Array:", budgetsArray);
-    console.log("Expenses Array:", expensesArray);
-    console.log("Finance Capitals Array:", financeCapitalsArray);
+
 
     if (
       budgetsArray.length > 0 &&
@@ -92,13 +88,11 @@ const FinancialStatistics = () => {
   const processFinancialData = (budgets, expenses, financeCapitals) => {
     // التحقق من وجود البيانات
     if (!budgets || !Array.isArray(budgets) || budgets.length === 0) {
-      console.log("بيانات الميزانية غير كافية أو غير صالحة");
       return null;
     }
 
     // استخدام أول ميزانية (يمكن تعديل هذا حسب المتطلبات)
     const budget = budgets[0];
-    console.log("Budget being used:", budget);
 
     // حساب إجمالي الإيرادات (من رؤوس الأموال)
     const totalRevenue =
@@ -109,7 +103,6 @@ const FinancialStatistics = () => {
           )
         : 0;
 
-    console.log("Total Revenue:", totalRevenue);
 
     // تجميع المصروفات حسب العنوان (كفئات)
     const expensesByCategory = [];
@@ -118,7 +111,6 @@ const FinancialStatistics = () => {
     if (Array.isArray(expenses) && expenses.length > 0) {
       expenses.forEach((expense) => {
         if (!expense || typeof expense !== "object") {
-          console.log("Invalid expense object:", expense);
           return;
         }
 
@@ -134,7 +126,6 @@ const FinancialStatistics = () => {
       console.log("No expenses data available");
     }
 
-    console.log("Expense Titles:", expenseTitles);
     // تحويل المصروفات المجمعة إلى مصفوفة
     for (const [title, amount] of Object.entries(expenseTitles)) {
       const totalExpenses = Number(budget.total_expenses) || 0;
@@ -165,7 +156,6 @@ const FinancialStatistics = () => {
     if (Array.isArray(financeCapitals) && financeCapitals.length > 0) {
       financeCapitals.forEach((capital) => {
         if (!capital || typeof capital !== "object") {
-          console.log("Invalid capital object:", capital);
           return;
         }
 

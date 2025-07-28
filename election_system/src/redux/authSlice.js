@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { useInsertData, useInsertDataWithImage } from "../hooks/useInsertData";
 import { useGetDataToken } from "../hooks/useGetData";
 import { useDeleteDataWithToken } from "../hooks/useDeleteData";
-import { useUpdateDataWithToken } from "../hooks/useUpdateData";
+import { useInUpdateDataWithImage, useUpdateDataWithToken } from "../hooks/useUpdateData";
 
 // Register User
 export const registerUser = createAsyncThunk(
@@ -282,6 +282,21 @@ export const changeUserRole = createAsyncThunk(
   }
 );
 
+// Update User
+export const updateUser = createAsyncThunk(
+  "auth/updateUser",
+  async ({ userId, userData }, thunkAPI) => {
+    try {
+      const response = await useInUpdateDataWithImage(`/api/users/${userId}`, userData);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "فشل في تحديث بيانات المستخدم"
+      );
+    }
+  }
+);
+
 // Initial State
 const initialState = {
   user: null,
@@ -298,6 +313,7 @@ const initialState = {
   toggleActiveSuccess: false,
   changePasswordSuccess: false,
   changeRoleSuccess: false,
+  updateUserSuccess: false,
 };
 
 // Slice
@@ -607,6 +623,35 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         state.changeRoleSuccess = false;
+      })
+      
+      // Update User
+      .addCase(updateUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.updateUserSuccess = false;
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.updateUserSuccess = true;
+        state.error = null;
+        
+        // تحديث المستخدم في القائمة إذا كان موجودًا
+        if (state.allUsers.length > 0) {
+          state.allUsers = state.allUsers.map(user => 
+            user.id === action.meta.arg.userId ? { ...user, ...action.meta.arg.userData } : user
+          );
+        }
+        
+        // تحديث المستخدم الحالي إذا كان هو المستخدم المحدد
+        if (state.singleUser && state.singleUser.id === action.meta.arg.userId) {
+          state.singleUser = { ...state.singleUser, ...action.meta.arg.userData };
+        }
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.updateUserSuccess = false;
       });
   },
 });

@@ -16,6 +16,7 @@ import DeleteModal from "../../Components/Uitily/DeleteModal";
 import Loader from "../../Components/Uitily/Loader";
 import UsersMap from "../../Components/auth/UsersMap";
 import ObserverRegisterModal from "./Auth Modal/ObserverRegisterModal";
+import ObserverEditModal from "./Auth Modal/ObserverEditModal";
 const MonitorsTablePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -33,6 +34,8 @@ const MonitorsTablePage = () => {
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [userIdToDelete, setUserIdToDelete] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -143,6 +146,12 @@ const MonitorsTablePage = () => {
   // إجراءات المستخدمين
   const handleUserAction = (action, user) => {
     setShowActionMenu(null);
+    if (action === "permissions") {
+      // تنفيذ إجراء إدارة الصلاحيات
+    } else if (action === "edit") {
+      setSelectedUser(user);
+      setShowEditModal(true);
+    }
   };
 
   const handleDeleteConfirm = (id) => {
@@ -173,8 +182,14 @@ const MonitorsTablePage = () => {
   const handleOpenModal = () => {
     setShowModal(true);
   };
+
   const handleCloseModal = () => {
     setShowModal(false);
+  };
+
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
+    setSelectedUser(null);
   };
   return (
     <div>
@@ -307,14 +322,14 @@ const MonitorsTablePage = () => {
                                   >
                                     عرض التفاصيل
                                   </button>
-                                  {/* <button
+                                  <button
                                     onClick={() =>
                                       handleUserAction("edit", row)
                                     }
                                     className="block w-full text-right px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                   >
                                     تعديل
-                                  </button> */}
+                                  </button>
                                   <button
                                     onClick={() => handleDeleteConfirm(row.id)}
                                     className="block w-full text-right px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-red-700 hover:bg-red-50 transition-colors"
@@ -383,6 +398,12 @@ const MonitorsTablePage = () => {
         onCancel={handleDeleteCancel}
         onConfirm={handleDeleteConfirmation}
       />
+      {showEditModal && selectedUser && (
+        <ObserverEditModal 
+          onClose={handleCloseEditModal} 
+          userData={selectedUser} 
+        />
+      )}
     </div>
   );
 };

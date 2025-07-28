@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux";
 import { deleteUser, getAllUsers } from "../../redux/authSlice";
 import RegisterModal from "./Auth Modal/RegisterModal";
 import CenterManagerRegisterModal from "./Auth Modal/CenterManagerRegisterModal";
+import CenterManagerEditModal from "./Auth Modal/CenterManagerEditModal";
 const CenterManagers = () => {
   const dispatch = useDispatch();
   const [
@@ -48,7 +49,9 @@ const CenterManagers = () => {
   });
   const [showColumnMenu, setShowColumnMenu] = useState(false);
   const [showActionMenu, setShowActionMenu] = useState(null);
-    const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
 
   const itemsPerPage = 6;
@@ -127,6 +130,9 @@ const CenterManagers = () => {
     setShowActionMenu(null);
     if (action === "delete") {
       handleDeleteConfirm(user.id);
+    } else if (action === "edit") {
+      setSelectedUser(user);
+      setShowEditModal(true);
     }
   };
 
@@ -155,6 +161,11 @@ const CenterManagers = () => {
   };
   const handleCloseModal = () => {
     setShowModal(false);
+  };
+
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
+    setSelectedUser(null);
   };
 
   return (
@@ -380,6 +391,7 @@ const CenterManagers = () => {
 
         {/* نافذة تأكيد الحذف */}
         {showModal && <CenterManagerRegisterModal onClose={handleCloseModal} />}
+        {showEditModal && <CenterManagerEditModal onClose={handleCloseEditModal} user={selectedUser} />}
         <DeleteModal
           isOpen={showDeleteModal}
           onCancel={handleDeleteCancel}

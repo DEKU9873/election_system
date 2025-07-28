@@ -61,7 +61,6 @@ const AddExpenseHook = (onClose) => {
         }
       } else {
         // استخراج رسالة الخطأ من الاستجابة
-        console.log("Error response:", res.payload); // للتشخيص
         const errorMessage = res.payload?.message || "حدث خطأ أثناء الإضافة";
         notify(errorMessage, "error");
       }

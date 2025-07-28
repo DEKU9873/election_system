@@ -9,7 +9,6 @@ const GetAllLogHook = () => {
       dispatch(getLogs());
     }, []);
     const { logs, loading } = useSelector((state) => state.log);
-    console.log("hook",logs);
   
     return [logs, loading];
 
