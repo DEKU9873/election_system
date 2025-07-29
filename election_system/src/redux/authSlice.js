@@ -18,53 +18,11 @@ export const registerUser = createAsyncThunk(
   }
 );
 
-// Add Coordinator
-export const addCoordinator = createAsyncThunk(
-  "auth/addCoordinator",
-  async (formData, thunkAPI) => {
-    try {
-      const response = await useInsertDataWithImage(
-        "/api/coordinator/",
-        formData
-      );
-      return response;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data || "فشل في إضافة المنسق"
-      );
-    }
-  }
-);
+// تم إزالة إضافة منسق جديد واستبدالها بإضافة مستخدم
 
-// Get All Coordinators
-export const getAllCoordinators = createAsyncThunk(
-  "auth/getAllCoordinators",
-  async (_, thunkAPI) => {
-    try {
-      const response = await useGetDataToken("api/coordinator/");
-      return response.data.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data || "حدث خطأ غير متوقع"
-      );
-    }
-  }
-);
+// تم إزالة جلب جميع المنسقين
 
-// Get One Coordinator
-export const getCoordinator = createAsyncThunk(
-  "auth/getCoordinator",
-  async (userId, thunkAPI) => {
-    try {
-      const response = await useGetDataToken(`/api/coordinator/${userId}/`);
-      return response.data.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data || "فشل في جلب بيانات المنسق"
-      );
-    }
-  }
-);
+// تم إزالة جلب منسق واحد
 
 // Add User
 export const addUser = createAsyncThunk(
@@ -189,20 +147,7 @@ export const changePassword = createAsyncThunk(
   }
 );
 
-// Delete Coordinator
-export const deleteCoordinator = createAsyncThunk(
-  "auth/deleteCoordinator",
-  async (coordinatorId, thunkAPI) => {
-    try {
-      await useDeleteDataWithToken(`/api/coordinator/${coordinatorId}/`);
-      return coordinatorId;
-    } catch (err) {
-      return thunkAPI.rejectWithValue(
-        err.response?.data || "فشل في حذف المنسق"
-      );
-    }
-  }
-);
+// تم إزالة حذف منسق
 
 // Add District Manager
 export const addDistrictManager = createAsyncThunk(
@@ -302,12 +247,10 @@ const initialState = {
   user: null,
   singleUser: null,
   allUsers: [],
-  allCoordinators: [],
   allDistrictManagers: [],
   loading: false,
   error: null,
   deleteSuccess: false,
-  deleteCoordinatorSuccess: false,
   deleteDistrictManagerSuccess: false,
   confirmVotingSuccess: false,
   toggleActiveSuccess: false,
@@ -341,20 +284,7 @@ const authSlice = createSlice({
         state.error = action.payload;
       })
 
-      // Add Coordinator
-      .addCase(addCoordinator.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(addCoordinator.fulfilled, (state, action) => {
-        state.loading = false;
-        state.user = action.payload;
-        state.error = null;
-      })
-      .addCase(addCoordinator.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
+      // تم إزالة إضافة منسق
 
       // Login
       .addCase(loginUser.pending, (state) => {
@@ -435,35 +365,9 @@ const authSlice = createSlice({
         state.error = action.payload;
       })
 
-      // Get All Coordinators
-      .addCase(getAllCoordinators.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(getAllCoordinators.fulfilled, (state, action) => {
-        state.loading = false;
-        state.allCoordinators = action.payload;
-      })
-      .addCase(getAllCoordinators.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
+      // تم إزالة جلب جميع المنسقين
 
-      // Get One Coordinator
-      .addCase(getCoordinator.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-        state.singleUser = null; // أو state.singleCoordinator
-      })
-      .addCase(getCoordinator.fulfilled, (state, action) => {
-        state.loading = false;
-        state.singleUser = action.payload; // أو state.singleCoordinator
-      })
-      .addCase(getCoordinator.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-        state.singleUser = null; // أو state.singleCoordinator
-      })
+      // تم إزالة جلب منسق واحد
 
       // Confirm Voting
       .addCase(confirmVoting.pending, (state) => {
@@ -499,24 +403,7 @@ const authSlice = createSlice({
         state.toggleActiveSuccess = false;
       })
 
-      // Delete Coordinator
-      .addCase(deleteCoordinator.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-        state.deleteCoordinatorSuccess = false;
-      })
-      .addCase(deleteCoordinator.fulfilled, (state, action) => {
-        state.loading = false;
-        state.deleteCoordinatorSuccess = true;
-        state.allCoordinators = state.allCoordinators.filter(
-          (coordinator) => coordinator.User?.id !== action.payload
-        );
-      })
-      .addCase(deleteCoordinator.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-        state.deleteCoordinatorSuccess = false;
-      })
+      // تم إزالة حذف منسق
 
       // Change Password
       .addCase(changePassword.pending, (state) => {

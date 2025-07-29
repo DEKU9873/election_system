@@ -228,7 +228,7 @@ const UserTablePage = () => {
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
             onOpen={handleOpenModal}
-            allowedRoles={["system_admin", "coordinator"]} // تحديد الأدوار المسموح لها برؤية زر الإضافة
+            allowedRoles={["system_admin", "owner"]} // تحديد الأدوار المسموح لها برؤية زر الإضافة
             className="flex-wrap"
           />
 

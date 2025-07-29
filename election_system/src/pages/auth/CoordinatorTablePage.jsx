@@ -14,7 +14,7 @@ import AllCoordinatorHook from "../../hook/auth/all-coordinator-hook";
 import CoordinatorRegisterModal from "./Auth Modal/CoordinatorRegisterModal";
 import DeleteModal from "../../Components/Uitily/DeleteModal";
 import { useDispatch } from "react-redux";
-import { deleteCoordinator, getAllCoordinators } from "../../redux/authSlice";
+import { deleteUser, getAllUsers } from "../../redux/authSlice";
 import { useNavigate } from "react-router-dom";
 
 const CoordinatorTablePage = () => {
@@ -26,6 +26,7 @@ const CoordinatorTablePage = () => {
   const [userIdToDelete, setUserIdToDelete] = useState(null);
 
   const [allCoordinators, loading] = AllCoordinatorHook();
+  console.log(allCoordinators);
   // حالات التطبيق
   const [selectedRows, setSelectedRows] = useState(new Set());
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
@@ -48,10 +49,10 @@ const CoordinatorTablePage = () => {
   const filteredData = useMemo(() => {
     return allCoordinators.filter(
       (item) =>
-        item?.User?.full_name
+        item?.full_name
           .toLowerCase()
           .includes(filterText.toLowerCase()) ||
-        item?.User?.phone_number.includes(filterText)
+        item?.phone_number.includes(filterText)
     );
   }, [allCoordinators, filterText]);
 
@@ -131,8 +132,8 @@ const CoordinatorTablePage = () => {
 
   const handleDeleteConfirmation = async () => {
     if (userIdToDelete) {
-      await dispatch(deleteCoordinator(userIdToDelete));
-      await dispatch(getAllCoordinators());
+      await dispatch(deleteUser(userIdToDelete));
+      await dispatch(getAllUsers());
 
       setShowDeleteModal(false);
       setUserIdToDelete(null);
@@ -231,7 +232,7 @@ const CoordinatorTablePage = () => {
                         <td className="px-2 sm:px-4 py-2 sm:py-3">
                           <div className="flex items-center gap-1 sm:gap-2">
                             <div className="font-medium text-xs sm:text-sm text-gray-900">
-                              {row?.User?.full_name}
+                              {row?.full_name}
                             </div>
                           </div>
                         </td>
@@ -239,7 +240,7 @@ const CoordinatorTablePage = () => {
                       {visibleColumns.phone_number && (
                         <td className="px-2 sm:px-4 py-2 sm:py-3">
                           <div className="text-xs sm:text-sm text-gray-900">
-                            {row?.User?.phone_number}
+                            {row?.phone_number}
                           </div>
                         </td>
                       )}

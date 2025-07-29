@@ -1,17 +1,21 @@
-import React, { useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllCoordinators, getAllUsers } from "../../redux/authSlice";
+import { getAllUsers } from "../../redux/authSlice";
 
 const AllCoordinatorHook = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllCoordinators());
+    dispatch(getAllUsers());
   }, [dispatch]);
 
-  const { allCoordinators, loading } = useSelector((state) => state.auth);
+  const { allUsers, loading } = useSelector((state) => state.auth);
+  
+  const coordinators = useMemo(() => {
+    return allUsers?.filter(user => user.role === "coordinator") || [];
+  }, [allUsers]);
 
-  return [allCoordinators, loading];
+  return [coordinators, loading];
 };
 
 export default AllCoordinatorHook;

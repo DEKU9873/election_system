@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addCoordinator, getAllCoordinators, getAllUsers } from "../../redux/authSlice";
+import { addUser, getAllUsers } from "../../redux/authSlice";
 import notify from "../useNotification";
 
 const CoordinatorRegisterHook = (onClose) => {
@@ -73,9 +73,9 @@ const CoordinatorRegisterHook = (onClose) => {
     });
 
     try {
-      const response = await dispatch(addCoordinator(formData)).unwrap();
+      const response = await dispatch(addUser(formData)).unwrap();
       notify("تم التسجيل بنجاح", "success");
-      await dispatch(getAllCoordinators());
+      await dispatch(getAllUsers());
       
       // إغلاق المودال بعد التسجيل الناجح
       if (typeof onClose === 'function') {

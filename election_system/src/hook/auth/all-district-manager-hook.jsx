@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllCoordinators, getAllDistrictManagers, getAllUsers } from "../../redux/authSlice";
+import { getAllDistrictManagers, getAllUsers } from "../../redux/authSlice";
 
 const AllDistrictManagerHook = () => {
   const dispatch = useDispatch();
