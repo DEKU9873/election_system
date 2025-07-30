@@ -20,6 +20,10 @@ const useEditUser = (userData, onClose, userRole) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [newCenter, setNewCenter] = useState("");
+  const [added_by, setAddedBy] = useState("");
+  const [station_id, setStationId] = useState("");
+  const [address, setAddress] = useState("");
+  const [voting_card_number, setVotingCardNumber] = useState("");
 
   // حالة الصور
   const [personalPhoto, setPersonalPhoto] = useState(null);
@@ -44,12 +48,19 @@ const useEditUser = (userData, onClose, userRole) => {
         setGrandFatherName(userData.last_name || "");
         setPhone(userData.phone_number || "");
         setBirthYear(userData.birth_year || "");
-        setNewCenter(userData.center?.id || "");
+        setNewCenter(userData.ElectionCenter?.id || "");
         
         // تعيين الحالات الخاصة بالناخبين إذا كانت موجودة
-        if (userRole === "voter") {
-          setHasVotingRight(userData.can_vote || false);
-          setIdUpdated(userData.has_updated_card || false);
+        if (userRole === "voter" || userRole === "observer" || userRole === "center_manager") {
+          setAddedBy(userData.added_by || "");
+          setStationId(userData.station_id || "");
+          setAddress(userData.address || "");
+          setVotingCardNumber(userData.voting_card_number || "");
+          
+          if (userRole === "voter") {
+            setHasVotingRight(userData.can_vote || false);
+            setIdUpdated(userData.has_updated_card || false);
+          }
         }
         
         // تعيين معاينات الصور إذا كانت موجودة
@@ -97,6 +108,10 @@ const useEditUser = (userData, onClose, userRole) => {
   const handleBirthYearChange = (e) => setBirthYear(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
   const handleConfirmPasswordChange = (e) => setConfirmPassword(e.target.value);
+  const handleAddByChange = (e) => setAddedBy(Number(e.target.value));
+  const handleStationIdChange = (e) => setStationId(Number(e.target.value));
+  const handleAddressChange = (e) => setAddress(e.target.value);
+  const handleVotingCardNumberChange = (e) => setVotingCardNumber(e.target.value);
   const handleNewCenterChange = (e) => {
     console.log('New center value:', e.target.value);
     setNewCenter(e.target.value);
@@ -171,10 +186,18 @@ const useEditUser = (userData, onClose, userRole) => {
     
     formData.append("role", userRole);
     
-    // إضافة الحقول الخاصة بالناخبين إذا كان المستخدم ناخباً
-    if (userRole === "voter") {
-      formData.append("can_vote", hasVotingRight);
-      formData.append("has_updated_card", idUpdated);
+    // إضافة الحقول المشتركة بين الناخبين والمراقبين ومدراء المراكز
+    if (userRole === "voter" || userRole === "observer" || userRole === "center_manager") {
+      if (added_by) formData.append("added_by", added_by);
+      if (station_id) formData.append("station_id", station_id);
+      if (address) formData.append("address", address);
+      if (voting_card_number) formData.append("voting_card_number", voting_card_number);
+      
+      // إضافة الحقول الخاصة بالناخبين فقط
+      if (userRole === "voter") {
+        formData.append("can_vote", hasVotingRight);
+        formData.append("has_updated_card", idUpdated);
+      }
     }
     
     // إضافة كلمة المرور إذا تم تغييرها
@@ -199,7 +222,7 @@ const useEditUser = (userData, onClose, userRole) => {
 
   console.log(firstName, fatherName, grandFatherName, phone, birthYear);
 
-  return [
+  return {
     // البيانات الأساسية
     firstName,
     fatherName,
@@ -216,6 +239,11 @@ const useEditUser = (userData, onClose, userRole) => {
     idPhotoPreview,
     electionCardPhoto,
     electionCardPhotoPreview,
+    // الحقول المضافة
+    added_by,
+    station_id,
+    address,
+    voting_card_number,
     // الحالات الخاصة بالناخبين
     hasVotingRight,
     idUpdated,
@@ -228,13 +256,17 @@ const useEditUser = (userData, onClose, userRole) => {
     handlePasswordChange,
     handleConfirmPasswordChange,
     handleNewCenterChange,
+    handleAddByChange,
+    handleStationIdChange,
+    handleAddressChange,
+    handleVotingCardNumberChange,
     handleHasVotingRightChange,
     handleIdUpdatedChange,
     handleFileChange,
     handleSubmit,
     // حالة التحميل
     isLoading,
-  ];
+  };
 };
 
 export default useEditUser;

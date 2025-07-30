@@ -36,6 +36,7 @@ const ElectedTablePage = () => {
     finance_auditor,
     voter,
   ] = AllUserHook();
+  console.log("voter", voter);
 
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);

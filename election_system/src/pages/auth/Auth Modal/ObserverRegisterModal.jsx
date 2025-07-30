@@ -8,45 +8,61 @@ import {
   Camera,
   PlusCircle,
   X,
+  Building2,
+  Users,
+  MapPinned,
+  CreditCard,
+  Calendar,
+  Eye,
+  EyeOff,
+  UserCircle,
+  FileImage,
 } from "lucide-react";
 import logo from "../../../assets/urlogo.png";
 import RegisterHook from "../../../hook/auth/register-hook";
 import { Toaster } from "react-hot-toast";
 import { useState, useEffect } from "react";
 import GetAllCenter from "../../../hook/Center/get-all-center";
+import AllCoordinatorHook from "../../../hook/auth/all-coordinator-hook";
 import Select from "react-select";
+import GetAllStation from "../../../hook/Stations/get-all-station";
+import GetStationByCenter from "../../../hook/Station/get-station-by-center";
 
 const ObserverRegisterModal = ({ onClose }) => {
-  const [
-    registrationType,
-    handleRegistrationTypeChange,
+  const {
     firstName,
-    handleFirstNameChange,
     fatherName,
-    handleFatherNameChange,
     grandFatherName,
-    handleGrandFatherNameChange,
     phone,
-    handlePhoneChange,
     birthYear,
-    handleBirthYearChange,
     password,
-    handlePasswordChange,
     confirmPassword,
-    handleConfirmPasswordChange,
     personalPhoto,
     personalPhotoPreview,
-    handleFileChange,
     idPhoto,
     idPhotoPreview,
     electionCardPhoto,
     electionCardPhotoPreview,
     newCenter,
+    registrationType,
+    added_by,
+    station_id,
+    address,
+    voting_card_number,
+    handleFirstNameChange,
+    handleFatherNameChange,
+    handleGrandFatherNameChange,
+    handlePhoneChange,
+    handleBirthYearChange,
+    handlePasswordChange,
+    handleConfirmPasswordChange,
+    handleFileChange,
     handleNewCenterChange,
-    hasVotingRight,
-    handleHasVotingRightChange,
-    idUpdated,
-    handleIdUpdatedChange,
+    handleRegistrationTypeChange,
+    handleAddByChange,
+    handleStationIdChange,
+    handleAddressChange,
+    handleVotingCardNumberChange,
     handleSubmit,
     setPersonalPhoto,
     setPersonalPhotoPreview,
@@ -54,14 +70,17 @@ const ObserverRegisterModal = ({ onClose }) => {
     setIdPhotoPreview,
     setElectionCardPhoto,
     setElectionCardPhotoPreview,
-  ] = RegisterHook(onClose);
+  } = RegisterHook(onClose);
 
   // تعيين نوع التسجيل إلى "observer" عند تحميل المكون
   useEffect(() => {
     handleRegistrationTypeChange("observer");
-  }, []);
+  }, [handleRegistrationTypeChange]);
 
   const [electionCenters, loading] = GetAllCenter();
+  const [stations, loadingStations] = GetAllStation();
+  const [stationsByCenter, loadingStationsByCenter] = GetStationByCenter(newCenter);
+  const [coordinators, loadingCoordinators] = AllCoordinatorHook();
 
   return (
     <div
@@ -410,6 +429,153 @@ const ObserverRegisterModal = ({ onClose }) => {
                   noOptionsMessage={() => "لا توجد مراكز متاحة"}
                 />
               )}
+            </div>
+          </div>
+
+          {/* معلومات المحطة الانتخابية */}
+          <div className="space-y-3 w-full">
+            <div className="relative">
+              <Building2
+                className="absolute right-3 top-2 text-gray-400 z-10"
+                size={18}
+              />
+              {loadingStationsByCenter ? (
+                <div className="w-full pr-10 py-2 border rounded-lg text-right">
+                  جاري تحميل المحطات...
+                </div>
+              ) : (
+                <Select
+                  placeholder="اختر المحطة الانتخابية"
+                  value={stationsByCenter?.find(option => option.id === station_id) ? 
+                    { value: station_id, label: stationsByCenter.find(option => option.id === station_id).name } : null}
+                  onChange={(selectedOption) => handleStationIdChange({ target: { value: selectedOption.value } })}
+                  options={stationsByCenter?.map(station => ({ value: station.id, label: station.name }))}
+                  className="w-full text-right"
+                  classNamePrefix="select"
+                  isRtl={true}
+                  styles={{
+                    control: (baseStyles) => ({
+                      ...baseStyles,
+                      paddingRight: '2.5rem',
+                      borderRadius: '0.5rem',
+                      borderColor: '#e2e8f0',
+                      '&:hover': {
+                        borderColor: '#cbd5e0'
+                      }
+                    }),
+                    placeholder: (baseStyles) => ({
+                      ...baseStyles,
+                      textAlign: 'right'
+                    }),
+                    option: (baseStyles, state) => ({
+                      ...baseStyles,
+                      textAlign: 'right',
+                      backgroundColor: state.isSelected ? '#3b82f6' : state.isFocused ? '#eff6ff' : 'white',
+                      color: state.isSelected ? 'white' : '#1f2937',
+                      '&:hover': {
+                        backgroundColor: state.isSelected ? '#3b82f6' : '#eff6ff',
+                      }
+                    }),
+                    menu: (baseStyles) => ({
+                      ...baseStyles,
+                      zIndex: 50
+                    })
+                  }}
+                  noOptionsMessage={() => "لا توجد محطات متاحة"}
+                />
+              )}
+            </div>
+          </div>
+
+          {/* معلومات المنسق */}
+          <div className="space-y-3 w-full">
+            <div className="relative">
+              <Users
+                className="absolute right-3 top-2 text-gray-400 z-10"
+                size={18}
+              />
+              {loadingCoordinators ? (
+                <div className="w-full pr-10 py-2 border rounded-lg text-right">
+                  جاري تحميل المنسقين...
+                </div>
+              ) : (
+                <Select
+                  placeholder="اختر المنسق"
+                  value={coordinators?.find(option => option.id === added_by) ? 
+                    { value: added_by, label: `${coordinators.find(option => option.id === added_by).first_name} ${coordinators.find(option => option.id === added_by).second_name} ${coordinators.find(option => option.id === added_by).last_name}` } : null}
+                  onChange={(selectedOption) => handleAddByChange({ target: { value: selectedOption.value } })}
+                  options={coordinators?.map(coordinator => ({ 
+                    value: coordinator.id, 
+                    label: `${coordinator.first_name} ${coordinator.second_name} ${coordinator.last_name}` 
+                  }))}
+                  className="w-full text-right"
+                  classNamePrefix="select"
+                  isRtl={true}
+                  styles={{
+                    control: (baseStyles) => ({
+                      ...baseStyles,
+                      paddingRight: '2.5rem',
+                      borderRadius: '0.5rem',
+                      borderColor: '#e2e8f0',
+                      '&:hover': {
+                        borderColor: '#cbd5e0'
+                      }
+                    }),
+                    placeholder: (baseStyles) => ({
+                      ...baseStyles,
+                      textAlign: 'right'
+                    }),
+                    option: (baseStyles, state) => ({
+                      ...baseStyles,
+                      textAlign: 'right',
+                      backgroundColor: state.isSelected ? '#3b82f6' : state.isFocused ? '#eff6ff' : 'white',
+                      color: state.isSelected ? 'white' : '#1f2937',
+                      '&:hover': {
+                        backgroundColor: state.isSelected ? '#3b82f6' : '#eff6ff',
+                      }
+                    }),
+                    menu: (baseStyles) => ({
+                      ...baseStyles,
+                      zIndex: 50
+                    })
+                  }}
+                  noOptionsMessage={() => "لا يوجد منسقين متاحين"}
+                />
+              )}
+            </div>
+          </div>
+
+          {/* العنوان */}
+          <div className="space-y-3 w-full">
+            <div className="relative">
+              <MapPinned
+                className="absolute right-3 top-2 text-gray-400 z-10"
+                size={18}
+              />
+              <input
+                type="text"
+                placeholder="العنوان"
+                value={address}
+                onChange={handleAddressChange}
+                className="w-full pr-10 py-2 border rounded-lg text-right focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+              />
+            </div>
+          </div>
+
+          {/* رقم البطاقة الانتخابية */}
+          <div className="space-y-3 w-full">
+            <div className="relative">
+              <CreditCard
+                className="absolute right-3 top-2 text-gray-400 z-10"
+                size={18}
+              />
+              <input
+                type="text"
+                placeholder="رقم البطاقة الانتخابية"
+                value={voting_card_number}
+                onChange={handleVotingCardNumberChange}
+                className="w-full pr-10 py-2 border rounded-lg text-right focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+              />
             </div>
           </div>
 

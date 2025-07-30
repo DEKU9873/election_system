@@ -8,45 +8,56 @@ import {
   Camera,
   PlusCircle,
   X,
+  Building2,
+  Users,
+  MapPinned,
+  CreditCard,
 } from "lucide-react";
 import logo from "../../../assets/urlogo.png";
 import RegisterHook from "../../../hook/auth/register-hook";
 import { Toaster } from "react-hot-toast";
 import { useState, useEffect } from "react";
 import GetAllCenter from "../../../hook/Center/get-all-center";
+import GetStationByCenter from "../../../hook/Station/get-station-by-center";
 import Select from "react-select";
+import GetAllStation from "../../../hook/Stations/get-all-station";
+import AllCoordinatorHook from "../../../hook/auth/all-coordinator-hook";
 
 const CenterManagerRegisterModal = ({ onClose }) => {
-  const [
-    registrationType,
-    handleRegistrationTypeChange,
+  const {
     firstName,
-    handleFirstNameChange,
     fatherName,
-    handleFatherNameChange,
     grandFatherName,
-    handleGrandFatherNameChange,
     phone,
-    handlePhoneChange,
     birthYear,
-    handleBirthYearChange,
     password,
-    handlePasswordChange,
     confirmPassword,
-    handleConfirmPasswordChange,
     personalPhoto,
     personalPhotoPreview,
-    handleFileChange,
     idPhoto,
     idPhotoPreview,
     electionCardPhoto,
     electionCardPhotoPreview,
     newCenter,
+    registrationType,
+    added_by,
+    station_id,
+    address,
+    voting_card_number,
+    handleFirstNameChange,
+    handleFatherNameChange,
+    handleGrandFatherNameChange,
+    handlePhoneChange,
+    handleBirthYearChange,
+    handlePasswordChange,
+    handleConfirmPasswordChange,
+    handleFileChange,
     handleNewCenterChange,
-    hasVotingRight,
-    handleHasVotingRightChange,
-    idUpdated,
-    handleIdUpdatedChange,
+    handleRegistrationTypeChange,
+    handleAddByChange,
+    handleStationIdChange,
+    handleAddressChange,
+    handleVotingCardNumberChange,
     handleSubmit,
     setPersonalPhoto,
     setPersonalPhotoPreview,
@@ -54,14 +65,17 @@ const CenterManagerRegisterModal = ({ onClose }) => {
     setIdPhotoPreview,
     setElectionCardPhoto,
     setElectionCardPhotoPreview,
-  ] = RegisterHook(onClose);
+  } = RegisterHook(onClose);
 
   // تعيين نوع التسجيل إلى "center_manager" عند تحميل المكون
   useEffect(() => {
     handleRegistrationTypeChange("center_manager");
-  }, []);
+  }, [handleRegistrationTypeChange]);
 
   const [electionCenters, loading] = GetAllCenter();
+  const [stations, stationsLoading] = GetAllStation();
+  const [stationsByCenter, stationsByCenterLoading] = GetStationByCenter(newCenter);
+  const [coordinators, coordinatorsLoading] = AllCoordinatorHook();
 
   return (
     <div
@@ -410,6 +424,159 @@ const CenterManagerRegisterModal = ({ onClose }) => {
                   noOptionsMessage={() => "لا توجد مراكز متاحة"}
                 />
               )}
+            </div>
+          </div>
+
+          {/* معلومات المحطة الانتخابية */}
+          <div className="mt-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+              <Building2 className="ml-2" size={20} />
+              معلومات المحطة الانتخابية
+            </h3>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                المحطة الانتخابية
+              </label>
+              {stationsByCenterLoading ? (
+                <div className="animate-pulse flex space-x-4">
+                  <div className="h-10 bg-gray-200 rounded w-full"></div>
+                </div>
+              ) : (
+                <Select
+                  value={stationsByCenter?.find(option => option.value === station_id)}
+                  onChange={handleStationIdChange}
+                  options={stationsByCenter}
+                  placeholder="اختر المحطة الانتخابية"
+                  className="basic-single"
+                  classNamePrefix="select"
+                  isRtl={true}
+                  isSearchable={true}
+                  isLoading={stationsByCenterLoading}
+                  styles={{
+                    control: (baseStyles, state) => ({
+                      ...baseStyles,
+                      borderColor: state.isFocused ? '#3b82f6' : '#e5e7eb',
+                      boxShadow: state.isFocused ? '0 0 0 1px #3b82f6' : 'none',
+                      '&:hover': {
+                        borderColor: state.isFocused ? '#3b82f6' : '#e5e7eb'
+                      }
+                    }),
+                    option: (baseStyles, state) => ({
+                      ...baseStyles,
+                      backgroundColor: state.isSelected
+                        ? '#3b82f6'
+                        : state.isFocused
+                        ? '#eff6ff'
+                        : null,
+                      color: state.isSelected ? 'white' : 'black',
+                      '&:hover': {
+                        backgroundColor: state.isSelected ? '#3b82f6' : '#eff6ff',
+                      }
+                    }),
+                    menu: (baseStyles) => ({
+                      ...baseStyles,
+                      zIndex: 50
+                    })
+                  }}
+                  noOptionsMessage={() => "لا توجد محطات متاحة"}
+                />
+              )}
+            </div>
+          </div>
+
+          {/* معلومات المنسق */}
+          <div className="mt-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+              <Users className="ml-2" size={20} />
+              معلومات المنسق
+            </h3>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                المنسق
+              </label>
+              {coordinatorsLoading ? (
+                <div className="animate-pulse flex space-x-4">
+                  <div className="h-10 bg-gray-200 rounded w-full"></div>
+                </div>
+              ) : (
+                <Select
+                  value={coordinators?.find(option => option.value === added_by)}
+                  onChange={handleAddByChange}
+                  options={coordinators}
+                  placeholder="اختر المنسق"
+                  className="basic-single"
+                  classNamePrefix="select"
+                  isRtl={true}
+                  isSearchable={true}
+                  isLoading={coordinatorsLoading}
+                  styles={{
+                    control: (baseStyles, state) => ({
+                      ...baseStyles,
+                      borderColor: state.isFocused ? '#3b82f6' : '#e5e7eb',
+                      boxShadow: state.isFocused ? '0 0 0 1px #3b82f6' : 'none',
+                      '&:hover': {
+                        borderColor: state.isFocused ? '#3b82f6' : '#e5e7eb'
+                      }
+                    }),
+                    option: (baseStyles, state) => ({
+                      ...baseStyles,
+                      backgroundColor: state.isSelected
+                        ? '#3b82f6'
+                        : state.isFocused
+                        ? '#eff6ff'
+                        : null,
+                      color: state.isSelected ? 'white' : 'black',
+                      '&:hover': {
+                        backgroundColor: state.isSelected ? '#3b82f6' : '#eff6ff',
+                      }
+                    }),
+                    menu: (baseStyles) => ({
+                      ...baseStyles,
+                      zIndex: 50
+                    })
+                  }}
+                  noOptionsMessage={() => "لا يوجد منسقين متاحين"}
+                />
+              )}
+            </div>
+          </div>
+
+          {/* العنوان ورقم البطاقة الانتخابية */}
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                <div className="flex items-center">
+                  <MapPinned className="ml-1" size={16} />
+                  العنوان
+                </div>
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={address}
+                  onChange={handleAddressChange}
+                  className="w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="أدخل العنوان"
+                />
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                <div className="flex items-center">
+                  <CreditCard className="ml-1" size={16} />
+                  رقم البطاقة الانتخابية
+                </div>
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={voting_card_number}
+                  onChange={handleVotingCardNumberChange}
+                  className="w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="أدخل رقم البطاقة الانتخابية"
+                />
+              </div>
             </div>
           </div>
 

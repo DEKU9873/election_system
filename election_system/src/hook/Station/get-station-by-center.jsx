@@ -12,7 +12,8 @@ const GetStationByCenter = (id) => {
   }, [dispatch, id]);
   const { stations, loading } = useSelector((state) => state.place);
   
-  return { stations, loading };
+  // إرجاع المصفوفة بدلاً من الكائن للتوافق مع الاستخدام الحالي في الملفات
+  return [stations, loading];
 }
 
 export default GetStationByCenter;

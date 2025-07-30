@@ -253,7 +253,7 @@ const RegisterHook = (onClose) => {
     }
   };
 
-  return [
+  return {
     registrationType,
     handleRegistrationTypeChange,
     firstName,
@@ -298,7 +298,7 @@ const RegisterHook = (onClose) => {
     handleStationIdChange,
     handleAddressChange,
     handleVotingCardNumberChange,
-  ];
+  };
 };
 
 export default RegisterHook;

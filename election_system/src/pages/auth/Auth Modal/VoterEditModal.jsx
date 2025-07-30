@@ -11,11 +11,13 @@ import {
 } from "lucide-react";
 import logo from "../../../assets/urlogo.png";
 import GetAllCenter from "../../../hook/Center/get-all-center";
+import GetAllStation from "../../../hook/Stations/get-all-station";
+import AllCoordinatorHook from "../../../hook/auth/all-coordinator-hook";
 import Select from "react-select";
 import useEditUser from "../../../hook/auth/edit-user-hook";
 
 const VoterEditModal = ({ onClose, userData }) => {
-  const [
+  const {
     // البيانات الأساسية
     firstName,
     fatherName,
@@ -35,6 +37,11 @@ const VoterEditModal = ({ onClose, userData }) => {
     // الحالات الخاصة بالناخبين
     hasVotingRight,
     idUpdated,
+    // البيانات الإضافية
+    added_by,
+    station_id,
+    address,
+    voting_card_number,
     // معالجات الأحداث
     handleFirstNameChange,
     handleFatherNameChange,
@@ -46,11 +53,15 @@ const VoterEditModal = ({ onClose, userData }) => {
     handleNewCenterChange,
     handleHasVotingRightChange,
     handleIdUpdatedChange,
+    handleAddByChange,
+    handleStationIdChange,
+    handleAddressChange,
+    handleVotingCardNumberChange,
     handleFileChange,
     handleSubmit,
     // حالة التحميل
     isLoading,
-  ] = useEditUser(userData, onClose, "voter");
+  } = useEditUser(userData, onClose, "voter");
   
   console.log('page',firstName, fatherName, grandFatherName, phone, birthYear);
 
@@ -58,6 +69,8 @@ const VoterEditModal = ({ onClose, userData }) => {
   // تقديم النموذج - تم نقل المنطق إلى هوك edit-user-hook
 
   const [electionCenters, loading] = GetAllCenter();
+  const [stations, loadingStations] = GetAllStation();
+  const [coordinators, loadingCoordinators] = AllCoordinatorHook();
 
   return (
     <div
@@ -349,6 +362,142 @@ const VoterEditModal = ({ onClose, userData }) => {
                   noOptionsMessage={() => "لا توجد مراكز متاحة"}
                 />
               )}
+            </div>
+
+            <div className="relative">
+              <MapPin
+                className="absolute right-3 top-2 text-gray-400 z-10"
+                size={18}
+              />
+              {loadingStations ? (
+                <div className="w-full pr-10 py-2 border rounded-lg text-right">
+                  جاري تحميل المحطات...
+                </div>
+              ) : (
+                <Select
+                  placeholder="اختر المحطة"
+                  value={stations?.find(option => option.id === station_id) ? 
+                    { value: station_id, label: stations.find(option => option.id === station_id).name } : null}
+                  onChange={(selectedOption) => {
+                    handleStationIdChange({ target: { value: selectedOption?.value } });
+                  }}
+                  options={stations?.map(station => ({ value: station.id, label: station.name }))}
+                  className="w-full text-right mt-3"
+                  classNamePrefix="select"
+                  isRtl={true}
+                  styles={{
+                    control: (baseStyles) => ({
+                      ...baseStyles,
+                      paddingRight: '2.5rem',
+                      borderRadius: '0.5rem',
+                      borderColor: '#e2e8f0',
+                      '&:hover': {
+                        borderColor: '#cbd5e0'
+                      }
+                    }),
+                    placeholder: (baseStyles) => ({
+                      ...baseStyles,
+                      textAlign: 'right'
+                    }),
+                    option: (baseStyles, state) => ({
+                      ...baseStyles,
+                      textAlign: 'right',
+                      backgroundColor: state.isSelected ? '#3b82f6' : state.isFocused ? '#eff6ff' : 'white',
+                      color: state.isSelected ? 'white' : '#1f2937',
+                      '&:hover': {
+                        backgroundColor: state.isSelected ? '#3b82f6' : '#eff6ff',
+                      }
+                    }),
+                    menu: (baseStyles) => ({
+                      ...baseStyles,
+                      zIndex: 50
+                    })
+                  }}
+                  noOptionsMessage={() => "لا توجد محطات متاحة"}
+                />
+              )}
+            </div>
+
+            <div className="relative">
+              <User
+                className="absolute right-3 top-2 text-gray-400 z-10"
+                size={18}
+              />
+              {loadingCoordinators ? (
+                <div className="w-full pr-10 py-2 border rounded-lg text-right">
+                  جاري تحميل المنسقين...
+                </div>
+              ) : (
+                <Select
+                  placeholder="اختر المنسق"
+                  value={coordinators?.find(option => option.id === added_by) ? 
+                    { value: added_by, label: `${coordinators.find(option => option.id === added_by).first_name} ${coordinators.find(option => option.id === added_by).father_name}` } : null}
+                  onChange={(selectedOption) => {
+                    handleAddByChange({ target: { value: selectedOption?.value } });
+                  }}
+                  options={coordinators?.map(coordinator => ({ value: coordinator.id, label: `${coordinator.first_name} ${coordinator.father_name}` }))}
+                  className="w-full text-right mt-3"
+                  classNamePrefix="select"
+                  isRtl={true}
+                  styles={{
+                    control: (baseStyles) => ({
+                      ...baseStyles,
+                      paddingRight: '2.5rem',
+                      borderRadius: '0.5rem',
+                      borderColor: '#e2e8f0',
+                      '&:hover': {
+                        borderColor: '#cbd5e0'
+                      }
+                    }),
+                    placeholder: (baseStyles) => ({
+                      ...baseStyles,
+                      textAlign: 'right'
+                    }),
+                    option: (baseStyles, state) => ({
+                      ...baseStyles,
+                      textAlign: 'right',
+                      backgroundColor: state.isSelected ? '#3b82f6' : state.isFocused ? '#eff6ff' : 'white',
+                      color: state.isSelected ? 'white' : '#1f2937',
+                      '&:hover': {
+                        backgroundColor: state.isSelected ? '#3b82f6' : '#eff6ff',
+                      }
+                    }),
+                    menu: (baseStyles) => ({
+                      ...baseStyles,
+                      zIndex: 50
+                    })
+                  }}
+                  noOptionsMessage={() => "لا يوجد منسقين متاحين"}
+                />
+              )}
+            </div>
+
+            <div className="relative">
+              <MapPin
+                className="absolute right-3 top-3 text-gray-400"
+                size={20}
+              />
+              <input
+                type="text"
+                placeholder="العنوان"
+                className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
+                value={address}
+                onChange={handleAddressChange}
+              />
+            </div>
+
+            <div className="relative">
+              <IdCard
+                className="absolute right-3 top-3 text-gray-400"
+                size={20}
+              />
+              <input
+                type="text"
+                placeholder="رقم بطاقة الناخب"
+                className="w-full pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right"
+                value={voting_card_number}
+                onChange={handleVotingCardNumberChange}
+              />
             </div>
 
             <div className="flex flex-col space-y-2">
