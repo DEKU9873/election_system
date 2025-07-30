@@ -18,7 +18,10 @@ const CoordinatorRegisterHook = (onClose) => {
   const [idPhotoPreview, setIdPhotoPreview] = useState(null);
   const [electionCardPhoto, setElectionCardPhoto] = useState(null);
   const [electionCardPhotoPreview, setElectionCardPhotoPreview] = useState(null);
-  const [selectedCenters, setSelectedCenters] = useState([]);
+    const [newCenter, setNewCenter] = useState("");
+
+  // const [selectedCenters, setSelectedCenters] = useState([]);
+
 
   const handleFirstNameChange = (e) => setFirstName(e.target.value);
   const handleFatherNameChange = (e) => setFatherName(e.target.value);
@@ -27,7 +30,10 @@ const CoordinatorRegisterHook = (onClose) => {
   const handleBirthYearChange = (e) => setBirthYear(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
   const handleConfirmPasswordChange = (e) => setConfirmPassword(e.target.value);
-  const handleSelectedCentersChange = (centers) => setSelectedCenters(centers);
+   const handleNewCenterChange = (e) => {
+    setNewCenter(Number(e.target.value));
+  };
+  // const handleSelectedCentersChange = (centers) => setSelectedCenters(centers);
 
   const handleFileChange = (e, setFile, setPreview) => {
     const file = e.target.files[0];
@@ -47,15 +53,11 @@ const CoordinatorRegisterHook = (onClose) => {
       return;
     }
 
-    if (!personalPhoto || !idPhoto || !electionCardPhoto) {
-      notify("يرجى رفع جميع الصور المطلوبة", "error");
+    if (!firstName || !fatherName || !grandFatherName || !phone || !birthYear || !password || !confirmPassword ||  !newCenter) {
+      notify("يرجى ملئ جميع الحقول", "error");
       return;
     }
 
-    if (selectedCenters.length === 0) {
-      notify("يرجى اختيار مركز انتخابي واحد على الأقل", "error");
-      return;
-    }
 
     const formData = new FormData();
     formData.append("first_name", firstName);
@@ -68,9 +70,10 @@ const CoordinatorRegisterHook = (onClose) => {
     formData.append("profile_image", personalPhoto);
     formData.append("identity_image", idPhoto);
     formData.append("voting_card_image", electionCardPhoto);
-    selectedCenters.forEach(center => {
-      formData.append("election_centers_id[]", center.value);
-    });
+    formData.append("election_center_id", newCenter);
+    // selectedCenters.forEach(center => {
+    //   formData.append("election_centers_id[]", center.value);
+    // });
 
     try {
       const response = await dispatch(addUser(formData)).unwrap();
@@ -108,8 +111,8 @@ const CoordinatorRegisterHook = (onClose) => {
     idPhotoPreview,
     electionCardPhoto,
     electionCardPhotoPreview,
-    selectedCenters,
-    handleSelectedCentersChange,
+    newCenter,
+    handleNewCenterChange,
     handleSubmit,
     setPersonalPhoto,
     setPersonalPhotoPreview,

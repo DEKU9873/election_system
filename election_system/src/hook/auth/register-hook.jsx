@@ -22,6 +22,10 @@ const RegisterHook = (onClose) => {
     useState(null);
 
   const [newCenter, setNewCenter] = useState("");
+  const [added_by, setAddedBy] = useState("");
+  const [station_id, setStationId] = useState("");
+  const [address, setAddress] = useState("");
+  const [voting_card_number, setVotingCardNumber] = useState("");
 
   const [hasVotingRight, setHasVotingRight] = useState(false);
   const [idUpdated, setIdUpdated] = useState(false);
@@ -58,6 +62,24 @@ const RegisterHook = (onClose) => {
     setRegistrationType(type);
   };
 
+
+
+  const handleAddByChange = (e) => {
+    setAddedBy(Number(e.target.value));
+  };
+
+  const handleStationIdChange = (e) => {
+    setStationId(Number(e.target.value));
+  };
+
+  const handleAddressChange = (e) => {
+    setAddress(e.target.value);
+  };
+
+  const handleVotingCardNumberChange = (e) => {
+    setVotingCardNumber(e.target.value);
+  };
+
   const handleFileChange = (e, setFile, setPreview) => {
     const file = e.target.files[0];
     if (file) {
@@ -80,9 +102,9 @@ const RegisterHook = (onClose) => {
     setNewCenter(Number(e.target.value));
   };
 
- const {user, error} = useSelector((state) => state.auth);
- console.log("user", user);
- console.log("error", error);
+  const { user, error } = useSelector((state) => state.auth);
+  console.log("user", user);
+  console.log("error", error);
 
   const validationValues = () => {
     if (!firstName.trim()) {
@@ -141,7 +163,8 @@ const RegisterHook = (onClose) => {
     }
 
     if (
-      (registrationType === "observer" || registrationType === "center_manager") &&
+      (registrationType === "observer" ||
+        registrationType === "center_manager") &&
       !electionCardPhoto
     ) {
       notify("من فضلك اختر صورة بطاقة الانتخاب", "error");
@@ -176,6 +199,14 @@ const RegisterHook = (onClose) => {
     formData.append("can_vote", hasVotingRight);
     formData.append("has_updated_card", idUpdated);
 
+
+
+    formData.append("added_by", added_by);
+    formData.append("station_id", station_id);
+    formData.append("address", address);
+    formData.append("voting_card_number", voting_card_number);
+
+
     formData.append("election_center_id", newCenter);
 
     if (personalPhoto) formData.append("profile_image", personalPhoto);
@@ -205,9 +236,9 @@ const RegisterHook = (onClose) => {
         setNewCenter("");
         setHasVotingRight(false);
         setIdUpdated(false);
-        
+
         // إغلاق المودال بعد التسجيل الناجح
-        if (typeof onClose === 'function') {
+        if (typeof onClose === "function") {
           onClose();
         }
       } else {
@@ -216,7 +247,6 @@ const RegisterHook = (onClose) => {
     } catch (err) {
       if (error && error.message) {
         notify(error.message, "error");
-     
       } else {
         notify(err.message || "حدث خطأ في الاتصال بالخادم", "error");
       }
@@ -260,6 +290,14 @@ const RegisterHook = (onClose) => {
     setIdPhotoPreview,
     setElectionCardPhoto,
     setElectionCardPhotoPreview,
+    added_by,
+    station_id,
+    address,
+    voting_card_number,
+    handleAddByChange,
+    handleStationIdChange,
+    handleAddressChange,
+    handleVotingCardNumberChange,
   ];
 };
 

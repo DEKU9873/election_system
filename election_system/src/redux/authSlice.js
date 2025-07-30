@@ -3,7 +3,10 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { useInsertData, useInsertDataWithImage } from "../hooks/useInsertData";
 import { useGetDataToken } from "../hooks/useGetData";
 import { useDeleteDataWithToken } from "../hooks/useDeleteData";
-import { useInUpdateDataWithImage, useUpdateDataWithToken } from "../hooks/useUpdateData";
+import {
+  useInUpdateDataWithImage,
+  useUpdateDataWithToken,
+} from "../hooks/useUpdateData";
 
 // Register User
 export const registerUser = createAsyncThunk(
@@ -17,12 +20,6 @@ export const registerUser = createAsyncThunk(
     }
   }
 );
-
-// تم إزالة إضافة منسق جديد واستبدالها بإضافة مستخدم
-
-// تم إزالة جلب جميع المنسقين
-
-// تم إزالة جلب منسق واحد
 
 // Add User
 export const addUser = createAsyncThunk(
@@ -104,7 +101,10 @@ export const confirmVoting = createAsyncThunk(
   "auth/confirmVoting",
   async (userId, thunkAPI) => {
     try {
-      const response = await useUpdateDataWithToken(`/api/confirm-voting/${userId}`, {});
+      const response = await useUpdateDataWithToken(
+        `/api/confirm-voting/${userId}`,
+        {}
+      );
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
@@ -119,7 +119,10 @@ export const toggleActive = createAsyncThunk(
   "auth/toggleActive",
   async (userId, thunkAPI) => {
     try {
-      const response = await useUpdateDataWithToken(`/api/toggle-active/${userId}`, {});
+      const response = await useUpdateDataWithToken(
+        `/api/toggle-active/${userId}`,
+        {}
+      );
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
@@ -187,7 +190,9 @@ export const getDistrictManager = createAsyncThunk(
   "auth/getDistrictManager",
   async (userId, thunkAPI) => {
     try {
-      const response = await useGetDataToken(`/api/district-manager/${userId}/`);
+      const response = await useGetDataToken(
+        `/api/district-manager/${userId}/`
+      );
       return response.data.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
@@ -202,7 +207,9 @@ export const deleteDistrictManager = createAsyncThunk(
   "auth/deleteDistrictManager",
   async (districtManagerId, thunkAPI) => {
     try {
-      await useDeleteDataWithToken(`/api/district-manager/${districtManagerId}/`);
+      await useDeleteDataWithToken(
+        `/api/district-manager/${districtManagerId}/`
+      );
       return districtManagerId;
     } catch (err) {
       return thunkAPI.rejectWithValue(
@@ -217,7 +224,10 @@ export const changeUserRole = createAsyncThunk(
   "auth/changeUserRole",
   async ({ userId, roleData }, thunkAPI) => {
     try {
-      const response = await useUpdateDataWithToken(`/api/change-role/${userId}`, roleData);
+      const response = await useUpdateDataWithToken(
+        `/api/change-role/${userId}`,
+        roleData
+      );
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
@@ -232,7 +242,10 @@ export const updateUser = createAsyncThunk(
   "auth/updateUser",
   async ({ userId, userData }, thunkAPI) => {
     try {
-      const response = await useInUpdateDataWithImage(`/api/users/${userId}`, userData);
+      const response = await useInUpdateDataWithImage(
+        `/api/users/${userId}`,
+        userData
+      );
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
@@ -484,7 +497,7 @@ const authSlice = createSlice({
         state.error = action.payload;
         state.deleteDistrictManagerSuccess = false;
       })
-      
+
       // Change User Role
       .addCase(changeUserRole.pending, (state) => {
         state.loading = true;
@@ -497,13 +510,21 @@ const authSlice = createSlice({
         state.error = null;
         // تحديث المستخدم في القائمة إذا كان موجودًا
         if (state.allUsers.length > 0) {
-          state.allUsers = state.allUsers.map(user => 
-            user.id === action.meta.arg.userId ? { ...user, role: action.meta.arg.roleData.newRole } : user
+          state.allUsers = state.allUsers.map((user) =>
+            user.id === action.meta.arg.userId
+              ? { ...user, role: action.meta.arg.roleData.newRole }
+              : user
           );
         }
         // تحديث المستخدم الحالي إذا كان هو المستخدم المحدد
-        if (state.singleUser && state.singleUser.id === action.meta.arg.userId) {
-          state.singleUser = { ...state.singleUser, role: action.meta.arg.roleData.newRole };
+        if (
+          state.singleUser &&
+          state.singleUser.id === action.meta.arg.userId
+        ) {
+          state.singleUser = {
+            ...state.singleUser,
+            role: action.meta.arg.roleData.newRole,
+          };
         }
       })
       .addCase(changeUserRole.rejected, (state, action) => {
@@ -511,7 +532,7 @@ const authSlice = createSlice({
         state.error = action.payload;
         state.changeRoleSuccess = false;
       })
-      
+
       // Update User
       .addCase(updateUser.pending, (state) => {
         state.loading = true;
@@ -522,17 +543,25 @@ const authSlice = createSlice({
         state.loading = false;
         state.updateUserSuccess = true;
         state.error = null;
-        
+
         // تحديث المستخدم في القائمة إذا كان موجودًا
         if (state.allUsers.length > 0) {
-          state.allUsers = state.allUsers.map(user => 
-            user.id === action.meta.arg.userId ? { ...user, ...action.meta.arg.userData } : user
+          state.allUsers = state.allUsers.map((user) =>
+            user.id === action.meta.arg.userId
+              ? { ...user, ...action.meta.arg.userData }
+              : user
           );
         }
-        
+
         // تحديث المستخدم الحالي إذا كان هو المستخدم المحدد
-        if (state.singleUser && state.singleUser.id === action.meta.arg.userId) {
-          state.singleUser = { ...state.singleUser, ...action.meta.arg.userData };
+        if (
+          state.singleUser &&
+          state.singleUser.id === action.meta.arg.userId
+        ) {
+          state.singleUser = {
+            ...state.singleUser,
+            ...action.meta.arg.userData,
+          };
         }
       })
       .addCase(updateUser.rejected, (state, action) => {

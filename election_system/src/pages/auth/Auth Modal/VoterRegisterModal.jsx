@@ -54,6 +54,14 @@ const VoterRegisterModal = ({ onClose }) => {
     setIdPhotoPreview,
     setElectionCardPhoto,
     setElectionCardPhotoPreview,
+    added_by,
+    station_id,
+    address,
+    voting_card_number,
+    handleAddByChange,
+    handleStationIdChange,
+    handleAddressChange,
+    handleVotingCardNumberChange,
   ] = RegisterHook(onClose);
 
   // تعيين نوع التسجيل إلى "voter" عند تحميل المكون
@@ -164,6 +172,66 @@ const VoterRegisterModal = ({ onClose }) => {
                   className="w-full pr-10 py-1.5 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right text-sm"
                   value={birthYear}
                   onChange={handleBirthYearChange}
+                />
+              </div>
+
+              <div className="relative">
+                <User
+                  className="absolute right-3 top-2 text-gray-400"
+                  size={18}
+                />
+
+                <input
+                  type="number"
+                  placeholder="المحطة"
+                  className="w-full pr-10 py-1.5 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right text-sm"
+                  value={station_id}
+                  onChange={handleStationIdChange}
+                />
+              </div>
+
+              <div className="relative">
+                <User
+                  className="absolute right-3 top-2 text-gray-400"
+                  size={18}
+                />
+
+                <input
+                  type="number"
+                  placeholder="اضيف بواسطة"
+                  className="w-full pr-10 py-1.5 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right text-sm"
+                  value={added_by}
+                  onChange={handleAddByChange}
+                />
+              </div>
+
+              <div className="relative">
+                <User
+                  className="absolute right-3 top-2 text-gray-400"
+                  size={18}
+                />
+
+                <input
+                  type="text"
+                  placeholder="العنوان"
+                  className="w-full pr-10 py-1.5 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right text-sm"
+                  value={address}
+                  onChange={handleAddressChange}
+                />
+              </div>
+
+              <div className="relative">
+                <User
+                  className="absolute right-3 top-2 text-gray-400"
+                  size={18}
+                />
+
+                <input
+                  type="text"
+                  placeholder="رقم بطاقة الناخب"
+                  className="w-full pr-10 py-1.5 border rounded-lg focus:ring-2 focus:ring-blue-400 text-right text-sm"
+                  value={voting_card_number}
+                  onChange={handleVotingCardNumberChange}
                 />
               </div>
 
@@ -320,40 +388,61 @@ const VoterRegisterModal = ({ onClose }) => {
               ) : (
                 <Select
                   placeholder="اختر المركز الانتخابي"
-                  value={electionCenters?.find(option => option.id === newCenter) ? 
-                    { value: newCenter, label: electionCenters.find(option => option.id === newCenter).name } : null}
-                  onChange={(selectedOption) => handleNewCenterChange({ target: { value: selectedOption.value } })}
-                  options={electionCenters?.map(center => ({ value: center.id, label: center.name }))}
+                  value={
+                    electionCenters?.find((option) => option.id === newCenter)
+                      ? {
+                          value: newCenter,
+                          label: electionCenters.find(
+                            (option) => option.id === newCenter
+                          ).name,
+                        }
+                      : null
+                  }
+                  onChange={(selectedOption) =>
+                    handleNewCenterChange({
+                      target: { value: selectedOption.value },
+                    })
+                  }
+                  options={electionCenters?.map((center) => ({
+                    value: center.id,
+                    label: center.name,
+                  }))}
                   className="w-full text-right"
                   classNamePrefix="select"
                   isRtl={true}
                   styles={{
                     control: (baseStyles) => ({
                       ...baseStyles,
-                      paddingRight: '2.5rem',
-                      borderRadius: '0.5rem',
-                      borderColor: '#e2e8f0',
-                      '&:hover': {
-                        borderColor: '#cbd5e0'
-                      }
+                      paddingRight: "2.5rem",
+                      borderRadius: "0.5rem",
+                      borderColor: "#e2e8f0",
+                      "&:hover": {
+                        borderColor: "#cbd5e0",
+                      },
                     }),
                     placeholder: (baseStyles) => ({
                       ...baseStyles,
-                      textAlign: 'right'
+                      textAlign: "right",
                     }),
                     option: (baseStyles, state) => ({
                       ...baseStyles,
-                      textAlign: 'right',
-                      backgroundColor: state.isSelected ? '#3b82f6' : state.isFocused ? '#eff6ff' : 'white',
-                      color: state.isSelected ? 'white' : '#1f2937',
-                      '&:hover': {
-                        backgroundColor: state.isSelected ? '#3b82f6' : '#eff6ff',
-                      }
+                      textAlign: "right",
+                      backgroundColor: state.isSelected
+                        ? "#3b82f6"
+                        : state.isFocused
+                        ? "#eff6ff"
+                        : "white",
+                      color: state.isSelected ? "white" : "#1f2937",
+                      "&:hover": {
+                        backgroundColor: state.isSelected
+                          ? "#3b82f6"
+                          : "#eff6ff",
+                      },
                     }),
                     menu: (baseStyles) => ({
                       ...baseStyles,
-                      zIndex: 50
-                    })
+                      zIndex: 50,
+                    }),
                   }}
                   noOptionsMessage={() => "لا توجد مراكز متاحة"}
                 />

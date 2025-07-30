@@ -30,8 +30,8 @@ const CoordinatorRegisterModal = ({ onClose }) => {
     idPhotoPreview,
     electionCardPhoto,
     electionCardPhotoPreview,
-    selectedCenters,
-    handleSelectedCentersChange,
+    newCenter,
+    handleNewCenterChange,
     handleSubmit,
     setPersonalPhoto,
     setPersonalPhotoPreview,
@@ -41,7 +41,7 @@ const CoordinatorRegisterModal = ({ onClose }) => {
     setElectionCardPhotoPreview
   ] = CoordinatorRegisterHook(onClose);
 
-    const [electionCenters, isLoading] = GetAllCenter();
+    const [electionCenters, loading] = GetAllCenter();
 
 
 
@@ -264,36 +264,57 @@ const CoordinatorRegisterModal = ({ onClose }) => {
             </div>
           </div>
 
-          <div className="space-y-3 w-full">
-            <h3 className="text-lg font-semibold text-gray-700 mb-2 text-right">المراكز الانتخابية</h3>
-            <div className="relative">
-              <MapPin className="absolute right-3 top-2 text-gray-400" size={18} />
-              <Select
-                isMulti
-                options={electionCenters?.map(center => ({
-                  value: center.id,
-                  label: center.name
-                }))}
-                value={selectedCenters}
-                onChange={handleSelectedCentersChange}
-                placeholder="اختر المراكز الانتخابية"
-                className="text-right"
-                isLoading={isLoading}
-                styles={{
-                  control: (base) => ({
-                    ...base,
-                    paddingRight: '2.5rem',
-                    minHeight: '42px',
-                    borderRadius: '0.5rem',
-                  }),
-                  placeholder: (base) => ({
-                    ...base,
-                    color: '#9CA3AF',
-                  }),
-                }}
+   <div className="relative">
+              <MapPin
+                className="absolute right-3 top-2 text-gray-400 z-10"
+                size={18}
               />
+              {loading ? (
+                <div className="w-full pr-10 py-2 border rounded-lg text-right">
+                  جاري تحميل المراكز...
+                </div>
+              ) : (
+                <Select
+                  placeholder="اختر المركز الانتخابي"
+                  value={electionCenters?.find(option => option.id === newCenter) ? 
+                    { value: newCenter, label: electionCenters.find(option => option.id === newCenter).name } : null}
+                  onChange={(selectedOption) => handleNewCenterChange({ target: { value: selectedOption.value } })}
+                  options={electionCenters?.map(center => ({ value: center.id, label: center.name }))}
+                  className="w-full text-right"
+                  classNamePrefix="select"
+                  isRtl={true}
+                  styles={{
+                    control: (baseStyles) => ({
+                      ...baseStyles,
+                      paddingRight: '2.5rem',
+                      borderRadius: '0.5rem',
+                      borderColor: '#e2e8f0',
+                      '&:hover': {
+                        borderColor: '#cbd5e0'
+                      }
+                    }),
+                    placeholder: (baseStyles) => ({
+                      ...baseStyles,
+                      textAlign: 'right'
+                    }),
+                    option: (baseStyles, state) => ({
+                      ...baseStyles,
+                      textAlign: 'right',
+                      backgroundColor: state.isSelected ? '#3b82f6' : state.isFocused ? '#eff6ff' : 'white',
+                      color: state.isSelected ? 'white' : '#1f2937',
+                      '&:hover': {
+                        backgroundColor: state.isSelected ? '#3b82f6' : '#eff6ff',
+                      }
+                    }),
+                    menu: (baseStyles) => ({
+                      ...baseStyles,
+                      zIndex: 50
+                    })
+                  }}
+                  noOptionsMessage={() => "لا توجد مراكز متاحة"}
+                />
+              )}
             </div>
-          </div>
 
            <div className="flex flex-col space-x-4 space-x-reverse justify-end w-full mt-4">
             <button
