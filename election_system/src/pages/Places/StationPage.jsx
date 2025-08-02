@@ -29,7 +29,7 @@ const StationPage = () => {
   const { id } = useParams();
 
   // const { subdistrictsData } = useUserData();
-  const [stations, loading] = GetStationByCenter(id);
+  const { stations, loading } = GetStationByCenter(id);
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);

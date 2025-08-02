@@ -15,6 +15,8 @@ const ElectoralStripsDetails = () => {
   const { id } = useParams();
   const [currentTape, isLoading] = GetOneTapesHook(id);
 
+  console.log(currentTape)
+
   // Loading state
   if (isLoading) {
     return (
@@ -154,13 +156,55 @@ const ElectoralStripsDetails = () => {
           <div className="bg-white rounded-lg shadow-sm border p-3 sm:p-4 md:p-6">
             <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4 flex items-center">
               <ImageIcon className="ml-2 h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
-              صورة الشريط
+              صور الشريط
             </h2>
 
-            {data?.tape_imageurl ? (
+            {/* عرض الصور المتعددة إذا كانت متوفرة */}
+            {data?.images && data.images.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {data.images.map((image, index) => (
+                  <div key={index} className="relative">
+                    <img
+                      src={image.url || image}
+                      alt={`صورة الشريط الانتخابي ${index + 1}`}
+                      className="w-full h-48 object-cover rounded-lg border border-gray-200 shadow-sm bg-gray-50"
+                      onError={(e) => {
+                        e.target.style.display = "none";
+                        e.target.nextSibling.style.display = "flex";
+                      }}
+                      onLoad={(e) => {
+                        e.target.style.display = "block";
+                        if (e.target.nextSibling) {
+                          e.target.nextSibling.style.display = "none";
+                        }
+                      }}
+                    />
+                    <div
+                      className="hidden items-center justify-center h-48 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300"
+                      style={{ display: "none" }}
+                    >
+                      <div className="text-center">
+                        <ImageIcon className="h-12 w-12 text-gray-400 mx-auto mb-2" />
+                        <p className="text-gray-500">فشل في تحميل الصورة</p>
+                      </div>
+                    </div>
+                    <div className="absolute top-1 sm:top-2 right-1 sm:right-2 flex gap-1 sm:gap-2">
+                      <a
+                        href={image.url || image}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-black bg-opacity-50 text-white px-1 sm:px-2 py-0.5 sm:py-1 rounded text-xs hover:bg-opacity-70 transition-opacity"
+                      >
+                        عرض بالحجم الكامل
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (data?.tape_imageurl || (data?.images && data?.images[0])) ? (
               <div className="relative">
                 <img
-                  src={data?.tape_imageurl}
+                  src={data?.tape_imageurl || (data?.images && data?.images[0]?.url)}
                   alt="صورة الشريط الانتخابي"
                   className="w-full h-auto max-h-96 object-contain rounded-lg border border-gray-200 shadow-sm bg-gray-50"
                   onError={(e) => {
@@ -188,7 +232,7 @@ const ElectoralStripsDetails = () => {
                 </div>
                 <div className="absolute top-1 sm:top-2 right-1 sm:right-2 flex gap-1 sm:gap-2">
                   <a
-                    href={data?.tape_image}
+                    href={data?.tape_imageurl || (data?.images && data?.images[0]?.url)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="bg-black bg-opacity-50 text-white px-1 sm:px-2 py-0.5 sm:py-1 rounded text-xs hover:bg-opacity-70 transition-opacity"

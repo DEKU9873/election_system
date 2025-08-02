@@ -9,7 +9,7 @@ const EditTapesHook = (tapeData, onClose) => {
   const [electionCenterId, setElectionCenterId] = useState("");
   const [stationId, setStationId] = useState("");
   const [date, setDate] = useState("");
-  const [tape_image, setTapeImage] = useState(null);
+  const [tape_image, setTapeImage] = useState([]);
   const [notes, setNotes] = useState("");
   const [status, setStatus] = useState("");
   const [tapeId, setTapeId] = useState(null);
@@ -42,11 +42,11 @@ const EditTapesHook = (tapeData, onClose) => {
   };
 
   const onChangeTapeImage = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setTapeImage(e.target.files[0]);
+    if (e.target.files && e.target.files.length > 0) {
+      setTapeImage(Array.from(e.target.files));
     } else {
       // إذا تم مسح الصورة، نحتفظ بالصورة القديمة
-      setTapeImage(null);
+      setTapeImage([]);
     }
   };
 
@@ -82,9 +82,11 @@ const EditTapesHook = (tapeData, onClose) => {
     formData.append("notes", notes);
     formData.append("status", status);
 
-    // إضافة الصورة فقط إذا تم تحديد صورة جديدة
-    if (tape_image) {
-      formData.append("tape_image", tape_image);
+    // إضافة الصور فقط إذا تم تحديد صور جديدة
+    if (tape_image && tape_image.length > 0) {
+      tape_image.forEach((image) => {
+        formData.append("tape_image", image);
+      });
     }
 
     try {

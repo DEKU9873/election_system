@@ -192,7 +192,7 @@ const FinancialStatistics = () => {
         }
 
         expenseTransactions.push({
-          id: expense.id || `exp-${Math.random().toString(36).substr(2, 9)}`,
+          id: `exp-${expense.id || Math.random().toString(36).substr(2, 9)}`,
           description: expense.title || "مصروفات",
           amount: Number(expense.amount) || 0,
           date: expense.createdAt || new Date().toISOString(),
@@ -214,7 +214,7 @@ const FinancialStatistics = () => {
         }
 
         capitalTransactions.push({
-          id: capital.id || `cap-${Math.random().toString(36).substr(2, 9)}`,
+          id: `cap-${capital.id || Math.random().toString(36).substr(2, 9)}`,
           description: capital.title || "إيرادات",
           amount: Number(capital.amount) || 0,
           date: capital.createdAt || new Date().toISOString(),

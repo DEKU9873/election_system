@@ -66,7 +66,6 @@ const VoterRegisterModal = ({ onClose }) => {
     handleVotingCardNumberChange,
   } = RegisterHook(onClose);
 
-  // تعيين نوع التسجيل إلى "voter" عند تحميل المكون
   useEffect(() => {
     handleRegistrationTypeChange("voter");
   }, [handleRegistrationTypeChange]);

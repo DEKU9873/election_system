@@ -12,6 +12,7 @@ import Loader from "../../Components/Uitily/Loader";
 import AllUserHook from "../../hook/auth/all-user-hook";
 import AllCoordinatorHook from "../../hook/auth/all-coordinator-hook";
 import CoordinatorRegisterModal from "./Auth Modal/CoordinatorRegisterModal";
+import CoordinatorEditModal from "./Auth Modal/CoordinatorEditModal";
 import DeleteModal from "../../Components/Uitily/DeleteModal";
 import { useDispatch } from "react-redux";
 import { deleteUser, getAllUsers } from "../../redux/authSlice";
@@ -22,8 +23,10 @@ const CoordinatorTablePage = () => {
   const navigate = useNavigate();
 
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [userIdToDelete, setUserIdToDelete] = useState(null);
+  const [selectedCoordinator, setSelectedCoordinator] = useState(null);
 
   const [allCoordinators, loading] = AllCoordinatorHook();
   console.log(allCoordinators);
@@ -116,7 +119,9 @@ const CoordinatorTablePage = () => {
   const handleUserAction = (action, user) => {
     setShowActionMenu(null);
     if (action === "delete") {
-      handleDeleteConfirm(user.User.id);
+      handleDeleteConfirm(user.id);
+    } else if (action === "edit") {
+      handleEditCoordinator(user);
     }
   };
 
@@ -145,6 +150,16 @@ const CoordinatorTablePage = () => {
   };
   const handleCloseModal = () => {
     setShowModal(false);
+  };
+
+  const handleEditCoordinator = (coordinator) => {
+    setSelectedCoordinator(coordinator);
+    setShowEditModal(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
+    setSelectedCoordinator(null);
   };
 
   const handleDetailsUserAction = async (id) => {
@@ -278,6 +293,12 @@ const CoordinatorTablePage = () => {
                                     عرض التفاصيل
                                   </button>
                                   <button
+                                    onClick={() => handleUserAction("edit", row)}
+                                    className="block w-full text-right px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                  >
+                                    تعديل
+                                  </button>
+                                  <button
                                     onClick={() => handleDeleteConfirm(row.id)}
                                     className="block w-full text-right px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-red-700 hover:bg-red-50 transition-colors"
                                   >
@@ -340,6 +361,9 @@ const CoordinatorTablePage = () => {
         )}
       </div>
       {showModal && <CoordinatorRegisterModal onClose={handleCloseModal} />}
+      {showEditModal && selectedCoordinator && (
+        <CoordinatorEditModal onClose={handleCloseEditModal} userData={selectedCoordinator} />
+      )}
       <DeleteModal
         isOpen={showDeleteModal}
         onCancel={handleDeleteCancel}

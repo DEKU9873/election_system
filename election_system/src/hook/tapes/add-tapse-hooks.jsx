@@ -10,7 +10,7 @@ const AddTapesHook = (onClose) => {
   const [electionCenterId, setElectionCenterId] = useState("");
   const [stationId, setStationId] = useState("");
   const [date, setDate] = useState("");
-  const [tape_image, setTapeImage] = useState(null);
+  const [tape_image, setTapeImage] = useState([]);
   const [notes, setNotes] = useState("");
   const [status, setStatus] = useState("");
 
@@ -37,7 +37,18 @@ const AddTapesHook = (onClose) => {
   };
 
   const onChangeTapeImage = (e) => {
-    setTapeImage(e.target.files[0]);
+    if (e.target.files && e.target.files.length > 0) {
+      // إضافة الصور الجديدة إلى المصفوفة الحالية بدلاً من استبدالها
+      setTapeImage(prevImages => {
+        // تحويل FileList إلى مصفوفة
+        const newImages = Array.from(e.target.files);
+        // دمج الصور السابقة مع الصور الجديدة
+        return [...prevImages, ...newImages];
+      });
+    } else if (e.target.files && e.target.files.length === 0) {
+      // إذا تم مسح الصور، نقوم بتفريغ المصفوفة
+      setTapeImage([]);
+    }
   };
 
   const onChangeNotes = (e) => {
@@ -57,7 +68,7 @@ const AddTapesHook = (onClose) => {
       !electionCenterId ||
       !stationId ||
       !date ||
-      !tape_image ||
+      !tape_image.length ||
       !notes ||
       !status
     ) {
@@ -70,7 +81,10 @@ const AddTapesHook = (onClose) => {
     formData.append("election_center_id", electionCenterId);
     formData.append("station_id", stationId);
     formData.append("date", date);
-    formData.append("tape_image", tape_image);
+    // إضافة جميع الصور المحددة
+    tape_image.forEach((image, index) => {
+      formData.append("tape_image", image);
+    });
     formData.append("notes", notes);
     formData.append("status", status);
 

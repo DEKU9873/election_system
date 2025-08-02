@@ -11,6 +11,9 @@ import {
   Check,
   AlertCircle,
   Clock,
+  RefreshCw,
+  Trash2,
+  Maximize2,
 } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -70,6 +73,257 @@ const AddElectoralStripsModal = ({ onClose }) => {
     onSubmit,
     stationsByCenter, // استلام المحطات المرتبطة بالمركز
   ] = AddTapesHook(onClose);
+  
+  // دالة لتحديث معرض الصور المصغرة
+  const updateThumbnailGallery = (images) => {
+    const galleryElement = document.getElementById("thumbnails-gallery");
+    if (!galleryElement) return;
+    
+    // مسح المحتوى الحالي
+    galleryElement.innerHTML = "";
+    
+    // إضافة رسالة إذا لم تكن هناك صور
+    if (images.length === 0) {
+      const emptyMessage = document.createElement("div");
+      emptyMessage.className = "w-full py-3 text-center text-gray-400 text-xs italic";
+      emptyMessage.textContent = "لم يتم اختيار أي صور بعد";
+      galleryElement.appendChild(emptyMessage);
+      return;
+    }
+    
+    // إضافة الصور المصغرة
+    images.forEach((file, index) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const thumbnailDiv = document.createElement("div");
+        thumbnailDiv.className = "relative rounded-lg overflow-hidden border border-gray-200 group shadow-sm hover:shadow-md transition-all duration-200";
+        
+        // إنشاء عنصر الصورة المصغرة مع معلومات إضافية
+        thumbnailDiv.innerHTML = `
+          <div class="w-20 h-20 bg-cover bg-center" style="background-image: url('${e.target.result}')"></div>
+          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-1 text-[10px] text-white text-center truncate">
+            ${index + 1}/${images.length}
+          </div>
+          <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <div class="bg-black/60 w-full h-full flex flex-col items-center justify-center">
+              <div class="flex space-x-1 rtl:space-x-reverse mb-1">
+                <button type="button" data-action="view" data-index="${index}" class="p-1.5 rounded-full bg-blue-500/80 hover:bg-blue-600 text-white transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </button>
+                <button type="button" data-action="delete" data-index="${index}" class="p-1.5 rounded-full bg-red-500/80 hover:bg-red-600 text-white transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                </button>
+              </div>
+              <span class="text-white text-[9px] px-1 py-0.5 bg-black/40 rounded-sm">${file.name.length > 15 ? file.name.substring(0, 12) + '...' : file.name}</span>
+            </div>
+          </div>
+        `;
+        
+        // إضافة حدث النقر لعرض الصورة
+        thumbnailDiv.addEventListener("click", (e) => {
+          // إذا لم يكن النقر على زر، نقوم بتحديث الصورة الرئيسية
+          if (!e.target.closest('button')) {
+            // تحديث الصورة الرئيسية في المعاينة
+            const previewElement = document.getElementById("image-preview");
+            const largePreviewContainer = document.querySelector(".image-preview-container");
+            
+            if (previewElement && largePreviewContainer) {
+              previewElement.style.backgroundImage = `url(${e.target.result})`;
+              largePreviewContainer.style.backgroundImage = `url(${e.target.result})`;
+              window.imagePreviewUrl = e.target.result;
+            }
+          }
+        });
+        
+        // إضافة أحداث النقر للأزرار
+        const buttons = thumbnailDiv.querySelectorAll("button");
+        buttons.forEach(button => {
+          button.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const action = button.getAttribute("data-action");
+            const imageIndex = parseInt(button.getAttribute("data-index"));
+            
+            if (action === "delete") {
+              removeImageByIndex(imageIndex);
+            } else if (action === "view") {
+              // عرض الصورة في نافذة جديدة
+              const newWindow = window.open();
+              newWindow.document.write(`
+                <html>
+                  <head>
+                    <title>معاينة الصورة</title>
+                    <style>
+                      body {
+                        margin: 0;
+                        padding: 0;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        min-height: 100vh;
+                        background-color: #0f172a;
+                        font-family: Arial, sans-serif;
+                      }
+                      img {
+                        max-width: 95%;
+                        max-height: 90vh;
+                        object-fit: contain;
+                        border-radius: 8px;
+                        box-shadow: 0 0 30px rgba(0,0,0,0.5);
+                      }
+                    </style>
+                  </head>
+                  <body>
+                    <img src="${e.target.result}" />
+                  </body>
+                </html>
+              `);
+            }
+          });
+        });
+        
+        galleryElement.appendChild(thumbnailDiv);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+  
+  // دالة لحذف صورة محددة بواسطة الفهرس
+  const removeImageByIndex = (index) => {
+    // إضافة تأثير انتقالي للصورة المحذوفة
+    const thumbnailElements = document.querySelectorAll("#thumbnails-gallery > div");
+    if (thumbnailElements && thumbnailElements[index]) {
+      const thumbnailToRemove = thumbnailElements[index];
+      thumbnailToRemove.classList.add("thumbnail-removing");
+      
+      // عرض رسالة تأكيد صغيرة
+      const confirmMessage = document.createElement("div");
+      confirmMessage.className = "fixed bottom-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg text-sm flex items-center z-50 animate-fade-in";
+      confirmMessage.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+        تم حذف الصورة
+      `;
+      document.body.appendChild(confirmMessage);
+      
+      // إزالة رسالة التأكيد بعد فترة
+      setTimeout(() => {
+        confirmMessage.classList.add("animate-fade-out");
+        setTimeout(() => {
+          document.body.removeChild(confirmMessage);
+        }, 300);
+      }, 2000);
+      
+      // انتظار انتهاء التأثير الانتقالي قبل حذف الصورة فعليًا
+      setTimeout(() => {
+        // تحديث مصفوفة الصور
+        const updatedImages = [...tape_image];
+        updatedImages.splice(index, 1);
+        
+        // تحديث الحالة
+        const emptyEvent = { target: { files: [] } };
+        onChangeTapeImage(emptyEvent);
+        
+        // إعادة إضافة الصور المتبقية
+        if (updatedImages.length > 0) {
+          const dataTransfer = new DataTransfer();
+          updatedImages.forEach(file => {
+            dataTransfer.items.add(file);
+          });
+          
+          const newEvent = { 
+            target: { 
+              files: dataTransfer.files 
+            } 
+          };
+          onChangeTapeImage(newEvent);
+          
+          // تحديث واجهة المستخدم
+          if (updatedImages.length > 0) {
+            const firstFile = updatedImages[0];
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              const previewElement = document.getElementById("image-preview");
+              if (previewElement) {
+                previewElement.style.backgroundImage = `url(${e.target.result})`;
+              }
+              
+              const imageContainer = document.querySelector(".image-preview-container");
+              if (imageContainer) {
+                imageContainer.style.backgroundImage = `url(${e.target.result})`;
+              }
+              
+              // تحديث معلومات الملفات
+              const fileNameElement = document.getElementById("file-name");
+              if (fileNameElement) {
+                fileNameElement.textContent = updatedImages.length > 1 
+                  ? `${updatedImages.length} صور محددة` 
+                  : firstFile.name;
+              }
+              
+              // حساب الحجم الإجمالي للملفات
+              let totalSize = 0;
+              updatedImages.forEach(file => {
+                totalSize += file.size;
+              });
+              
+              const fileSizeElement = document.getElementById("file-size");
+              if (fileSizeElement) {
+                fileSizeElement.textContent = totalSize < 1024 * 1024
+                  ? `${(totalSize / 1024).toFixed(1)} كيلوبايت`
+                  : `${(totalSize / (1024 * 1024)).toFixed(1)} ميجابايت`;
+              }
+              
+              // تحديث URL الصورة للعرض
+              window.imagePreviewUrl = e.target.result;
+            };
+            reader.readAsDataURL(firstFile);
+          }
+        } else {
+          // إذا لم تبق أي صور، نقوم بإعادة تعيين واجهة المستخدم
+          const previewElement = document.getElementById("image-preview");
+          if (previewElement) {
+            previewElement.style.backgroundImage = "";
+            previewElement.classList.remove("has-image");
+            document.getElementById("upload-text").style.display = "block";
+            document.getElementById("change-text").style.display = "none";
+          }
+          
+          // إخفاء المعاينة الكبيرة
+          const largePreviewElement = document.getElementById("large-image-preview");
+          if (largePreviewElement) {
+            largePreviewElement.classList.remove("opacity-100");
+            setTimeout(() => {
+              largePreviewElement.classList.add("hidden");
+            }, 300);
+          }
+        }
+      }, 300); // انتظار انتهاء التأثير الانتقالي
+    } else {
+      // إذا لم يتم العثور على العنصر، نقوم بالحذف مباشرة
+      const updatedImages = [...tape_image];
+      updatedImages.splice(index, 1);
+      
+      // تحديث الحالة
+      const emptyEvent = { target: { files: [] } };
+      onChangeTapeImage(emptyEvent);
+      
+      // إعادة إضافة الصور المتبقية إذا وجدت
+      if (updatedImages.length > 0) {
+        const dataTransfer = new DataTransfer();
+        updatedImages.forEach(file => {
+          dataTransfer.items.add(file);
+        });
+        
+        const newEvent = { 
+          target: { 
+            files: dataTransfer.files 
+          } 
+        };
+        onChangeTapeImage(newEvent);
+      }
+    }
+  };
 
   const [centers] = GetAllCenter();
   // لم نعد بحاجة إلى جلب جميع المحطات لأننا سنستخدم المحطات المرتبطة بالمركز فقط
@@ -398,7 +652,7 @@ const AddElectoralStripsModal = ({ onClose }) => {
 
           <div>
             <label className="block text-gray-700 font-medium mb-1 text-right text-sm">
-              صورة الشريط
+              صور الشريط
             </label>
             <div className="relative">
               <div className="image-upload-container relative group">
@@ -407,11 +661,12 @@ const AddElectoralStripsModal = ({ onClose }) => {
                   accept="image/*"
                   id="tape-image-upload"
                   className="hidden"
+                  multiple
                   onChange={(e) => {
                     onChangeTapeImage(e);
-                    // عرض معاينة الصورة
-                    const file = e.target.files[0];
-                    if (file) {
+                    // عرض معاينة الصور
+                    const files = e.target.files;
+                    if (files && files.length > 0) {
                       // إظهار مؤشر التحميل
                       const previewElement =
                         document.getElementById("image-preview");
@@ -432,12 +687,15 @@ const AddElectoralStripsModal = ({ onClose }) => {
                           largePreviewElement.classList.add("opacity-100");
                         }, 10);
                         const imageContainer =
-                          largePreviewElement.querySelector(".h-24");
+                          largePreviewElement.querySelector(".image-preview-container");
                         if (imageContainer) {
                           imageContainer.classList.add("image-loading");
                         }
                       }
 
+                      // تحديث واجهة المستخدم لعرض الصور المختارة
+                      // استخدام أول صورة للمعاينة الرئيسية وعرض جميع الصور في المعرض المصغر
+                      const firstFile = files[0];
                       const reader = new FileReader();
                       reader.onload = (e) => {
                         const previewElement =
@@ -460,79 +718,103 @@ const AddElectoralStripsModal = ({ onClose }) => {
                         if (largePreviewElement) {
                           // إزالة تأثير التحميل
                           const imageContainer =
-                            largePreviewElement.querySelector(".h-24");
+                            largePreviewElement.querySelector(".image-preview-container");
                           if (imageContainer) {
                             imageContainer.classList.remove("image-loading");
                             imageContainer.style.backgroundImage = `url(${e.target.result})`;
                           }
 
-                          // إضافة اسم الملف
+                          // الحصول على جميع الصور المختارة من الحالة
+                          const allSelectedImages = tape_image;
+                          
+                          // إضافة معلومات الملفات
+                          const totalImagesCount = allSelectedImages.length;
                           document.getElementById("file-name").textContent =
-                            file.name;
+                            totalImagesCount > 1 ? `${totalImagesCount} صور محددة` : firstFile.name;
+                          
+                          // حساب الحجم الإجمالي للملفات
+                          let totalSize = 0;
+                          allSelectedImages.forEach(file => {
+                            totalSize += file.size;
+                          });
+                          
                           document.getElementById("file-size").textContent =
-                            file.size < 1024 * 1024
-                              ? `${(file.size / 1024).toFixed(1)} كيلوبايت`
-                              : `${(file.size / (1024 * 1024)).toFixed(
+                            totalSize < 1024 * 1024
+                              ? `${(totalSize / 1024).toFixed(1)} كيلوبايت`
+                              : `${(totalSize / (1024 * 1024)).toFixed(
                                   1
                                 )} ميجابايت`;
 
                           // تخزين URL الصورة للعرض
                           window.imagePreviewUrl = e.target.result;
+                          
+                          // إنشاء معرض مصغر للصور المختارة
+                          updateThumbnailGallery(allSelectedImages);
                         }
                       };
-                      reader.readAsDataURL(file);
+                      reader.readAsDataURL(firstFile);
                     }
                   }}
                 />
                 <label
                   htmlFor="tape-image-upload"
                   id="image-preview"
-                  className="w-full h-[34px] flex items-center justify-center border border-dashed border-blue-400 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-all duration-200 bg-center bg-no-repeat bg-cover"
+                  className="w-full h-[100px] flex flex-col items-center justify-center border-2 border-dashed border-blue-400 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-all duration-200 bg-center bg-no-repeat bg-cover relative overflow-hidden group"
                   onDragOver={(e) => {
                     e.preventDefault();
-                    e.currentTarget.classList.add("border-blue-600");
+                    e.currentTarget.classList.add("border-blue-600", "bg-blue-50");
                   }}
                   onDragLeave={(e) => {
                     e.preventDefault();
-                    e.currentTarget.classList.remove("border-blue-600");
+                    e.currentTarget.classList.remove("border-blue-600", "bg-blue-50");
                   }}
                   onDrop={(e) => {
                     e.preventDefault();
-                    e.currentTarget.classList.remove("border-blue-600");
-                    const file = e.dataTransfer.files[0];
-                    if (file && file.type.startsWith("image/")) {
-                      // إنشاء حدث مزيف لتمرير الملف إلى onChangeTapeImage
-                      const dataTransfer = new DataTransfer();
-                      dataTransfer.items.add(file);
-                      const fileInputElement =
-                        document.getElementById("tape-image-upload");
-                      fileInputElement.files = dataTransfer.files;
+                    e.currentTarget.classList.remove("border-blue-600", "bg-blue-50");
+                    const files = e.dataTransfer.files;
+                    if (files && files.length > 0) {
+                      // التحقق من أن جميع الملفات هي صور
+                      const allImages = Array.from(files).every(file => file.type.startsWith("image/"));
+                      if (allImages) {
+                        // إنشاء حدث مزيف لتمرير الملفات إلى onChangeTapeImage
+                        const dataTransfer = new DataTransfer();
+                        Array.from(files).forEach(file => {
+                          dataTransfer.items.add(file);
+                        });
+                        const fileInputElement =
+                          document.getElementById("tape-image-upload");
+                        fileInputElement.files = dataTransfer.files;
 
-                      // إطلاق حدث تغيير لتحديث الحالة
-                      const changeEvent = new Event("change", {
-                        bubbles: true,
-                      });
-                      fileInputElement.dispatchEvent(changeEvent);
+                        // إطلاق حدث تغيير لتحديث الحالة
+                        const changeEvent = new Event("change", {
+                          bubbles: true,
+                        });
+                        fileInputElement.dispatchEvent(changeEvent);
+                      }
                     }
                   }}
                 >
                   <span
                     id="upload-text"
-                    className="text-sm text-gray-600 flex items-center"
+                    className="text-sm text-gray-600 flex flex-col items-center justify-center h-full"
                   >
-                    <ImagePlus size={16} className="ml-2 text-blue-600" />
-                    اسحب الصورة أو انقر للاختيار
+                    <ImagePlus size={32} className="mb-2 text-blue-600" />
+                    <span className="font-medium text-blue-600">اسحب الصور أو انقر للاختيار</span>
+                    <span className="text-xs text-gray-500 mt-1">يمكنك اختيار صور متعددة</span>
                   </span>
                   <span
                     id="change-text"
-                    className="text-sm text-gray-600 hidden"
+                    className="text-sm text-white hidden absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-200 opacity-0 group-hover:opacity-100"
                   >
-                    تغيير الصورة
+                    <span className="flex items-center">
+                      <RefreshCw size={16} className="ml-2" />
+                      تغيير الصور
+                    </span>
                   </span>
                 </label>
                 <button
                   type="button"
-                  className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-red-500 transition-colors z-10 bg-white rounded-full p-1"
+                  className="absolute left-2 top-2 text-gray-500 hover:text-red-500 transition-colors z-10 bg-white rounded-full p-1.5 shadow-md"
                   onClick={(e) => {
                     e.preventDefault();
                     // إعادة تعيين حقل الإدخال
@@ -562,23 +844,29 @@ const AddElectoralStripsModal = ({ onClose }) => {
                       }, 300);
                     }
 
+                    // مسح معرض الصور المصغرة
+                    const galleryElement = document.getElementById("thumbnails-gallery");
+                    if (galleryElement) {
+                      galleryElement.innerHTML = "";
+                    }
+
                     // استدعاء onChangeTapeImage مع حدث فارغ
                     const emptyEvent = { target: { value: null, files: [] } };
                     onChangeTapeImage(emptyEvent);
                   }}
                 >
-                  <X size={14} />
+                  <Trash2 size={16} />
                 </button>
 
                 {/* معاينة كبيرة للصورة */}
                 <div
                   id="large-image-preview"
-                  className="hidden mt-2 rounded-lg overflow-hidden border border-gray-200 shadow-sm cursor-pointer max-h-[200px] transition-all duration-300 ease-in-out"
+                  className="hidden mt-3 rounded-lg overflow-hidden border border-gray-200 shadow-md cursor-pointer transition-all duration-300 ease-in-out bg-white"
                   onClick={(e) => {
                     // منع انتشار الحدث للأزرار داخل المعاينة
                     if (
                       e.target === e.currentTarget ||
-                      e.target.classList.contains("h-24")
+                      e.target.classList.contains("image-preview-container")
                     ) {
                       // فتح الصورة في نافذة جديدة
                       if (window.imagePreviewUrl) {
@@ -649,15 +937,23 @@ const AddElectoralStripsModal = ({ onClose }) => {
                   }}
                 >
                   <div className="relative">
-                    <div className="h-24 bg-center bg-no-repeat bg-cover w-full bg-contain overflow-hidden"></div>
-                    <div className="absolute top-0 right-0 bg-black bg-opacity-50 text-white p-1 text-xs rounded-bl-lg">
-                      <span>انقر للعرض بالحجم الكامل</span>
+                    <div className="image-preview-container h-40 bg-center bg-no-repeat bg-cover w-full bg-contain overflow-hidden"></div>
+                    <div className="absolute top-0 right-0 bg-black bg-opacity-60 text-white p-1.5 text-xs rounded-bl-lg">
+                      <span className="flex items-center"><Maximize2 size={12} className="ml-1" />انقر للعرض بالحجم الكامل</span>
                     </div>
-                    <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-1 text-xs flex justify-between items-center">
-                      <div className="flex items-center space-x-1">
+                    {/* معرض الصور المصغرة - تصميم محسن */}
+                    <div className="border-t border-gray-200 bg-gray-50">
+                      <div className="flex justify-between items-center px-3 py-2 border-b border-gray-200">
+                        <span className="text-xs text-gray-500">الصور المختارة</span>
+                        <span className="text-xs font-medium text-blue-600">{tape_image?.length || 0} صورة</span>
+                      </div>
+                      <div id="thumbnails-gallery" className="flex flex-wrap gap-2 p-3 bg-white max-h-32 overflow-y-auto scrollbar-thumb-rounded scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"></div>
+                    </div>
+                    <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white p-2 text-xs flex justify-between items-center">
+                      <div className="flex items-center space-x-2">
                         <button
                           type="button"
-                          className="text-white hover:text-red-300 transition-colors p-1 rounded-full"
+                          className="text-white hover:text-red-300 transition-colors p-1.5 rounded-full bg-black bg-opacity-40 hover:bg-opacity-70"
                           onClick={(e) => {
                             e.preventDefault();
                             // إعادة تعيين حقل الإدخال
@@ -698,11 +994,11 @@ const AddElectoralStripsModal = ({ onClose }) => {
                             onChangeTapeImage(emptyEvent);
                           }}
                         >
-                          <X size={14} />
+                          <Trash2 size={14} />
                         </button>
                         <button
                           type="button"
-                          className="text-white hover:text-blue-300 transition-colors p-1 rounded-full"
+                          className="text-white hover:text-blue-300 transition-colors p-1.5 rounded-full bg-black bg-opacity-40 hover:bg-opacity-70"
                           onClick={(e) => {
                             e.preventDefault();
                             // فتح الصورة في نافذة جديدة
@@ -720,24 +1016,37 @@ const AddElectoralStripsModal = ({ onClose }) => {
                                         justify-content: center;
                                         align-items: center;
                                         min-height: 100vh;
-                                        background-color: #1a1a1a;
+                                        background-color: #0f172a;
+                                        font-family: Arial, sans-serif;
+                                      }
+                                      .image-container {
+                                        position: relative;
+                                        max-width: 95vw;
+                                        max-height: 90vh;
+                                        box-shadow: 0 0 30px rgba(0,0,0,0.5);
+                                        border-radius: 8px;
+                                        overflow: hidden;
                                       }
                                       img {
                                         max-width: 100%;
-                                        max-height: 100vh;
+                                        max-height: 90vh;
                                         object-fit: contain;
-                                        box-shadow: 0 0 20px rgba(0,0,0,0.3);
+                                        display: block;
+                                        transition: transform 0.3s ease;
                                       }
                                       .controls {
                                         position: fixed;
-                                        bottom: 20px;
+                                        bottom: 30px;
                                         left: 50%;
                                         transform: translateX(-50%);
-                                        background-color: rgba(0,0,0,0.7);
-                                        padding: 10px 20px;
-                                        border-radius: 30px;
+                                        background-color: rgba(15,23,42,0.85);
+                                        padding: 12px 25px;
+                                        border-radius: 50px;
                                         display: flex;
-                                        gap: 15px;
+                                        gap: 20px;
+                                        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                                        backdrop-filter: blur(10px);
+                                        border: 1px solid rgba(255,255,255,0.1);
                                       }
                                       .controls button {
                                         background: none;
@@ -747,15 +1056,41 @@ const AddElectoralStripsModal = ({ onClose }) => {
                                         font-size: 14px;
                                         display: flex;
                                         align-items: center;
-                                        gap: 5px;
+                                        gap: 8px;
+                                        padding: 5px 10px;
+                                        border-radius: 5px;
+                                        transition: all 0.2s ease;
                                       }
                                       .controls button:hover {
                                         color: #93c5fd;
+                                        background-color: rgba(255,255,255,0.1);
+                                      }
+                                      .image-info {
+                                        position: absolute;
+                                        top: 15px;
+                                        right: 15px;
+                                        background-color: rgba(15,23,42,0.75);
+                                        color: white;
+                                        padding: 8px 15px;
+                                        border-radius: 20px;
+                                        font-size: 12px;
+                                        backdrop-filter: blur(5px);
+                                        border: 1px solid rgba(255,255,255,0.1);
+                                        opacity: 0.8;
+                                        transition: opacity 0.2s ease;
+                                      }
+                                      .image-info:hover {
+                                        opacity: 1;
                                       }
                                     </style>
                                   </head>
                                   <body>
-                                    <img src="${window.imagePreviewUrl}" id="preview-image" />
+                                    <div class="image-container">
+                                      <img src="${window.imagePreviewUrl}" id="preview-image" />
+                                      <div class="image-info">
+                                        معاينة الصورة
+                                      </div>
+                                    </div>
                                     <div class="controls">
                                       <button onclick="document.getElementById('preview-image').style.objectFit='contain'">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
@@ -764,6 +1099,10 @@ const AddElectoralStripsModal = ({ onClose }) => {
                                       <button onclick="document.getElementById('preview-image').style.objectFit='cover'">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
                                         تكبير
+                                      </button>
+                                      <button onclick="window.close()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                        إغلاق
                                       </button>
                                     </div>
                                   </body>
@@ -792,12 +1131,14 @@ const AddElectoralStripsModal = ({ onClose }) => {
                       <div className="flex flex-col items-end">
                         <span
                           id="file-name"
-                          className="truncate max-w-[150px] text-right"
+                          className="truncate max-w-[180px] text-right font-medium"
                         ></span>
                         <span
                           id="file-size"
-                          className="text-gray-300 text-xs"
-                        ></span>
+                          className="text-blue-200 text-xs flex items-center mt-0.5"
+                        >
+                          <FileText size={10} className="ml-1" />
+                        </span>
                       </div>
                     </div>
                   </div>

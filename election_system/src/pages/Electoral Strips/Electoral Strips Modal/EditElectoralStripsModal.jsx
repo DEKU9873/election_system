@@ -364,25 +364,26 @@ const EditElectoralStripsModal = ({ onClose, tapeData }) => {
 
           <div>
             <label className="block text-gray-700 font-medium mb-1 text-right text-sm">
-              صورة الشريط
+              صور الشريط
             </label>
             <div className="relative">
               <div className="image-upload-container relative group">
                 <input
                   type="file"
                   accept="image/*"
+                  multiple
                   id="tape-image-upload"
                   className="hidden"
                   onChange={(e) => {
                     onChangeTapeImage(e);
-                    // عرض معاينة الصورة
-                    const file = e.target.files[0];
-                    if (file) {
+                    // عرض معاينة الصور
+                    const files = e.target.files;
+                    if (files && files.length > 0) {
                       // إظهار مؤشر التحميل
                       const previewElement = document.getElementById('image-preview');
                       if (previewElement) {
                         previewElement.classList.add('upload-pulse');
-                        document.getElementById('upload-text').innerHTML = '<div class="flex items-center"><div class="w-3 h-3 border-2 border-blue-600 border-t-transparent rounded-full animate-spin ml-2"></div>جاري التحميل...</div>';
+                        document.getElementById('upload-text').innerHTML = `<div class="flex items-center"><div class="w-3 h-3 border-2 border-blue-600 border-t-transparent rounded-full animate-spin ml-2"></div>جاري تحميل ${files.length} ${files.length === 1 ? 'صورة' : 'صور'}...</div>`;
                       }
                       
                       // إظهار المعاينة الكبيرة مع تأثير التحميل
@@ -399,6 +400,8 @@ const EditElectoralStripsModal = ({ onClose, tapeData }) => {
                         }
                       }
                       
+                      // استخدام أول صورة للمعاينة
+                      const firstFile = files[0];
                       const reader = new FileReader();
                       reader.onload = (e) => {
                         const previewElement = document.getElementById('image-preview');
@@ -421,18 +424,21 @@ const EditElectoralStripsModal = ({ onClose, tapeData }) => {
                             imageContainer.style.backgroundImage = `url(${e.target.result})`;
                           }
                           
-                          // إضافة اسم الملف
-                          document.getElementById('file-name').textContent = file.name;
+                          // إضافة معلومات الملفات
+                          const totalSize = Array.from(files).reduce((total, file) => total + file.size, 0);
+                          document.getElementById('file-name').textContent = files.length === 1 
+                            ? firstFile.name 
+                            : `تم اختيار ${files.length} ${files.length === 1 ? 'صورة' : 'صور'}`;
                           document.getElementById('file-size').textContent = 
-                            (file.size < 1024 * 1024) 
-                              ? `${(file.size / 1024).toFixed(1)} كيلوبايت` 
-                              : `${(file.size / (1024 * 1024)).toFixed(1)} ميجابايت`;
+                            (totalSize < 1024 * 1024) 
+                              ? `${(totalSize / 1024).toFixed(1)} كيلوبايت` 
+                              : `${(totalSize / (1024 * 1024)).toFixed(1)} ميجابايت`;
                           
                           // تخزين URL الصورة للعرض
                           window.imagePreviewUrl = e.target.result;
                         }
                       };
-                      reader.readAsDataURL(file);
+                      reader.readAsDataURL(firstFile);
                     }
                   }}
                 />
@@ -451,26 +457,32 @@ const EditElectoralStripsModal = ({ onClose, tapeData }) => {
                   onDrop={(e) => {
                     e.preventDefault();
                     e.currentTarget.classList.remove('border-blue-600');
-                    const file = e.dataTransfer.files[0];
-                    if (file && file.type.startsWith('image/')) {
-                      // إنشاء حدث مزيف لتمرير الملف إلى onChangeTapeImage
-                      const dataTransfer = new DataTransfer();
-                      dataTransfer.items.add(file);
-                      const fileInputElement = document.getElementById('tape-image-upload');
-                      fileInputElement.files = dataTransfer.files;
-                      
-                      // إطلاق حدث تغيير لتحديث الحالة
-                      const changeEvent = new Event('change', { bubbles: true });
-                      fileInputElement.dispatchEvent(changeEvent);
+                    const files = e.dataTransfer.files;
+                    if (files && files.length > 0) {
+                      // التحقق من أن جميع الملفات هي صور
+                      const allImages = Array.from(files).every(file => file.type.startsWith('image/'));
+                      if (allImages) {
+                        // إنشاء حدث مزيف لتمرير الملفات إلى onChangeTapeImage
+                        const dataTransfer = new DataTransfer();
+                        Array.from(files).forEach(file => {
+                          dataTransfer.items.add(file);
+                        });
+                        const fileInputElement = document.getElementById('tape-image-upload');
+                        fileInputElement.files = dataTransfer.files;
+                        
+                        // إطلاق حدث تغيير لتحديث الحالة
+                        const changeEvent = new Event('change', { bubbles: true });
+                        fileInputElement.dispatchEvent(changeEvent);
+                      }
                     }
                   }}
                 >
                   <span id="upload-text" className="text-sm text-gray-600 flex items-center">
                     <ImagePlus size={16} className="ml-2 text-blue-600" />
-                    اسحب الصورة أو انقر للاختيار
+                    اسحب الصور أو انقر للاختيار
                   </span>
                   <span id="change-text" className="text-sm text-gray-600 hidden">
-                    تغيير الصورة
+                    تغيير الصور
                   </span>
                 </label>
                 <button 

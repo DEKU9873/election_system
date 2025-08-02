@@ -172,3 +172,120 @@
 #large-image-preview .h-24 {
   animation: image-loaded 0.5s ease-out;
 }
+
+/* أنماط معرض الصور المصغرة */
+#thumbnails-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px;
+  background-color: #ffffff;
+  border-radius: 0 0 8px 8px;
+  transition: all 0.3s ease;
+}
+
+#thumbnails-gallery::-webkit-scrollbar {
+  width: 6px;
+}
+
+#thumbnails-gallery::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+#thumbnails-gallery::-webkit-scrollbar-thumb {
+  background: #c5c5c5;
+  border-radius: 10px;
+}
+
+#thumbnails-gallery::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0;
+}
+
+/* تأثيرات للصور المصغرة */
+#thumbnails-gallery > div {
+  transition: all 0.2s ease-in-out;
+  animation: thumbnail-appear 0.3s ease-out;
+  position: relative;
+  cursor: pointer;
+}
+
+#thumbnails-gallery > div:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+@keyframes thumbnail-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* تأثير عند تحديد صورة مصغرة */
+#thumbnails-gallery > div.selected {
+  border: 2px solid #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+/* تأثير عند حذف صورة مصغرة */
+@keyframes thumbnail-remove {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.5) rotate(5deg);
+  }
+}
+
+.thumbnail-removing {
+  animation: thumbnail-remove 0.3s ease-out forwards;
+}
+
+/* تأثيرات الظهور والاختفاء للرسائل */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-out {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(10px); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
+}
+
+.animate-fade-out {
+  animation: fade-out 0.3s ease-out forwards;
+}
+
+/* تحسينات إضافية لمعرض الصور المصغرة */
+#thumbnails-gallery {
+  position: relative;
+}
+
+#thumbnails-gallery::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0));
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#thumbnails-gallery:hover::after {
+  opacity: 1;
+}

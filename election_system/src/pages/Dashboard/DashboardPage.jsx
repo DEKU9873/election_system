@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
 import { Users, Vote, UserCog } from 'lucide-react';
-import { Chart as ChartJS, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js';
+import { Chart as ChartJS, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title, ArcElement } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import AllUserHook from '../../hook/auth/all-user-hook';
 
 // تسجيل مكونات Chart.js
-ChartJS.register(Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title, ChartDataLabels);
+ChartJS.register(Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title, ArcElement, ChartDataLabels);
 
 const DashboardPage = () => {
   const [
